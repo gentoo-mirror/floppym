@@ -29,13 +29,7 @@ DEPEND="${RDEPEND}"
 src_prepare() {
 	epatch "${FILESDIR}"/secure.c-32bpp-fallback.patch || die
 
-	sed -e '/$(STRIP)/d' \
-		#-e 's/^LDFLAGS\(.*\)@LDFLAGS@ \(.*\)/LDLIBS \1\2 -lX11/' \
-		#-e '/ -o rdesktop /d' \
-		#-e '/^\.SUFFIXES:/d' \
-		#-e '/^\.c\.o:$/d' \
-		#-e '/$(CC) $(CFLAGS) -o $@ -c $</d' \
-		-i Makefile.in || die
+	sed -e '/$(STRIP)/d' -i Makefile.in || die
 
 	eautoreconf || die
 }
