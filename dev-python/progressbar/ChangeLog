@@ -1,0 +1,10 @@
+# ChangeLog for dev-python/progressbar
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*progressbar-2.2 (02 Sep 2010)
+
+  02 Sep 2010; Mike Gilbert <floppymaster@gmail.com> +progressbar-2.2.ebuild,
+  +metadata.xml:
+  Add progressbar
+
