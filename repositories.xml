@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE repositories SYSTEM "/dtd/repositories.dtd">
+<repositories xmlns="" version="1.0">
+	<repo quality="experimental" status="unofficial">
+		<name>floppym</name>
+		<description>floppym's personal overlay</description>
+		<homepage>http://bitbucket.org/floppym/floppym-overlay</homepage>
+		<owner>
+			<email>floppymaster@gmail.com</email>
+			<name>Mike Gilbert</name>
+		</owner>
+		<source type="mercurial">https://bitbucket.org/floppym/floppym-overlay</source>
+		<source type="mercurial">ssh://hg@bitbucket.org/floppym/floppym-overlay</source>
+		<feed>http://bitbucket.org/floppym/floppym-overlay/atom</feed>
+		<feed>http://bitbucket.org/floppym/floppym-overlay/rss</feed>
+	</repo>
+</repositories>
