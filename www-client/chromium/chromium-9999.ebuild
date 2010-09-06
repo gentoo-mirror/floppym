@@ -100,11 +100,6 @@ remove_bundled_lib() {
 src_prepare() {
 	# Add Gentoo plugin paths.
 	epatch "${FILESDIR}"/${PN}-plugins-path-r0.patch
-
-	# TODO: also remove third_party/libxml and third_party/libxslt when
-	# http://crbug.com/29333 is fixed.
-	# TODO: also remove third_party/zlib. For now the compilation fails if we
-	# remove it (minizip-related).
 }
 
 src_configure() {
