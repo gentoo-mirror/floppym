@@ -1,6 +1,10 @@
 # ChangeLog for www-client/chromium
-# Copyright 2010 Michael Gilbert; Distributed under the GPL v2
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
+
+  09 Sep 2010; Mike Gilbert <floppymaster@gmail.com>
+  +files/chromium-gnome-keyring-r0.patch, chromium-9999.ebuild:
+  Merge changes from gentoo
 
   29 Aug 2010; Mike Gilbert <floppymaster@gmail.com> +chromium-9999.ebuild,
   +files/chromium.xml, +files/chromium-launcher.sh,
