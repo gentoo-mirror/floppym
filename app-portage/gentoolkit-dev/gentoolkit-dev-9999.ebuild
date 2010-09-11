@@ -6,7 +6,7 @@ EAPI="3"
 PYTHON_DEPEND="*:2.6"
 PYTHON_USE_WITH="xml"
 
-inherit subversion python
+inherit eutils subversion python
 
 DESCRIPTION="Collection of developer scripts for Gentoo"
 HOMEPAGE="http://www.gentoo.org/proj/en/portage/tools/index.xml"
@@ -23,6 +23,10 @@ RDEPEND="sys-apps/portage
 	sys-apps/diffutils"
 
 ESVN_REPO_URI="svn://anonsvn.gentoo.org/gentoolkit/trunk/${PN}"
+
+src_prepare() {
+	epatch "${FILESDIR}"/echangelog-hgfix.patch || die
+}
 
 src_test() {
 	# echangelog test is not able to run as root
