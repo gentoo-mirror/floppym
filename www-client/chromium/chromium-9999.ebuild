@@ -57,14 +57,12 @@ src_unpack() {
 	[[ -f .gclient ]] || ${EGCLIENT} config "${EGCLIENT_REPO_URI}" || die
 
 	if [[ -d "${S}" ]]; then
-		ebegin "gclient revert"
+		einfo "gclient revert"
 		${EGCLIENT} revert --nohooks || die
-		eend
 	fi
 
-	ebegin "gclient sync"
+	einfo "gclient sync"
 	${EGCLIENT} sync --nohooks || die
-	eend
 
 	# Display correct svn revision in about box, and log new version
 	CREV=$(subversion__svn_info "${S}" "Revision")
@@ -212,9 +210,9 @@ src_install() {
 
 	# Chromium looks for these in its folder
 	# See media_posix.cc and base_paths_linux.cc
-	dosym /usr/$(get_libdir)/libavcodec.so.52 "$(get_chromium_home)" || die
-	dosym /usr/$(get_libdir)/libavformat.so.52 "$(get_chromium_home)" || die
-	dosym /usr/$(get_libdir)/libavutil.so.50 "$(get_chromium_home)" || die
+	dosym /usr/$(get_libdir)/libavcodec.so.52 "${CHROMIUM_HOME}" || die
+	dosym /usr/$(get_libdir)/libavformat.so.52 "${CHROMIUM_HOME}" || die
+	dosym /usr/$(get_libdir)/libavutil.so.50 "${CHROMIUM_HOME}" || die
 
 	# Install icon and desktop entry.
 	newicon out/Release/product_logo_48.png ${PN}-browser.png || die
