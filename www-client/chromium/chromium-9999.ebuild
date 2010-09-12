@@ -47,36 +47,28 @@ RDEPEND+="
 	x11-misc/xdg-utils
 	virtual/ttf-fonts"
 
+S=${ESVN_STORE_DIR}/${PN}/src
+
 src_unpack() {
-	subversion_src_unpack
-	mv "${S}" "${WORKDIR}"/depot_tools
+	ESVN_RESTRICT="export" subversion_fetch
+	cd "${ESVN_STORE_DIR}"/${PN} || die
 
-	# Most subversion checks and configurations were already run
-	EGCLIENT="${WORKDIR}"/depot_tools/gclient
-	cd "${ESVN_STORE_DIR}" || die "gclient: can't chdir to ${ESVN_STORE_DIR}"
+	local EGCLIENT=${ESVN_STORE_DIR}/${PN}/depot_tools/gclient
+	[[ -f .gclient ]] || ${EGCLIENT} config "${EGCLIENT_REPO_URI}" || die
 
-	if [[ ! -d ${PN} ]]; then
-		mkdir -p "${PN}" || die "gclient: can't mkdir ${PN}."
+	if [[ -d "${S}" ]]; then
+		ebegin "gclient revert"
+		${EGCLIENT} revert --nohooks || die
+		eend
 	fi
 
-	cd "${PN}" || die "gclient: can't chdir to ${PN}"
-
-	if [[ ! -f .gclient ]]; then
-		einfo "gclient config -->"
-		${EGCLIENT} config ${EGCLIENT_REPO_URI} || die "gclient: error creating config"
-	fi
-
-	einfo "gclient sync start -->"
-	einfo "     repository: ${EGCLIENT_REPO_URI}"
-	${EGCLIENT} revert --nohooks || die "gclient: revert failed"
-	${EGCLIENT} sync --nohooks || die "gclient: can't fetch to ${PN} from ${EGCLIENT_REPO_URI}."
-	einfo "   working copy: ${ESVN_STORE_DIR}/${PN}"
-
-	S="${ESVN_STORE_DIR}/${PN}/src"
+	ebegin "gclient sync"
+	${EGCLIENT} sync --nohooks || die
+	eend
 
 	# Display correct svn revision in about box, and log new version
-	CREV=$(subversion__svn_info "src" "Revision")
-	echo ${CREV} > "${S}"/build/LASTCHANGE.in || die "setting revision failed"
+	CREV=$(subversion__svn_info "${S}" "Revision")
+	echo ${CREV} > "${S}"/build/LASTCHANGE.in || die
 	. src/chrome/VERSION
 	elog "Installing/updating to version ${MAJOR}.${MINOR}.${BUILD}.${PATCH}_p${CREV} "
 }
