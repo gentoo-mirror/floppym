@@ -92,7 +92,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-plugins-path-r0.patch
 
 	# Make compile-time dependency on gnome-keyring optional, bug #332411.
-	epatch "${FILESDIR}"/${PN}-gnome-keyring-r0.patch
+	#epatch "${FILESDIR}"/${PN}-gnome-keyring-r0.patch
 }
 
 src_configure() {
