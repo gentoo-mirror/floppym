@@ -90,9 +90,6 @@ pkg_setup() {
 src_prepare() {
 	# Add Gentoo plugin paths.
 	epatch "${FILESDIR}"/${PN}-plugins-path-r0.patch
-
-	# Make compile-time dependency on gnome-keyring optional, bug #332411.
-	#epatch "${FILESDIR}"/${PN}-gnome-keyring-r0.patch
 }
 
 src_configure() {
