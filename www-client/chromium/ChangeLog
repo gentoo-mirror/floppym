@@ -2,6 +2,10 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  20 Sep 2010; Mike Gilbert <floppymaster@gmail.com>
+  files/chromium-launcher.sh:
+  Enable password-store
+
   19 Sep 2010; Mike Gilbert <floppymaster@gmail.com> chromium-9999.ebuild:
   Disable gnome-keyring patch since it fails to apply
 
