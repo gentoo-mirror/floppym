@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.83 2010/09/14 14:08:22 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.84 2010/09/20 12:14:04 phajdan.jr Exp $
 
 EAPI="2"
 
@@ -68,7 +68,7 @@ src_unpack() {
 
 	# Display correct svn revision in about box, and log new version
 	CREV=$(subversion__svn_info "${S}" "Revision")
-	echo ${CREV} > "${S}"/build/LASTCHANGE.in || die
+	echo ${CREV} > "${S}"/build/LASTCHANGE.in || die "setting revision failed"
 	. src/chrome/VERSION
 	elog "Installing/updating to version ${MAJOR}.${MINOR}.${BUILD}.${PATCH}_p${CREV} "
 }
