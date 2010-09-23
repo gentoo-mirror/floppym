@@ -2,6 +2,9 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  23 Sep 2010; Mike Gilbert <floppymaster@gmail.com> chromium-9999.ebuild:
+  Merge gentoo 1.85
+
   20 Sep 2010; Mike Gilbert <floppymaster@gmail.com>
   files/chromium-launcher.sh:
   Enable password-store
