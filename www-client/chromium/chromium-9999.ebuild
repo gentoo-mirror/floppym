@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.85 2010/09/22 08:33:24 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.87 2010/10/01 08:34:59 phajdan.jr Exp $
 
 EAPI="2"
 
@@ -15,9 +15,10 @@ EGCLIENT_REPO_URI="http://src.chromium.org/svn/trunk/src/"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS=""
-IUSE="cups gnome gnome-keyring"
+IUSE="cups gnome gnome-keyring system-sqlite"
 
 RDEPEND="app-arch/bzip2
+	system-sqlite? ( >=dev-db/sqlite-3.6.23.1[fts3,secure-delete] )
 	>=dev-libs/icu-4.4.1
 	>=dev-libs/libevent-1.4.13
 	dev-libs/libxml2
@@ -58,16 +59,20 @@ src_unpack() {
 	local EGCLIENT=${ESVN_STORE_DIR}/${PN}/depot_tools/gclient
 	[[ -f .gclient ]] || ${EGCLIENT} config "${EGCLIENT_REPO_URI}" || die
 
-	if [[ -d "${S}" ]]; then
-		einfo "gclient revert"
-		${EGCLIENT} revert --nohooks || die
-	fi
+	einfo "Reverting patched files"
+	svn revert src/webkit/glue/plugins/plugin_list_posix.cc \
+		src/third_party/sqlite/sqlite3.h \
+		src/third_party/sqlite/sqlite.gyp \
+		src/chrome/chrome.gyp
+	rm -f src/third_party/sqlite/stubs.cc
 
-	einfo "gclient sync"
+	einfo "gclient sync start -->"
+	einfo "     repository: ${EGCLIENT_REPO_URI}"
 	${EGCLIENT} sync --nohooks || die
+	einfo "   working copy: ${ESVN_STORE_DIR}/${PN}"
 
 	# Display correct svn revision in about box, and log new version
-	CREV=$(subversion__svn_info "${S}" "Revision")
+	CREV=$(subversion__svn_info "src" "Revision")
 	echo ${CREV} > "${S}"/build/LASTCHANGE.in || die "setting revision failed"
 	. src/chrome/VERSION
 	elog "Installing/updating to version ${MAJOR}.${MINOR}.${BUILD}.${PATCH}_p${CREV} "
@@ -90,6 +95,10 @@ pkg_setup() {
 src_prepare() {
 	# Add Gentoo plugin paths.
 	epatch "${FILESDIR}"/${PN}-plugins-path-r0.patch
+
+	# Small fixes to the system-provided sqlite support,
+	# to be upstreamed.
+	epatch "${FILESDIR}"/${PN}-system-sqlite-r0.patch
 }
 
 src_configure() {
@@ -100,7 +109,6 @@ src_configure() {
 	myconf+=" -Ddisable_sse2=1"
 
 	# Use system-provided libraries.
-	# TODO: use_system_sqlite (http://crbug.com/22208).
 	# TODO: use_system_hunspell (upstream changes needed).
 	# TODO: use_system_ssl when we have a recent enough system NSS.
 	myconf+="
@@ -115,6 +123,10 @@ src_configure() {
 
 	# The system-provided ffmpeg supports more codecs. Enable them in chromium.
 	myconf="${myconf} -Dproprietary_codecs=1"
+
+	if use system-sqlite; then
+		myconf+=" -Duse_system_sqlite=1"
+	fi
 
 	# The dependency on cups is optional, see bug #324105.
 	if use cups; then
@@ -135,10 +147,6 @@ src_configure() {
 	myconf+="
 		-Dlinux_sandbox_path=${CHROMIUM_HOME}/chrome_sandbox
 		-Dlinux_sandbox_chrome_path=${CHROMIUM_HOME}/chrome"
-
-	# Disable tcmalloc memory allocator. It causes problems,
-	# for example bug #320419.
-	myconf+=" -Dlinux_use_tcmalloc=0"
 
 	# Use target arch detection logic from bug #296917.
 	local myarch="$ABI"
@@ -172,16 +180,11 @@ src_configure() {
 	# the build to fail because of that.
 	myconf+=" -Dwerror="
 
-	build/gyp_chromium -f make build/all.gyp ${myconf} --depth=. || die
+	build/gyp_chromium --depth=. ${myconf} || die
 }
 
 src_compile() {
-	emake -r V=1 chrome chrome_sandbox BUILDTYPE=Release \
-		CC="$(tc-getCC)" \
-		CXX="$(tc-getCXX)" \
-		AR="$(tc-getAR)" \
-		RANLIB="$(tc-getRANLIB)" \
-		|| die
+	emake chrome chrome_sandbox BUILDTYPE=Release V=1 || die
 }
 
 src_install() {
