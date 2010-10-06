@@ -58,7 +58,7 @@ src_unpack() {
 	ESVN_RESTRICT="export" subversion_fetch
 
 	# Most subversion checks and configurations were already run
-	EGCLIENT="${WORKDIR}"/depot_tools/gclient
+	EGCLIENT="${ESVN_STORE_DIR}"/${PN}/depot_tools/gclient
 	cd "${ESVN_STORE_DIR}"/${PN} || die
 
 	if [[ ! -f .gclient ]]; then
