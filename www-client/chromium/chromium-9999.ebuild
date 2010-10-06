@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.87 2010/10/01 08:34:59 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.90 2010/10/05 14:51:39 phajdan.jr Exp $
 
 EAPI="2"
 
@@ -18,12 +18,14 @@ KEYWORDS=""
 IUSE="cups gnome gnome-keyring system-sqlite"
 
 RDEPEND="app-arch/bzip2
-	system-sqlite? ( >=dev-db/sqlite-3.6.23.1[fts3,secure-delete] )
+	system-sqlite? (
+		>=dev-db/sqlite-3.6.23.1[fts3,icu,secure-delete,threadsafe]
+	)
 	>=dev-libs/icu-4.4.1
 	>=dev-libs/libevent-1.4.13
 	dev-libs/libxml2
 	dev-libs/libxslt
-	>=dev-libs/nss-3.12.3
+	>=dev-libs/nss-3.12.8
 	>=gnome-base/gconf-2.24.0
 	gnome-keyring? ( >=gnome-base/gnome-keyring-2.28.2 )
 	>=media-libs/alsa-lib-1.0.19
@@ -54,17 +56,15 @@ S=${ESVN_STORE_DIR}/${PN}/src
 
 src_unpack() {
 	ESVN_RESTRICT="export" subversion_fetch
+
+	# Most subversion checks and configurations were already run
+	EGCLIENT="${WORKDIR}"/depot_tools/gclient
 	cd "${ESVN_STORE_DIR}"/${PN} || die
 
-	local EGCLIENT=${ESVN_STORE_DIR}/${PN}/depot_tools/gclient
-	[[ -f .gclient ]] || ${EGCLIENT} config "${EGCLIENT_REPO_URI}" || die
-
-	einfo "Reverting patched files"
-	svn revert src/webkit/glue/plugins/plugin_list_posix.cc \
-		src/third_party/sqlite/sqlite3.h \
-		src/third_party/sqlite/sqlite.gyp \
-		src/chrome/chrome.gyp
-	rm -f src/third_party/sqlite/stubs.cc
+	if [[ ! -f .gclient ]]; then
+		einfo "gclient config -->"
+		${EGCLIENT} config ${EGCLIENT_REPO_URI} || die "gclient: error creating config"
+	fi
 
 	einfo "gclient sync start -->"
 	einfo "     repository: ${EGCLIENT_REPO_URI}"
@@ -93,12 +93,9 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Add Gentoo plugin paths.
-	epatch "${FILESDIR}"/${PN}-plugins-path-r0.patch
-
-	# Small fixes to the system-provided sqlite support,
-	# to be upstreamed.
-	epatch "${FILESDIR}"/${PN}-system-sqlite-r0.patch
+	# Allow us to build with system SSL support,
+	# see http://crbug.com/57275.
+	epatch "${FILESDIR}"/${PN}-system-ssl-r0.patch
 }
 
 src_configure() {
@@ -110,7 +107,6 @@ src_configure() {
 
 	# Use system-provided libraries.
 	# TODO: use_system_hunspell (upstream changes needed).
-	# TODO: use_system_ssl when we have a recent enough system NSS.
 	myconf+="
 		-Duse_system_bzip2=1
 		-Duse_system_ffmpeg=1
@@ -119,6 +115,7 @@ src_configure() {
 		-Duse_system_libjpeg=1
 		-Duse_system_libpng=1
 		-Duse_system_libxml=1
+		-Duse_system_ssl=1
 		-Duse_system_zlib=1"
 
 	# The system-provided ffmpeg supports more codecs. Enable them in chromium.
@@ -147,6 +144,12 @@ src_configure() {
 	myconf+="
 		-Dlinux_sandbox_path=${CHROMIUM_HOME}/chrome_sandbox
 		-Dlinux_sandbox_chrome_path=${CHROMIUM_HOME}/chrome"
+
+	if host-is-pax; then
+		# Prevent the build from failing (bug #301880). The performance
+		# difference is very small.
+		myconf+=" -Dv8_use_snapshot=0"
+	fi
 
 	# Use target arch detection logic from bug #296917.
 	local myarch="$ABI"
