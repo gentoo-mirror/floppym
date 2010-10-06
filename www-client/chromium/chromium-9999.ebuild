@@ -66,6 +66,9 @@ src_unpack() {
 		${EGCLIENT} config ${EGCLIENT_REPO_URI} || die "gclient: error creating config"
 	fi
 
+	einfo "Reverting patches"
+	svn revert src/net/socket/ssl_client_socket_nss.cc
+
 	einfo "gclient sync start -->"
 	einfo "     repository: ${EGCLIENT_REPO_URI}"
 	${EGCLIENT} sync --nohooks || die
