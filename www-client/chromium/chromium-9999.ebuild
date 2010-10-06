@@ -66,9 +66,6 @@ src_unpack() {
 		${EGCLIENT} config ${EGCLIENT_REPO_URI} || die "gclient: error creating config"
 	fi
 
-	einfo "Reverting patches"
-	svn revert src/net/socket/ssl_client_socket_nss.cc
-
 	einfo "gclient sync start -->"
 	einfo "     repository: ${EGCLIENT_REPO_URI}"
 	${EGCLIENT} sync --nohooks || die
@@ -95,12 +92,6 @@ pkg_setup() {
 	CHROMIUM_HOME="/usr/$(get_libdir)/chromium-browser"
 }
 
-src_prepare() {
-	# Allow us to build with system SSL support,
-	# see http://crbug.com/57275.
-	epatch "${FILESDIR}"/${PN}-system-ssl-r0.patch
-}
-
 src_configure() {
 	local myconf=""
 
@@ -118,7 +109,6 @@ src_configure() {
 		-Duse_system_libjpeg=1
 		-Duse_system_libpng=1
 		-Duse_system_libxml=1
-		-Duse_system_ssl=1
 		-Duse_system_zlib=1"
 
 	# The system-provided ffmpeg supports more codecs. Enable them in chromium.
