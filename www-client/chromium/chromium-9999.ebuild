@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.90 2010/10/05 14:51:39 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.92 2010/10/07 15:20:09 phajdan.jr Exp $
 
 EAPI="2"
 
@@ -25,7 +25,7 @@ RDEPEND="app-arch/bzip2
 	>=dev-libs/libevent-1.4.13
 	dev-libs/libxml2
 	dev-libs/libxslt
-	>=dev-libs/nss-3.12.8
+	>=dev-libs/nss-3.12.3
 	>=gnome-base/gconf-2.24.0
 	gnome-keyring? ( >=gnome-base/gnome-keyring-2.28.2 )
 	>=media-libs/alsa-lib-1.0.19
@@ -66,6 +66,9 @@ src_unpack() {
 		${EGCLIENT} config ${EGCLIENT_REPO_URI} || die "gclient: error creating config"
 	fi
 
+	einfo "Reverting patches"
+	svn revert src/webkit/glue/plugins/pepper_private.cc
+
 	einfo "gclient sync start -->"
 	einfo "     repository: ${EGCLIENT_REPO_URI}"
 	${EGCLIENT} sync --nohooks || die
@@ -92,6 +95,12 @@ pkg_setup() {
 	CHROMIUM_HOME="/usr/$(get_libdir)/chromium-browser"
 }
 
+src_prepare() {
+	# Small fix to the system-provided icu support,
+	# to be upstreamed.
+	epatch "${FILESDIR}"/${PN}-system-icu-r0.patch
+}
+
 src_configure() {
 	local myconf=""
 
@@ -101,6 +110,7 @@ src_configure() {
 
 	# Use system-provided libraries.
 	# TODO: use_system_hunspell (upstream changes needed).
+	# TODO: use_system_ssl (need to consult upstream).
 	myconf+="
 		-Duse_system_bzip2=1
 		-Duse_system_ffmpeg=1
