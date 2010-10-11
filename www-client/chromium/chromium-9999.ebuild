@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.92 2010/10/07 15:20:09 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.94 2010/10/11 09:40:37 phajdan.jr Exp $
 
 EAPI="2"
 
@@ -15,7 +15,7 @@ EGCLIENT_REPO_URI="http://src.chromium.org/svn/trunk/src/"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS=""
-IUSE="cups gnome gnome-keyring system-sqlite"
+IUSE="cups +gecko-mediaplayer gnome gnome-keyring system-sqlite"
 
 RDEPEND="app-arch/bzip2
 	system-sqlite? (
@@ -31,7 +31,7 @@ RDEPEND="app-arch/bzip2
 	>=media-libs/alsa-lib-1.0.19
 	media-libs/jpeg:0
 	media-libs/libpng
-	>=media-video/ffmpeg-9999[threads]
+	>=media-video/ffmpeg-0.6_p25423[threads]
 	cups? ( >=net-print/cups-1.4.4 )
 	sys-libs/zlib
 	>=x11-libs/gtk+-2.14.7
@@ -50,7 +50,8 @@ RDEPEND+="
 	)
 	x11-apps/xmessage
 	x11-misc/xdg-utils
-	virtual/ttf-fonts"
+	virtual/ttf-fonts
+	gecko-mediaplayer? ( !www-plugins/gecko-mediaplayer[gnome] )"
 
 S=${ESVN_STORE_DIR}/${PN}/src
 
@@ -65,6 +66,9 @@ src_unpack() {
 		einfo "gclient config -->"
 		${EGCLIENT} config ${EGCLIENT_REPO_URI} || die "gclient: error creating config"
 	fi
+
+	einfo "Reverting patches"
+	svn revert src/webkit/glue/plugins/plugin_list_posix.cc
 
 	einfo "gclient sync start -->"
 	einfo "     repository: ${EGCLIENT_REPO_URI}"
@@ -92,6 +96,11 @@ pkg_setup() {
 	CHROMIUM_HOME="/usr/$(get_libdir)/chromium-browser"
 }
 
+src_prepare() {
+	# Enable optional support for gecko-mediaplayer.
+	epatch "${FILESDIR}"/${PN}-gecko-mediaplayer-r0.patch
+}
+
 src_configure() {
 	local myconf=""
 
@@ -111,9 +120,6 @@ src_configure() {
 		-Duse_system_libpng=1
 		-Duse_system_libxml=1
 		-Duse_system_zlib=1"
-
-	# The system-provided ffmpeg supports more codecs. Enable them in chromium.
-	myconf="${myconf} -Dproprietary_codecs=1"
 
 	if use system-sqlite; then
 		myconf+=" -Duse_system_sqlite=1"
@@ -144,6 +150,18 @@ src_configure() {
 		# difference is very small.
 		myconf+=" -Dv8_use_snapshot=0"
 	fi
+
+	if use gecko-mediaplayer; then
+		# Disable hardcoded blacklist for gecko-mediaplayer.
+		# When www-plugins/gecko-mediaplayer is compiled with USE=gnome, it causes
+		# the browser to hang. We can handle the situation via dependencies,
+		# thus making it possible to use gecko-mediaplayer.
+		append-flags -DGENTOO_CHROMIUM_ENABLE_GECKO_MEDIAPLAYER
+	fi
+
+	# Our system ffmpeg should support more codecs than the bundled one
+	# for Chromium.
+	myconf+=" -Dproprietary_codecs=1"
 
 	# Use target arch detection logic from bug #296917.
 	local myarch="$ABI"
