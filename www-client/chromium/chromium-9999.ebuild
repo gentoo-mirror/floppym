@@ -66,9 +66,6 @@ src_unpack() {
 		${EGCLIENT} config ${EGCLIENT_REPO_URI} || die "gclient: error creating config"
 	fi
 
-	einfo "Reverting patches"
-	svn revert src/webkit/glue/plugins/pepper_private.cc
-
 	einfo "gclient sync start -->"
 	einfo "     repository: ${EGCLIENT_REPO_URI}"
 	${EGCLIENT} sync --nohooks || die
@@ -93,12 +90,6 @@ remove_bundled_lib() {
 
 pkg_setup() {
 	CHROMIUM_HOME="/usr/$(get_libdir)/chromium-browser"
-}
-
-src_prepare() {
-	# Small fix to the system-provided icu support,
-	# to be upstreamed.
-	epatch "${FILESDIR}"/${PN}-system-icu-r0.patch
 }
 
 src_configure() {
