@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.94 2010/10/11 09:40:37 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999.ebuild,v 1.95 2010/10/13 14:13:33 phajdan.jr Exp $
 
 EAPI="2"
 
@@ -68,7 +68,8 @@ src_unpack() {
 	fi
 
 	einfo "Reverting patches"
-	svn revert src/webkit/glue/plugins/plugin_list_posix.cc
+	svn revert src/webkit/glue/plugins/plugin_list_posix.cc \
+		src/webkit/glue/plugins/pepper_private.cc
 
 	einfo "gclient sync start -->"
 	einfo "     repository: ${EGCLIENT_REPO_URI}"
@@ -97,6 +98,10 @@ pkg_setup() {
 }
 
 src_prepare() {
+	# Small fix to the system-provided icu support,
+	# to be upstreamed.
+	epatch "${FILESDIR}"/${PN}-system-icu-r1.patch
+
 	# Enable optional support for gecko-mediaplayer.
 	epatch "${FILESDIR}"/${PN}-gecko-mediaplayer-r0.patch
 }
