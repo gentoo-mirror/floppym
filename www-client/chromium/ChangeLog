@@ -2,6 +2,9 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  19 Oct 2010; Mike Gilbert <floppym@gentoo.org> chromium-9999.ebuild:
+  Merge gentoo 1.96
+
   14 Oct 2010; Mike Gilbert <floppymaster@gmail.com>
   +files/chromium-system-icu-r1.patch, chromium-9999.ebuild:
   Merge gentoo 1.95
