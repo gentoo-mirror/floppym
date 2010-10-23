@@ -68,8 +68,7 @@ src_unpack() {
 	fi
 
 	einfo "Reverting patches"
-	svn revert src/webkit/glue/plugins/plugin_list_posix.cc \
-		src/webkit/glue/plugins/pepper_private.cc
+	svn revert src/webkit/glue/plugins/plugin_list_posix.cc
 
 	einfo "gclient sync start -->"
 	einfo "     repository: ${EGCLIENT_REPO_URI}"
@@ -101,10 +100,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Small fix to the system-provided icu support,
-	# to be upstreamed.
-	epatch "${FILESDIR}"/${PN}-system-icu-r1.patch
-
 	# Enable optional support for gecko-mediaplayer.
 	epatch "${FILESDIR}"/${PN}-gecko-mediaplayer-r0.patch
 }
