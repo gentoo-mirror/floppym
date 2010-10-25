@@ -30,7 +30,8 @@ DEPEND="
 	libsamplerate? ( media-libs/libsamplerate )
 	cups? ( net-print/cups )
 	iconv? ( virtual/libiconv )"
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	x11-apps/setxkbmap"
 
 DOCS=( AUTHORS ChangeLog NEWS README )
 
