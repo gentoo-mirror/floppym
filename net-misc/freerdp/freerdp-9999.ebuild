@@ -21,7 +21,7 @@ IUSE="alsa cups debug gnutls iconv ipv6 largefile libsamplerate nss polarssl \
 ssl X"
 
 DEPEND="
-	x11-libs/libX11
+	X? ( x11-libs/libX11 )
 	ssl? ( >=dev-libs/openssl-0.9.8a )
 	nss? ( dev-libs/nss )
 	gnutls? ( >=net-libs/gnutls-2.10.1 )
@@ -31,7 +31,7 @@ DEPEND="
 	cups? ( net-print/cups )
 	iconv? ( virtual/libiconv )"
 RDEPEND="${DEPEND}
-	x11-apps/setxkbmap"
+	X? ( x11-apps/setxkbmap )"
 
 DOCS=( AUTHORS ChangeLog NEWS README )
 
