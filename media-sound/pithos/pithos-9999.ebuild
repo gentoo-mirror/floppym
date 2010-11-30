@@ -4,7 +4,7 @@
 
 EAPI="3"
 PYTHON_DEPEND="2"
-SUPPORT_PYTHON_ABIS="1"
+#SUPPORT_PYTHON_ABIS="1"
 PYTHON_USE_WITH="tk"
 inherit distutils bzr eutils
 
@@ -41,6 +41,6 @@ src_compile() {
 }
 
 src_install() {
-	distutils_src_install --prefix="${EPREFIX}/usr"
+	distutils_src_install
 	dodoc CHANGELOG
 }
