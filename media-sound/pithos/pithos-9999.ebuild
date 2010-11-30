@@ -41,6 +41,6 @@ src_compile() {
 }
 
 src_install() {
-	distutils_src_install
+	distutils_src_install --prefix="${EPREFIX}/usr"
 	dodoc CHANGELOG
 }
