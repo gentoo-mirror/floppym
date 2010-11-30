@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="3"
 PYTHON_DEPEND="2"
 SUPPORT_PYTHON_ABIS="1"
 PYTHON_USE_WITH="tk"
@@ -32,11 +32,6 @@ RDEPEND="dev-python/python-distutils-extra
 
 DEPEND="${RDEPEND}"
 RESTRICT_PYTHON_ABIS="3.*"
-
-src_prepare() {
-	# Patch pithos_data_directory location to /usr/share/pithos/
-	epatch "${FILESDIR}"/pithosconfig-set-data-dir.patch
-}
 
 src_compile() {
 	# Make a gstreamer registry place holder so it does not fail to access the /root gstreamer registry
