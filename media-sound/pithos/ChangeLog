@@ -1,0 +1,10 @@
+# ChangeLog for media-sound/pithos
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*pithos-9999 (30 Nov 2010)
+
+  30 Nov 2010; Mike Gilbert <floppymaster@gmail.com> +pithos-9999.ebuild,
+  +files/pithosconfig-set-data-dir.patch, +metadata.xml:
+  New package
+
