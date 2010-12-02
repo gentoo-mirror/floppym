@@ -2,6 +2,9 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+  02 Dec 2010; Mike Gilbert <floppymaster@gmail.com> -freerdp-0.8.0.ebuild:
+  Remove 0.8.0
+
 *freerdp-0.8.0 (25 Oct 2010)
 
   25 Oct 2010; Mike Gilbert <floppymaster@gmail.com> -freerdp-0.7.4.ebuild,
