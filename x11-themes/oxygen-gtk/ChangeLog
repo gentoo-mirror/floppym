@@ -1,0 +1,10 @@
+# ChangeLog for x11-themes/oxygen-gtk
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*oxygen-gtk-9999 (12 Dec 2010)
+
+  12 Dec 2010; Mike Gilbert <floppymaster@gmail.com> +oxygen-gtk-9999.ebuild,
+  +metadata.xml:
+  New package x11-themes/oxygen-gtk by Ben Morris (BCMM).
+
