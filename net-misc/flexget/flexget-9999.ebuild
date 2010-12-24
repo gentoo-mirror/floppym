@@ -29,7 +29,9 @@ RDEPEND="dev-python/setuptools
 	dev-python/pygooglechart
 	dev-python/pyrss2gen
 	dev-python/pynzb
-	dev-python/progressbar"
+	dev-python/progressbar
+	dev-python/flask
+	dev-python/cherrypy"
 
 DEPEND="${RDPEEND}
 	dev-python/paver
