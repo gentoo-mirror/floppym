@@ -4,7 +4,7 @@
 
 EAPI=3
 
-SUPPORT_PYTHON_ABIS="1"
+SUPPORT_PYTHON_ABIS=1
 
 inherit distutils
 
@@ -28,5 +28,5 @@ PYTHON_MODNAME="${MY_PN}.py"
 S="${WORKDIR}/${MY_P}"
 
 src_prepare() {
-	rm -v "example.py" "test.py"
+	rm -f example.py test.py
 }
