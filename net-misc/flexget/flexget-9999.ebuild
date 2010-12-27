@@ -7,18 +7,18 @@ EAPI=3
 PYTHON_DEPEND="2"
 SUPPORT_PYTHON_ABIS=1
 RESTRICT_PYTHON_ABIS="3.*"
+DISTUTILS_SRC_TEST="setup.py"
 
 inherit distutils subversion
 
 DESCRIPTION="A multipurpose automation tool for content like torrents, nzbs, podcasts, comics, etc."
 HOMEPAGE="http://flexget.com/"
-
 ESVN_REPO_URI="http://svn.flexget.com/trunk"
 
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS=""
-IUSE=""
+IUSE="test"
 
 RDEPEND="dev-python/setuptools
 	dev-python/feedparser
@@ -32,11 +32,16 @@ RDEPEND="dev-python/setuptools
 	dev-python/progressbar
 	dev-python/flask
 	dev-python/cherrypy"
-
-DEPEND="${RDPEEND}
+DEPEND="${RDEPEND}
 	dev-python/paver
-	>=dev-python/nose-0.11"
+	test? ( >=dev-python/nose-0.11 )"
 
 src_prepare() {
+	# Prevent setup from grabbing nose from pypi
+	sed -e /setup_requires/d -i pavement.py || die
+
+	# Generate setup.py
 	paver generate_setup
+
+	distutils_src_prepare
 }
