@@ -9,7 +9,7 @@ SUPPORT_PYTHON_ABIS=1
 inherit distutils
 
 DESCRIPTION="Unified API for parsing NZB files"
-HOMEPAGE="http://http://pypi.python.org/pypi/pynzb/"
+HOMEPAGE="http://pypi.python.org/pypi/pynzb/"
 SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 
 LICENSE="BSD"
