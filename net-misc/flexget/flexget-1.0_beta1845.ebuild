@@ -12,7 +12,6 @@ DISTUTILS_SRC_TEST="setup.py"
 inherit distutils
 
 MY_P="FlexGet-${PV/_beta/r}"
-
 DESCRIPTION="A multipurpose automation tool for content like torrents, nzbs, podcasts, comics, etc."
 HOMEPAGE="http://flexget.com/"
 SRC_URI="http://download.flexget.com/unstable/${MY_P}.tar.gz"
@@ -22,7 +21,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE="test"
 
-RDEPEND="
+RDEPEND="dev-python/setuptools
 	dev-python/feedparser
 	>dev-python/sqlalchemy-0.5
 	dev-python/pyyaml
@@ -34,7 +33,6 @@ RDEPEND="
 	dev-python/progressbar
 	dev-python/flask
 	dev-python/cherrypy"
-
 DEPEND="${RDEPEND}
 	dev-python/paver
 	test? ( >=dev-python/nose-0.11 )"
@@ -42,7 +40,11 @@ DEPEND="${RDEPEND}
 S=${WORKDIR}/${MY_P}
 
 src_prepare() {
-	rm -f paver-minilib.zip
+	# Prevent setup from grabbing nose from pypi
 	sed -e /setup_requires/d -i pavement.py || die
+
+	# Use system paver for building
+	rm -f paver-minilib.zip
+
 	distutils_src_prepare
 }
