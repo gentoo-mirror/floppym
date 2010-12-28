@@ -8,8 +8,8 @@ SUPPORT_PYTHON_ABIS=1
 
 inherit distutils
 
-MY_PN="PyRSS2Gen"
-MY_P="${MY_PN}-${PV}"
+MY_PN=PyRSS2Gen
+MY_P=${MY_PN}-${PV}
 
 DESCRIPTION="A Python library for generating RSS 2.0 feeds"
 HOMEPAGE="http://www.dalkescientific.com/Python/PyRSS2Gen.html"
@@ -23,10 +23,12 @@ IUSE=""
 DEPEND="dev-python/setuptools"
 RDEPEND=""
 
-PYTHON_MODNAME="${MY_PN}.py"
+PYTHON_MODNAME=${MY_PN}.py
 
-S="${WORKDIR}/${MY_P}"
+S=${WORKDIR}/${MY_P}
+DOCS="example.py"
 
 src_prepare() {
-	rm -f example.py test.py
+	sed -e "s/py_modules = .*/py_modules = ['PyRSS2Gen']/" -i setup.py || die
+	distutils_src_prepare
 }
