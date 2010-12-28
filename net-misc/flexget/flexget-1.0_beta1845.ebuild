@@ -51,7 +51,7 @@ src_prepare() {
 
 	if [[ ${PV} == 9999 ]]; then
 		# Generate setup.py
-		paver generate_setup
+		paver generate_setup || die
 	else
 		# Remove bundled paver
 		rm -f paver-minilib.zip
