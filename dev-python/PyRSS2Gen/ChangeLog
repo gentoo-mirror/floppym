@@ -1,0 +1,16 @@
+# ChangeLog for dev-python/PyRSS2Gen
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*PyRSS2Gen-1.0.0 (29 Dec 2010)
+
+  29 Dec 2010; Mike Gilbert <floppymaster@gmail.com> +PyRSS2Gen-1.0.0.ebuild,
+  +metadata.xml:
+  Rename to match upstream
+
+*pyrss2gen-1.0.0 (02 Sep 2010)
+
+  02 Sep 2010; Mike Gilbert <floppymaster@gmail.com> +pyrss2gen-1.0.0.ebuild,
+  +metadata.xml:
+  Add pyrss2gen
+
