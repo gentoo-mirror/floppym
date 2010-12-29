@@ -6,7 +6,7 @@ EAPI=3
 
 SUPPORT_PYTHON_ABIS=1
 
-inherit distutils
+inherit distutils python
 
 MY_PN=PyRSS2Gen
 MY_P=${MY_PN}-${PV}
@@ -18,17 +18,25 @@ SRC_URI="mirror://pypi/${MY_PN:0:1}/${MY_PN}/${MY_P}.tar.gz"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
+IUSE="test"
 
-DEPEND="dev-python/setuptools"
+DEPEND="dev-python/setuptools
+	test? ( dev-python/feedparser )"
 RDEPEND=""
-
-PYTHON_MODNAME=${MY_PN}.py
 
 S=${WORKDIR}/${MY_P}
 DOCS="example.py"
+PYTHON_MODNAME=${MY_PN}.py
 
 src_prepare() {
-	sed -e "s/py_modules = .*/py_modules = ['PyRSS2Gen']/" -i setup.py || die
+	# Remove extra modules from py_modules
+	sed -e "s/py_modules = .*/py_modules = ['${MY_PN}']/" -i setup.py || die
 	distutils_src_prepare
+}
+
+src_test() {
+	testing() {
+		"$(PYTHON)" test.py
+	}
+	python_execute_function testing
 }
