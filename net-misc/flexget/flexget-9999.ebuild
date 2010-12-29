@@ -27,7 +27,7 @@ HOMEPAGE="http://flexget.com/"
 
 LICENSE="MIT"
 SLOT="0"
-IUSE="test"
+IUSE=""
 
 RDEPEND="dev-python/setuptools
 	dev-python/feedparser
