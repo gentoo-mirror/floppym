@@ -19,7 +19,17 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-DEPEND="dev-python/setuptools"
+DEPEND="dev-python/setuptools
+	test? ( dev-python/PyQrcodec )"
 RDEPEND=""
 
 PYTHON_MODNAME="${PN}.py"
+
+src_test() {
+	testing() {
+		PYTHONPATH="build-${PYTHON_ABI}/lib" "$(PYTHON)" test/test_general.py && \
+		PYTHONPATH="build-${PYTHON_ABI}/lib" "$(PYTHON)" test/test_bugs.py
+	}
+	touch test/__init__.py
+	python_execute_function testing
+}
