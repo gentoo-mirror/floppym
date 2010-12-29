@@ -9,24 +9,15 @@ SUPPORT_PYTHON_ABIS=1
 RESTRICT_PYTHON_ABIS="3.*"
 DISTUTILS_SRC_TEST="setup.py"
 
-inherit distutils
-
-if [[ ${PV} == 9999 ]]; then
-	inherit subversion
-	ESVN_REPO_URI="http://svn.flexget.com/trunk"
-	KEYWORDS=""
-else
-	MY_P="FlexGet-${PV/_beta/r}"
-	SRC_URI="http://download.flexget.com/unstable/${MY_P}.tar.gz"
-	KEYWORDS="~amd64"
-	S=${WORKDIR}/${MY_P}
-fi
+inherit distutils subversion
 
 DESCRIPTION="A multipurpose automation tool for content like torrents, nzbs, podcasts, comics, etc."
 HOMEPAGE="http://flexget.com/"
+ESVN_REPO_URI="http://svn.flexget.com/trunk"
 
 LICENSE="MIT"
 SLOT="0"
+KEYWORDS=""
 IUSE=""
 
 RDEPEND="dev-python/setuptools
@@ -36,7 +27,7 @@ RDEPEND="dev-python/setuptools
 	dev-python/beautifulsoup
 	>=dev-python/html5lib-0.11
 	dev-python/pygooglechart
-	dev-python/pyrss2gen
+	dev-python/PyRSS2Gen
 	dev-python/pynzb
 	dev-python/progressbar
 	dev-python/flask
@@ -49,13 +40,8 @@ src_prepare() {
 	# Prevent setup from grabbing nose from pypi
 	sed -e /setup_requires/d -i pavement.py || die
 
-	if [[ ${PV} == 9999 ]]; then
-		# Generate setup.py
-		paver generate_setup || die
-	else
-		# Remove bundled paver
-		rm -f paver-minilib.zip
-	fi
+	# Generate setup.py
+	paver generate_setup || die
 
 	distutils_src_prepare
 }
