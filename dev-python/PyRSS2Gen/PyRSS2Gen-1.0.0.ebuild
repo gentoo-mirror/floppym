@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI="3"
 
-SUPPORT_PYTHON_ABIS=1
+SUPPORT_PYTHON_ABIS="1"
 
 inherit distutils python
 
@@ -22,11 +22,12 @@ DEPEND="dev-python/setuptools
 RDEPEND=""
 
 DOCS="example.py"
-PYTHON_MODNAME=${PN}.py
+PYTHON_MODNAME="${PN}.py"
 
 src_prepare() {
 	# Remove extra modules from py_modules
 	sed -e "s/py_modules = .*/py_modules = ['${PN}']/" -i setup.py || die
+
 	distutils_src_prepare
 }
 
