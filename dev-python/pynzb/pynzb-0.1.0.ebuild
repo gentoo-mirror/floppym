@@ -4,7 +4,7 @@
 
 EAPI="3"
 
-SUPPORT_PYTHON_ABIS=1
+SUPPORT_PYTHON_ABIS="1"
 
 inherit distutils
 
