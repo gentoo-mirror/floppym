@@ -3,6 +3,9 @@
 # $Header: /var/cvsroot/gentoo-x86/net-libs/rb_libtorrent/rb_libtorrent-0.15.4.ebuild,v 1.6 2010/12/09 19:35:18 xmw Exp $
 
 EAPI="2"
+PYTHON_DEPEND="python? 2:2.4"
+PYTHON_USE_WITH="threads"
+PYTHON_USE_WITH_OPT="python"
 SUPPORT_PYTHON_ABIS="1"
 RESTRICT_PYTHON_ABIS="3.*"
 inherit eutils python versionator
@@ -23,9 +26,7 @@ RESTRICT="test"
 
 DEPEND="|| ( >=dev-libs/boost-1.35
 		( ~dev-libs/boost-1.34.1 dev-cpp/asio ) )
-	python? ( >=dev-libs/boost-1.35.0-r5[python]
-		|| ( dev-lang/python:2.6[threads]
-		dev-lang/python:2.7[threads] ) )
+	python? ( >=dev-libs/boost-1.35.0-r5[python] )
 	>=sys-devel/libtool-2.2
 	sys-libs/zlib
 	examples? ( !net-p2p/mldonkey )
@@ -62,20 +63,20 @@ src_configure() {
 		${BOOST_LIBS}
 
 	# Python bindings are built/tested/installed manually.
-	sed -e "/SUBDIRS =/s/ python//" -i bindings/Makefile || die "sed failed"
+	sed -e "/SUBDIRS =/s/ python//" -i bindings/Makefile || die
 }
 
 src_compile() {
 	default
 
-	if use python; then
+	if use python ; then
 		python_copy_sources bindings/python
 		building() {
 			# Override paths stored in bindings/python-${PYTHON_ABI}/Makefile
 			# files by 'configure'.
 			emake PYTHON="$(PYTHON)" \
 				PYTHON_INCLUDEDIR="$(python_get_includedir)" \
-				PYTHON_LIBDIR="$(python_get_libdir)"
+				PYTHON_LIBDIR="$(python_get_libdir)" || die
 		}
 		python_execute_function -s --source-dir bindings/python building
 	fi
@@ -86,5 +87,14 @@ src_install() {
 	dodoc ChangeLog AUTHORS NEWS README || die 'dodoc failed'
 	if use doc ; then
 		dohtml docs/* || die "Could not install HTML documentation"
+	fi
+	if use python ; then
+		installing() {
+			emake PYTHON="$(PYTHON)" \
+				PYTHON_INCLUDEDIR="$(python_get_includedir)" \
+				PYTHON_LIBDIR="$(python_get_libdir)" \
+				DESTDIR="${D}" install || die
+		}
+		python_execute_function -s --source-dir bindings/python installing
 	fi
 }
