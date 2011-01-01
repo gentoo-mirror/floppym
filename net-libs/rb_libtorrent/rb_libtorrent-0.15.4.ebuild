@@ -3,7 +3,9 @@
 # $Header: /var/cvsroot/gentoo-x86/net-libs/rb_libtorrent/rb_libtorrent-0.15.4.ebuild,v 1.6 2010/12/09 19:35:18 xmw Exp $
 
 EAPI="2"
-inherit eutils versionator
+SUPPORT_PYTHON_ABIS="1"
+RESTRICT_PYTHON_ABIS="3.*"
+inherit eutils python versionator
 
 MY_P=${P/rb_/}
 MY_P=${MY_P/torrent/torrent-rasterbar}
@@ -58,6 +60,25 @@ src_configure() {
 		--with-boost=${BOOST_INC} \
 		--with-boost-libdir=${BOOST_LIB} \
 		${BOOST_LIBS}
+
+	# Python bindings are built/tested/installed manually.
+	sed -e "/SUBDIRS =/s/ python//" -i bindings/Makefile || die "sed failed"
+}
+
+src_compile() {
+	default
+
+	if use python; then
+		python_copy_sources bindings/python
+		building() {
+			# Override paths stored in bindings/python-${PYTHON_ABI}/Makefile
+			# files by 'configure'.
+			emake PYTHON="$(PYTHON)" \
+				PYTHON_INCLUDEDIR="$(python_get_includedir)" \
+				PYTHON_LIBDIR="$(python_get_libdir)"
+		}
+		python_execute_function -s --source-dir bindings/python building
+	fi
 }
 
 src_install() {
