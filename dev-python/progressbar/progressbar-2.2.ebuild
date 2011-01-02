@@ -4,6 +4,7 @@
 
 EAPI="3"
 
+PYTHON_DEPEND="*"
 SUPPORT_PYTHON_ABIS="1"
 
 inherit distutils
@@ -16,8 +17,5 @@ LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
-
-DEPEND=""
-RDEPEND=""
 
 PYTHON_MODNAME="${PN}.py"
