@@ -4,6 +4,10 @@
 
 EAPI="2"
 
+PYTHON_DEPEND="2:2.6"
+SUPPORT_PYTHON_ABIS="1"
+RESTRICT_PYTHON_ABIS="2.4 2.5 3.*"
+
 inherit eutils distutils git flag-o-matic
 
 EGIT_REPO_URI="git://deluge-torrent.org/deluge.git"
@@ -17,14 +21,13 @@ SLOT="0"
 KEYWORDS=""
 IUSE="gtk libnotify webinterface"
 
-DEPEND=">=virtual/python-2.5
+DEPEND="
 	>=net-libs/rb_libtorrent-0.14.9[python]
 	dev-python/setuptools"
 RDEPEND="${DEPEND}
 	dev-python/chardet
 	dev-python/pyopenssl
 	dev-python/pyxdg
-	|| ( >=virtual/python-2.6 dev-python/simplejson )
 	>=dev-python/twisted-8.1
 	>=dev-python/twisted-web-8.1
 	gtk? (
