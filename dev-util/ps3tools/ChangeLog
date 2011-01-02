@@ -1,0 +1,10 @@
+# ChangeLog for dev-util/ps3tools
+# Copyright 1999-2011 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*ps3tools-9999 (02 Jan 2011)
+
+  02 Jan 2011; Mike Gilbert <floppymaster@gmail.com>
+  +files/ps3tools-respect-ldflags.patch, +ps3tools-9999.ebuild, +metadata.xml:
+  New ebuild
+
