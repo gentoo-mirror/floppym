@@ -26,10 +26,17 @@ RDEPEND=""
 PYTHON_MODNAME="${PN}.py"
 
 src_test() {
+	# Tests currently fail, but lets run them anyway.
+
+	# The test scripts import the test.test_base module; need this to get python
+	# to recognize the test module.
+	touch test/__init__.py
+
 	testing() {
+		# python_execute_function will die if this function returns a non-zero
+		# exit status.
 		PYTHONPATH="build-${PYTHON_ABI}/lib" "$(PYTHON)" test/test_general.py && \
 		PYTHONPATH="build-${PYTHON_ABI}/lib" "$(PYTHON)" test/test_bugs.py
 	}
-	touch test/__init__.py
 	python_execute_function testing
 }
