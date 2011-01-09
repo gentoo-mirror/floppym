@@ -18,6 +18,8 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
+RESTRICT="test"
+
 DEPEND="dev-python/setuptools
 	test? ( dev-python/feedparser )"
 RDEPEND=""
@@ -34,7 +36,7 @@ src_prepare() {
 
 src_test() {
 	testing() {
-		"$(PYTHON)" test.py
+		PYTHON_PATH="build-${PYTHON_ABI}/lib" "$(PYTHON)" test.py
 	}
 	python_execute_function testing
 }
