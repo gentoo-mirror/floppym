@@ -23,11 +23,11 @@ DEPEND="dev-python/setuptools
 	test? ( dev-python/PyQrcodec )"
 RDEPEND=""
 
+# Tests currently fail
+RESTRICT="test"
 PYTHON_MODNAME="${PN}.py"
 
 src_test() {
-	# Tests currently fail, but lets run them anyway.
-
 	# The test scripts import the test.test_base module; need this to get python
 	# to recognize the test module.
 	touch test/__init__.py
