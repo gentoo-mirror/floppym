@@ -20,8 +20,7 @@ IUSE="examples"
 
 RESTRICT="test"
 
-DEPEND="dev-python/setuptools
-	test? ( dev-python/feedparser )"
+DEPEND="test? ( dev-python/feedparser )"
 RDEPEND=""
 
 use examples && DOCS="example.py"
