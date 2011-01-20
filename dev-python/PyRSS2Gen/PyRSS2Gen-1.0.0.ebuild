@@ -3,11 +3,10 @@
 # $Header: $
 
 EAPI="3"
-
-PYTHON_DEPEND="*"
+PYTHON_DEPEND="2"
 SUPPORT_PYTHON_ABIS="1"
 
-inherit distutils python
+inherit distutils
 
 DESCRIPTION="RSS feed generator written in Python"
 HOMEPAGE="http://www.dalkescientific.com/Python/PyRSS2Gen.html"
@@ -18,17 +17,13 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="examples"
 
-RESTRICT="test"
+RESTRICT_PYTHON_ABIS="3.*"
 
-DEPEND="test? ( dev-python/feedparser )"
-RDEPEND=""
+src_install() {
+	distutils_src_install
 
-use examples && DOCS="example.py"
-PYTHON_MODNAME="${PN}.py"
-
-src_test() {
-	testing() {
-		PYTHON_PATH="build-${PYTHON_ABI}/lib" "$(PYTHON)" test.py
-	}
-	python_execute_function testing
+	if use examples; then
+		insinto /usr/share/${PF}/examples
+		doins example.py || die
+	fi
 }
