@@ -6,7 +6,6 @@ EAPI="3"
 
 PYTHON_DEPEND="2"
 SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="3.*"
 DISTUTILS_SRC_TEST="setup.py"
 
 inherit distutils
@@ -37,6 +36,7 @@ DEPEND="${RDEPEND}
 	dev-python/paver
 	test? ( >=dev-python/nose-0.11 )"
 
+RESTRICT_PYTHON_ABIS="3.*"
 S="${WORKDIR}/${MY_P}"
 
 src_prepare() {
