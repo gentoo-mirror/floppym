@@ -18,6 +18,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="examples"
 
 RESTRICT_PYTHON_ABIS="3.*"
+PYTHON_MODNAME="${PN}.py"
 
 src_install() {
 	distutils_src_install
