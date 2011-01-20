@@ -24,7 +24,6 @@ src_install() {
 	distutils_src_install
 
 	if use examples; then
-		insinto /usr/share/${PF}/examples
-		doins example.py || die
+		dodoc example.py || die
 	fi
 }
