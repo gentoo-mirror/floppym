@@ -2,6 +2,12 @@
 # Copyright 1999-2011 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+*flexget-1.0_beta1932 (12 Feb 2011)
+
+  12 Feb 2011; Mike Gilbert <floppymaster@gmail.com>
+  +flexget-1.0_beta1932.ebuild:
+  Version bump; fixes webui
+
 *flexget-1.0_beta1900 (31 Jan 2011)
 
   31 Jan 2011; Mike Gilbert <floppymaster@gmail.com>
