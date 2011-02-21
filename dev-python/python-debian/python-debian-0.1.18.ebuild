@@ -37,7 +37,7 @@ src_test() {
 			"$(PYTHON)" "${t}" || return
 		done
 	}
-	cd tests
+	cd tests || die
 	python_execute_function testing
 }
 
@@ -47,7 +47,7 @@ src_install() {
 		local e
 		for e in examples/* ; do
 			docinto "${e}"
-			dodoc "${e}"/*
+			dodoc "${e}"/* || die
 		done
 	fi
 }
