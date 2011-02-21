@@ -19,8 +19,9 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-DEPEND="dev-python/setuptools"
-RDEPEND=""
+RDEPEND="dev-python/chardet"
+DEPEND="${RDEPEND}
+	dev-python/setuptools"
 
 PYTHON_MODNAME="deb822.py debian debian_bundle"
 
