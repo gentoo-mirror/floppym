@@ -17,7 +17,7 @@ SRC_URI="mirror://debian/pool/main/${PN:0:1}/${PN}/${PN}_${PV}.tar.gz"
 LICENSE="GPL-2 GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
+IUSE="examples"
 
 RDEPEND="dev-python/chardet"
 DEPEND="${RDEPEND}
@@ -28,4 +28,26 @@ PYTHON_MODNAME="deb822.py debian debian_bundle"
 src_prepare() {
 	sed -e "s/__CHANGELOG_VERSION__/${PV}/" setup.py.in > setup.py || die
 	distutils_src_prepare
+}
+
+src_test() {
+	testing() {
+		local t
+		for t in test_*.py ; do
+			"$(PYTHON)" "${t}" || return
+		done
+	}
+	cd tests
+	python_execute_function testing
+}
+
+src_install() {
+	distutils_src_install
+	if use examples ; then
+		local e
+		for e in examples/* ; do
+			docinto "${e}"
+			dodoc "${e}"/*
+		done
+	fi
 }
