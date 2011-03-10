@@ -1,8 +1,8 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI="3"
 
 DESCRIPTION="A program for losslessly re-packing MP3 files"
 HOMEPAGE="http://omion.dyndns.org/mp3packer/mp3packer.html"
@@ -18,11 +18,7 @@ DEPEND="${RDEPEND}
 	app-arch/unzip
 	dev-lang/ocaml"
 
-src_unpack() {
-	mkdir -p "${S}" || die
-	cd "${S}" || die
-	unpack ${A} || die
-}
+S="${WORKDIR}"
 
 src_compile() {
 	emake EXE_EXT="" OBJ_EXT=".o" || die
