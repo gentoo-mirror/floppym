@@ -9,7 +9,7 @@ SUPPORT_PYTHON_ABIS="1"
 RESTRICT_PYTHON_ABIS="3.*"
 DISTUTILS_SRC_TEST="setup.py"
 
-inherit base distutils
+inherit distutils eutils
 
 MY_P="FlexGet-${PV/_beta/r}"
 DESCRIPTION="A multipurpose automation tool for content like torrents, nzbs, podcasts, comics, etc."
@@ -36,7 +36,6 @@ DEPEND="${RDEPEND}
 	dev-python/paver
 	test? ( >=dev-python/nose-0.11 )"
 
-PATCHES=("${FILESDIR}/flexget-deluge-import.patch")
 S="${WORKDIR}/${MY_P}"
 
 src_prepare() {
@@ -46,7 +45,10 @@ src_prepare() {
 	# Remove bundled paver
 	rm paver-minilib.zip || die
 
-	base_src_prepare
+	# Fix upstream issue http://flexget.com/ticket/1001
+	epatch "${FILESDIR}/flexget-deluge-import.patch"
+
+	epatch_user
 	distutils_src_prepare
 }
 

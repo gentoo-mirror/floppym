@@ -9,7 +9,7 @@ SUPPORT_PYTHON_ABIS="1"
 RESTRICT_PYTHON_ABIS="3.*"
 DISTUTILS_SRC_TEST="setup.py"
 
-inherit base distutils subversion
+inherit distutils eutils subversion
 
 DESCRIPTION="A multipurpose automation tool for content like torrents, nzbs, podcasts, comics, etc."
 HOMEPAGE="http://flexget.com/"
@@ -35,8 +35,6 @@ DEPEND="${RDEPEND}
 	dev-python/paver
 	test? ( >=dev-python/nose-0.11 )"
 
-PATCHES=("${FILESDIR}/flexget-deluge-import.patch")
-
 src_prepare() {
 	# Prevent setup from grabbing nose from pypi
 	sed -e /setup_requires/d -i pavement.py || die
@@ -44,7 +42,10 @@ src_prepare() {
 	# Generate setup.py
 	paver generate_setup || die
 
-	base_src_prepare
+	# Fix upstream issue http://flexget.com/ticket/1001
+	epatch "${FILESDIR}/flexget-deluge-import.patch"
+
+	epatch_user
 	distutils_src_prepare
 }
 
