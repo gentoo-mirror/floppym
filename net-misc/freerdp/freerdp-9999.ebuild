@@ -8,7 +8,7 @@ EGIT_BOOTSTRAP="eautoreconf"
 
 inherit autotools base git
 
-EGIT_REPO_URI="git://${PN}.git.sourceforge.net/gitroot/${PN}/${PN}"
+EGIT_REPO_URI="git://github.com/FreeRDP/FreeRDP.git"
 
 DESCRIPTION="A Remote Desktop Protocol Client, forked from rdesktop"
 HOMEPAGE="http://www.freerdp.com/"
