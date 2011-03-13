@@ -45,9 +45,6 @@ src_prepare() {
 	# Remove bundled paver
 	rm paver-minilib.zip || die
 
-	# Fix upstream issue http://flexget.com/ticket/1001
-	epatch "${FILESDIR}/flexget-deluge-import.patch"
-
 	epatch_user
 	distutils_src_prepare
 }

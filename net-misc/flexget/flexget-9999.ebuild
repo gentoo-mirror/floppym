@@ -42,9 +42,6 @@ src_prepare() {
 	# Generate setup.py
 	paver generate_setup || die
 
-	# Fix upstream issue http://flexget.com/ticket/1001
-	epatch "${FILESDIR}/flexget-deluge-import.patch"
-
 	epatch_user
 	distutils_src_prepare
 }
