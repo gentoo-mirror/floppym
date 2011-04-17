@@ -17,8 +17,7 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="alsa cups debug gnutls iconv ipv6 libsamplerate nss polarssl \
-ssl X"
+IUSE="alsa cups debug gnutls iconv ipv6 nss polarssl ssl X"
 
 DEPEND="
 	X? ( x11-libs/libX11 )
@@ -27,7 +26,6 @@ DEPEND="
 	gnutls? ( >=net-libs/gnutls-2.10.1 )
 	polarssl? ( >=net-libs/polarssl-0.14.0 )
 	alsa? ( media-libs/alsa-lib )
-	libsamplerate? ( media-libs/libsamplerate )
 	cups? ( net-print/cups )
 	iconv? ( virtual/libiconv )"
 RDEPEND="${DEPEND}
@@ -84,10 +82,8 @@ src_configure() {
 		$(use_with debug debug-rdp5) \
 		$(use_with debug debug-serial) \
 		$(use_with debug debug-sound) \
-		$(use_with alsa sound alsa) \
 		$(use_with cups printer cups) \
 		$(use_enable iconv) \
 		$(use_enable ipv6) \
-		$(use_with libsamplerate) \
 		$(use_with X x)
 }
