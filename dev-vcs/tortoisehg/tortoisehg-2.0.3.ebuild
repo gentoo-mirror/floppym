@@ -22,6 +22,7 @@ IUSE="doc nautilus"
 
 RDEPEND="
 	>=dev-python/iniparse-0.4
+	dev-python/pygments
 	dev-python/PyQt4
 	dev-python/qscintilla-python
 	>=dev-vcs/mercurial-1.8
