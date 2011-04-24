@@ -6,7 +6,6 @@ EAPI="2"
 
 SUPPORT_PYTHON_ABIS="1"
 PYTHON_DEPEND="2:2.5"
-#RESTRICT_PYTHON_ABIS="2.[45] 3.*"
 RESTRICT_PYTHON_ABIS="2.4 3.*"
 
 inherit distutils
@@ -21,7 +20,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="doc nautilus"
 
 RDEPEND="
-	>=dev-python/iniparse-0.4
+	dev-python/iniparse
 	dev-python/pygments
 	dev-python/PyQt4
 	dev-python/qscintilla-python
@@ -29,6 +28,12 @@ RDEPEND="
 	nautilus? ( dev-python/nautilus-python )"
 DEPEND="${RDEPEND}
 	doc? ( >=dev-python/sphinx-1.0.3 )"
+
+src_prepare() {
+	# make the install respect multilib.
+	sed -i -e "s:lib/nautilus:$(get_libdir)/nautilus:" setup.py || die
+	distutils_src_prepare
+}
 
 src_compile() {
 	distutils_src_compile
@@ -39,9 +44,6 @@ src_compile() {
 }
 
 src_install() {
-	# make the install respect multilib.
-	sed -i -e "s:lib/nautilus/extensions-2.0/python:$(get_libdir)/nautilus/extensions-2.0/python:" setup.py || die
-
 	distutils_src_install
 	dodoc doc/ReadMe*.txt doc/TODO || die
 
@@ -50,7 +52,7 @@ src_install() {
 	fi
 
 	if ! use nautilus; then
-		einfo "Excluding Nautilus extension."
-		rm -vR "${D}usr/$(get_libdir)/nautilus" || die
+		einfo "Excluding Nautilus extension"
+		rm -vr "${D}usr/$(get_libdir)/nautilus" || die
 	fi
 }
