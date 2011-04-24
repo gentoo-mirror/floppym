@@ -51,7 +51,6 @@ src_install() {
 	fi
 
 	if ! use nautilus; then
-		einfo "Excluding Nautilus extension"
 		rm -vr "${D}usr/$(get_libdir)/nautilus" || die
 	fi
 }
