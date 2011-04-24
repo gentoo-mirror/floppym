@@ -8,9 +8,9 @@ SUPPORT_PYTHON_ABIS="1"
 PYTHON_DEPEND="2:2.5"
 RESTRICT_PYTHON_ABIS="2.4 3.*"
 
-inherit distutils
+inherit distutils multilib
 
-DESCRIPTION="Mercurial GUI command line tool hgtk"
+DESCRIPTION="Set of graphical tools for Mercurial"
 HOMEPAGE="http://tortoisehg.bitbucket.org"
 SRC_URI="http://bitbucket.org/${PN}/targz/downloads/${P}.tar.gz"
 
