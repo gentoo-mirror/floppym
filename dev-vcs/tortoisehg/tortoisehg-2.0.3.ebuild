@@ -19,8 +19,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="doc nautilus"
 
-RDEPEND="
-	dev-python/iniparse
+RDEPEND="dev-python/iniparse
 	dev-python/pygments
 	dev-python/PyQt4
 	dev-python/qscintilla-python
