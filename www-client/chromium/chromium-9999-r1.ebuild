@@ -175,6 +175,7 @@ src_prepare() {
 		\! -path 'third_party/launchpad_translations/*' \
 		\! -path 'third_party/leveldb/*' \
 		\! -path 'third_party/libjingle/*' \
+		\! -path 'third_party/libphonenumber/*' \
 		\! -path 'third_party/libsrtp/*' \
 		\! -path 'third_party/libvpx/libvpx.h' \
 		\! -path 'third_party/mesa/*' \
