@@ -37,7 +37,10 @@ DEPEND="alsa? ( media-libs/alsa-lib )
 			)
 		)
 	)
-	X? ( x11-libs/libX11 x11-libs/libxkbfile )
+	X? ( x11-libs/libX11
+		x11-libs/libXcursor
+		x11-libs/libXext
+		x11-libs/libxkbfile )
 	xv? ( x11-libs/libXv )"
 RDEPEND="${DEPEND}"
 
