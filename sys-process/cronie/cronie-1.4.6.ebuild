@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/sys-process/cronie/cronie-1.4.6.ebuild,v 1.1 2010/11/08 13:21:51 bangert Exp $
 
@@ -34,7 +34,7 @@ src_install() {
 
 	docrondir
 	fowners root:cron /usr/bin/crontab
-	fperms 2750 /usr/bin/crontab
+	fperms 4750 /usr/bin/crontab
 
 	insinto /etc
 	newins "${FILESDIR}/${PN}-1.2-crontab" crontab
