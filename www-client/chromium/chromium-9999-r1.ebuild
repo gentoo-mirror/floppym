@@ -68,7 +68,6 @@ src_unpack() {
 	cd "${ESVN_STORE_DIR}/${PN}" || die
 
 	einfo "gclient config -->"
-	cp -f "${FILESDIR}/dot-gclient" .gclient || die
 	cat .gclient || die
 
 	einfo "gclient sync start -->"
@@ -189,6 +188,9 @@ src_configure() {
 	# Never tell the build system to "enable" SSE2, it has a few unexpected
 	# additions, bug #336871.
 	myconf+=" -Ddisable_sse2=1"
+
+	# Disable nacl
+	myconf+=" -Ddisable_nacl=1"
 
 	# Use system-provided libraries.
 	# TODO: use_system_hunspell (upstream changes needed).
