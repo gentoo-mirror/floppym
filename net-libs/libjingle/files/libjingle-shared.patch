@@ -1,0 +1,11 @@
+--- talk/libjingle.scons
++++ talk/libjingle.scons
+@@ -54,7 +54,7 @@
+                "/wd4702",
+              ],
+ )
+-talk.Library(env, name = "libjingle",
++talk.DynamicLibrary(env, name = "libjingle",
+              lin_srcs = [
+                "base/latebindingsymboltable.cc",
+                "base/linux.cc",
