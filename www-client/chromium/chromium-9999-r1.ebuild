@@ -221,9 +221,6 @@ src_configure() {
 		-Dlinux_sandbox_path=${CHROMIUM_HOME}/chrome_sandbox
 		-Dlinux_sandbox_chrome_path=${CHROMIUM_HOME}/chrome"
 
-	# Enable seccomp sandbox
-	myconf+=" -Dlinux_use_seccomp_sandbox=1"
-
 	if host-is-pax; then
 		# Prevent the build from failing (bug #301880). The performance
 		# difference is very small.
