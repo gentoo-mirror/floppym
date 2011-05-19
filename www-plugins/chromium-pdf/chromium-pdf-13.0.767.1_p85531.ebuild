@@ -13,7 +13,7 @@ MY_PN="google-chrome-unstable"
 MY_PV="${PV/_p/-r}"
 MY_P="${MY_PN}_${MY_PV}"
 
-SRC_URI="amd64? ( http://dl.google.com/linux/chrome/deb/pool/main/g/${MY_PV}/${MY_P}_amd64.deb )
+SRC_URI="amd64? ( http://dl.google.com/linux/chrome/deb/pool/main/g/${MY_PN}/${MY_P}_amd64.deb )
 	x86? ( http://dl.google.com/linux/chrome/deb/pool/main/g/${MY_PN}/${MY_P}_i386.deb )"
 
 LICENSE="google-chrome"
