@@ -18,7 +18,7 @@ KEYWORDS=""
 IUSE="alsa cups debug-assert debug-channel debug-gdi debug-kbd debug-nla
 	debug-proto debug-rdp5 debug-serial debug-smartcard debug-sound
 	debug-stream-assert directfb ffmpeg gnutls iconv ipv6 nss polarssl
-	pulseaudio smartcard ssl static-libs X xv"
+	pulseaudio smartcard static-libs X xv"
 
 DEPEND="alsa? ( media-libs/alsa-lib )
 	cups? ( net-print/cups )
@@ -27,14 +27,12 @@ DEPEND="alsa? ( media-libs/alsa-lib )
 	iconv? ( virtual/libiconv )
 	pulseaudio? ( media-sound/pulseaudio )
 	smartcard? ( sys-apps/pcsc-lite )
-	ssl? ( >=dev-libs/openssl-0.9.8a )
-	!ssl? (
-		gnutls? ( >=net-libs/gnutls-2.10.1 )
-		!gnutls? (
-			nss? ( dev-libs/nss )
-			!nss? (
-				polarssl? ( >=net-libs/polarssl-0.14.0 )
-			)
+	gnutls? ( >=net-libs/gnutls-2.10.1 )
+	!gnutls? (
+		nss? ( dev-libs/nss )
+		!nss? (
+			polarssl? ( >=net-libs/polarssl-0.14.0 )
+			!polarssl? ( >=dev-libs/openssl-0.9.8a )
 		)
 	)
 	X? ( x11-libs/libX11
@@ -46,27 +44,28 @@ RDEPEND="${DEPEND}"
 
 DOCS=( AUTHORS ChangeLog NEWS README )
 
+pkg_setup() {
+	crypto=(
+		$(usev gnutls)
+		$(usev nss)
+		$(usev polarssl)
+		openssl
+	)
+	[[ ${#crypto[@]} > 1 ]] && \
+		ewarn "${crypto[0]} crypto backend selected; this will disable tls support"
+}
+
+
 src_prepare() {
 	autotools-utils_src_prepare
 	eautoreconf
 }
 
 src_configure() {
-	local crypto=(
-		$(use ssl && echo openssl)
-		$(usev gnutls)
-		$(usev nss)
-		$(usev polarssl)
-		simple
-	)
-	[[ ${#crypto[@]} > 2 ]] && \
-		ewarn "Multiple crypto backends selected, using ${crypto[0]}"
-
 	local myeconfargs=(
 		$(use_enable iconv)
 		$(use_enable ipv6)
 		--enable-largefile
-		$(use_enable smartcard)
 		$(use_with alsa)
 		--with-crypto=${crypto[0]}
 		$(use_with cups printer cups)
@@ -84,10 +83,10 @@ src_configure() {
 		$(use_with directfb dfb)
 		$(use_with ffmpeg)
 		$(use_with pulseaudio pulse)
+		$(use_with smartcard)
 		$(use_with X x)
 		$(use_with X xkbfile)
 		$(use_with xv xvideo)
 	)
-
 	autotools-utils_src_configure
 }
