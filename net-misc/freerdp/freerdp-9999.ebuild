@@ -55,7 +55,6 @@ pkg_setup() {
 		ewarn "${crypto[0]} crypto backend selected; this will disable tls support"
 }
 
-
 src_prepare() {
 	autotools-utils_src_prepare
 	eautoreconf
