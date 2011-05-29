@@ -22,7 +22,7 @@ IUSE=""
 
 RDEPEND="dev-python/setuptools
 	dev-python/feedparser
-	>=dev-python/sqlalchemy-0.6
+	>=dev-python/sqlalchemy-0.7
 	dev-python/pyyaml
 	dev-python/beautifulsoup
 	>=dev-python/html5lib-0.11
