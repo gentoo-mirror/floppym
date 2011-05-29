@@ -70,7 +70,7 @@ distutils_src_install_pre_hook() {
 src_test() {
 	testing() {
 		[[ "$(python_get_implementation)" == "Jython" || "${PYTHON_ABI}" == 3.* ]] && return
-		PYTHONPATH="$(ls -d build-${PYTHON_ABI}/lib*)" nosetests
+		PYTHONPATH="$(ls -d build-${PYTHON_ABI}/lib*)" "$(PYTHON)" sqla_nose.py
 	}
 	python_execute_function testing
 }
