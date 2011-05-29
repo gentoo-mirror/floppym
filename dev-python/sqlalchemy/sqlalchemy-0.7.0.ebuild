@@ -16,7 +16,7 @@ SRC_URI="mirror://pypi/${MY_P:0:1}/${MY_PN}/${MY_P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 ~ppc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos"
+KEYWORDS="~amd64 ~ppc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos"
 IUSE="doc examples firebird mssql mysql postgres +sqlite test"
 
 RDEPEND="dev-python/setuptools
@@ -41,7 +41,7 @@ PYTHON_CFLAGS=("2.* + -fno-strict-aliasing")
 
 # In EAPI="4":
 # DISTUTILS_GLOBAL_OPTIONS=("2.*-cpython --with-cextensions")
-PYTHON_MODNAME="sqlalchemy sqlalchemy_nose"
+PYTHON_MODNAME="sqlalchemy"
 
 src_prepare() {
 	distutils_src_prepare
