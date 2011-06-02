@@ -4,6 +4,9 @@
 
 EAPI=4
 
+PERL_EXPORT_PHASE_FUNCTIONS=no
+inherit perl-module
+
 DESCRIPTION="SGML-based documentation formatting package used for the Debian manuals"
 HOMEPAGE="http://packages.debian.org/sid/debiandoc-sgml"
 SRC_URI="mirror://debian/pool/main/${P:0:1}/${PN}/${PN}_${PV}.tar.gz"
@@ -17,5 +20,10 @@ DEPEND=""
 RDEPEND="${DEPEND}"
 
 src_install() {
-	emake DESTDIR="${D}" prefix=/usr install
+	perl_set_version
+	emake \
+		DESTDIR="${D}" \
+		prefix="${EPREFIX}/usr" \
+		perl_dir="${ED}${VENDOR_LIB}" \
+		install
 }
