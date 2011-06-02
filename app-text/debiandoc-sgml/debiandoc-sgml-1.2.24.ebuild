@@ -5,7 +5,7 @@
 EAPI=4
 
 PERL_EXPORT_PHASE_FUNCTIONS=no
-inherit perl-module
+inherit perl-module sgml-catalog
 
 DESCRIPTION="SGML-based documentation formatting package used for the Debian manuals"
 HOMEPAGE="http://packages.debian.org/sid/debiandoc-sgml"
@@ -29,3 +29,6 @@ src_install() {
 	emake prefix="${EPREFIX}/usr" perl_dir="${ED}${VENDOR_LIB}" \
 		DESTDIR="${D}" install
 }
+
+sgml-catalog_cat_include "/etc/sgml/${PN}.cat" \
+	"/usr/share/sgml/debiandoc/dtd/sgml/1.0/catalog"
