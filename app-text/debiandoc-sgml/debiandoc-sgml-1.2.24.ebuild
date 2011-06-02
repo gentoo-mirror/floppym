@@ -16,8 +16,9 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-DEPEND=""
-RDEPEND="${DEPEND}"
+RDEPEND="dev-perl/HTML-Parser
+	dev-perl/Roman
+	dev-perl/Text-Format"
 
 src_compile() {
 	perl_set_version
