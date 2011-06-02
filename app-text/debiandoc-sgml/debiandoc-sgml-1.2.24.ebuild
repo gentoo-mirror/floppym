@@ -19,11 +19,12 @@ IUSE=""
 DEPEND=""
 RDEPEND="${DEPEND}"
 
-src_install() {
+src_compile() {
 	perl_set_version
-	emake \
-		DESTDIR="${D}" \
-		prefix="${EPREFIX}/usr" \
-		perl_dir="${ED}${VENDOR_LIB}" \
-		install
+	emake prefix="${EPREFIX}/usr" perl_dir="${VENDOR_LIB}"
+}
+
+src_install() {
+	emake prefix="${EPREFIX}/usr" perl_dir="${ED}${VENDOR_LIB}"
+		DESTDIR="${D}" install
 }
