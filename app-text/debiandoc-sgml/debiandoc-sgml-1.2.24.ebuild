@@ -25,6 +25,6 @@ src_compile() {
 }
 
 src_install() {
-	emake prefix="${EPREFIX}/usr" perl_dir="${ED}${VENDOR_LIB}"
+	emake prefix="${EPREFIX}/usr" perl_dir="${ED}${VENDOR_LIB}" \
 		DESTDIR="${D}" install
 }
