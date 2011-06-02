@@ -10,7 +10,7 @@ DESCRIPTION="PDF plugin from google-chrome"
 HOMEPAGE="http://www.google.com/chrome"
 
 MY_PN="google-chrome-unstable"
-MY_PV="${PV/_p/-r}"
+MY_PV="${PV/_alpha/-r}"
 MY_P="${MY_PN}_${MY_PV}"
 
 SRC_URI="amd64? ( http://dl.google.com/linux/chrome/deb/pool/main/g/${MY_PN}/${MY_P}_amd64.deb )
