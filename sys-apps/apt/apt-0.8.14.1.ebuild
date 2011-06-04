@@ -87,5 +87,5 @@ src_install() {
 	dodoc -r build/docs/examples
 
 	dodoc build/docs/*.text
-	dohtml -r build/docs/*.html
+	dohtml -r build/docs/*.html build/doc/doxygen/html/*.{html,png}
 }
