@@ -232,7 +232,8 @@ src_configure() {
 	# Our system ffmpeg should support more codecs than the bundled one
 	# for Chromium.
 	# TODO: uncomment when bug #371931 is fixed.
-	# myconf+=" -Dproprietary_codecs=1"
+	myconf+=" -Dproprietary_codecs=1"
+	myconf+=" -Dffmpeg_branding=Chrome"
 
 	local myarch="$(tc-arch)"
 	if [[ $myarch = amd64 ]] ; then
