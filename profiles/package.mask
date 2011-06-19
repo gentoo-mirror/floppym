@@ -1,0 +1,3 @@
+# Mike Gilbert <floppymaster@gmail.com> (18 Jun 2011)
+# Mask dev channel
+>=www-plugins/chromium-pdf-14
