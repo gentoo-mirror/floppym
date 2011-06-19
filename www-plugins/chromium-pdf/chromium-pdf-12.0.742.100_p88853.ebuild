@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit multilib
+inherit multilib versionator
 
 DESCRIPTION="PDF plugin from google-chrome"
 HOMEPAGE="http://www.google.com/chrome"
@@ -23,7 +23,7 @@ IUSE=""
 RESTRICT="mirror"
 
 DEPEND="!app-arch/deb2targz"
-RDEPEND="www-client/chromium"
+RDEPEND="=www-client/chromium-$(get_major_version)*"
 
 S="${WORKDIR}"
 QA_PREBUILT="usr/$(get_libdir)/chromium-browser/libpdf.so"
