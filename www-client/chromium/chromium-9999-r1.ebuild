@@ -71,25 +71,25 @@ src_unpack() {
 	ESVN_REVISION= subversion_fetch "http://src.chromium.org/svn/trunk/tools/depot_tools"
 	mv "${S}" "${WORKDIR}"/depot_tools || die
 
-	# Now grab chromium
-	ESVN_RESTRICT="export" subversion_fetch
-
-	local gclient="$}/depot_tools/gclient"
-
 	cd "${ESVN_STORE_DIR}/${PN}" > /dev/null || die
 
 	if [[ ! -f .gclient ]]; then
 		"${WORKDIR}"/depot_tools/gclient config "${ESVN_REPO_URI}" || die
 	fi
 
-	"${WORKDIR}"/depot_tools/gclient sync -nDm -j 7 || die
-	"$(PYTHON)" src/build/download_nacl_irt.py || die
+	if [[ -n ${ESVN_REVISION} ]]; then
+		"${WORKDIR}"/depot_tools/gclient sync -nD -r "${ESVN_REVISION}" || die
+	else
+		"${WORKDIR}"/depot_tools/gclient sync -nD || die
+	fi
+
+	"$(PYTHON)" src/build/download_nacl_irt.py
 
 	mkdir -p "${S}" || die
 	rsync -rlpgo --exclude=".svn/" src/ "${S}" || die
 
 	# Display correct svn revision in about box, and log new version.
-	CREV=$(subversion__svn_info "src" "Revision")
+	local CREV=$(subversion__svn_info "src" "Revision")
 	echo ${CREV} > "${S}"/build/LASTCHANGE.in || die
 	. src/chrome/VERSION
 	elog "Installing/updating to version ${MAJOR}.${MINOR}.${BUILD}.${PATCH} (Developer Build ${CREV})"
