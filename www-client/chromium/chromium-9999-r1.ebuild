@@ -10,8 +10,7 @@ inherit eutils fdo-mime flag-o-matic gnome2-utils linux-info multilib \
 
 DESCRIPTION="Open-source version of Google Chrome web browser"
 HOMEPAGE="http://chromium.org/"
-# subversion eclass fetches gclient, which will then fetch chromium itself
-ESVN_REPO_URI="http://src.chromium.org/svn/trunk/tools/depot_tools"
+ESVN_REPO_URI="http://src.chromium.org/svn/trunk/src"
 
 LICENSE="BSD"
 SLOT="live"
@@ -68,19 +67,23 @@ RDEPEND+="
 	virtual/ttf-fonts"
 
 src_unpack() {
-	subversion_src_unpack
+	# First grab depot_tools
+	subversion_fetch "http://src.chromium.org/svn/trunk/tools/depot_tools"
 	mv "${S}" "${WORKDIR}"/depot_tools || die
 
-	mkdir -p "${ESVN_STORE_DIR}/${PN}" || die
-	cd "${ESVN_STORE_DIR}/${PN}" || die
+	# Now grab chromium
+	ESVN_RESTRICT="export" subversion_fetch
 
-	einfo "gclient config -->"
-	cat .gclient || die
+	local gclient="$}/depot_tools/gclient"
 
-	einfo "gclient sync start -->"
-	"${WORKDIR}/depot_tools/gclient" sync --force --nohooks || die
-	"$(PYTHON)" src/build/download_nacl_irt.py || die  # bug #366413
-	einfo "   working copy: ${ESVN_STORE_DIR}/${PN}"
+	cd "${ESVN_STORE_DIR}/${PN}" > /dev/null || die
+
+	if [[ ! -f .gclient ]]; then
+		"${WORKDIR}"/depot_tools/gclient config "${ESVN_REPO_URI}" || die
+	fi
+
+	"${WORKDIR}"/depot_tools/gclient sync -nDm -j 7 || die
+	"$(PYTHON)" src/build/download_nacl_irt.py || die
 
 	mkdir -p "${S}" || die
 	rsync -rlpgo --exclude=".svn/" src/ "${S}" || die
