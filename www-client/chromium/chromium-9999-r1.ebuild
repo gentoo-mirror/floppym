@@ -68,7 +68,7 @@ RDEPEND+="
 
 src_unpack() {
 	# First grab depot_tools
-	subversion_fetch "http://src.chromium.org/svn/trunk/tools/depot_tools"
+	ESVN_REVISION= subversion_fetch "http://src.chromium.org/svn/trunk/tools/depot_tools"
 	mv "${S}" "${WORKDIR}"/depot_tools || die
 
 	# Now grab chromium
