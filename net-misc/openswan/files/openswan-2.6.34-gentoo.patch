@@ -1,134 +1,122 @@
---- a/lib/libcrypto/libmd5/Makefile
-+++ b/lib/libcrypto/libmd5/Makefile
+diff -Nru openswan-2.6.34.orig/lib/libcrypto/libmd5/Makefile openswan-2.6.34/lib/libcrypto/libmd5/Makefile
+--- openswan-2.6.34.orig/lib/libcrypto/libmd5/Makefile	2011-06-08 14:02:31.000000000 -0400
++++ openswan-2.6.34/lib/libcrypto/libmd5/Makefile	2011-06-25 16:47:13.292407773 -0400
 @@ -12,7 +12,7 @@
  
  ifeq ($(USE_LIBNSS),true)
  CFLAGS+=-DHAVE_LIBNSS
 -CFLAGS+=-I/usr/include/nspr4 -I/usr/include/nss3
-+CFLAGS+=$(shell pkg-config --cflags nss)
++CFLAGS+=-I/usr/include/nspr -I/usr/include/nss
  endif
  
  include ${srcdir}../../Makefile.library
---- a/lib/libcrypto/libsha1/Makefile
-+++ b/lib/libcrypto/libsha1/Makefile
+diff -Nru openswan-2.6.34.orig/lib/libcrypto/libsha1/Makefile openswan-2.6.34/lib/libcrypto/libsha1/Makefile
+--- openswan-2.6.34.orig/lib/libcrypto/libsha1/Makefile	2011-06-08 14:02:31.000000000 -0400
++++ openswan-2.6.34/lib/libcrypto/libsha1/Makefile	2011-06-25 16:47:13.293407751 -0400
 @@ -12,7 +12,7 @@
  
  ifeq ($(USE_LIBNSS),true)
  CFLAGS+=-DHAVE_LIBNSS  
 -CFLAGS+=-I/usr/include/nspr4 -I/usr/include/nss3
-+CFLAGS+=$(shell pkg-config --cflags nss)
++CFLAGS+=-I/usr/include/nspr -I/usr/include/nss
  endif
  
  
---- a/lib/libcrypto/libsha2/Makefile
-+++ b/lib/libcrypto/libsha2/Makefile
+diff -Nru openswan-2.6.34.orig/lib/libcrypto/libsha2/Makefile openswan-2.6.34/lib/libcrypto/libsha2/Makefile
+--- openswan-2.6.34.orig/lib/libcrypto/libsha2/Makefile	2011-06-08 14:02:31.000000000 -0400
++++ openswan-2.6.34/lib/libcrypto/libsha2/Makefile	2011-06-25 16:47:13.294407729 -0400
 @@ -15,5 +15,5 @@
  
  ifeq ($(USE_LIBNSS),true)
  CFLAGS+=-DHAVE_LIBNSS
 -INCLUDES+=-I/usr/include/nspr4 -I/usr/include/nss3
-+INCLUDES+=$(shell pkg-config --cflags nss)
++INCLUDES+=-I/usr/include/nspr -I/usr/include/nss
  endif
---- a/lib/libipsecconf/Makefile
-+++ b/lib/libipsecconf/Makefile
+diff -Nru openswan-2.6.34.orig/lib/libipsecconf/Makefile openswan-2.6.34/lib/libipsecconf/Makefile
+--- openswan-2.6.34.orig/lib/libipsecconf/Makefile	2011-06-08 14:02:31.000000000 -0400
++++ openswan-2.6.34/lib/libipsecconf/Makefile	2011-06-25 16:47:13.295407707 -0400
 @@ -33,7 +33,7 @@
  #CFLAGS+=-DFIPS_CHECK
  ifeq ($(USE_LIBNSS),true)
  CFLAGS+=-DHAVE_LIBNSS
 -CFLAGS+=-I/usr/include/nspr4 -I/usr/include/nss3
-+CFLAGS+=$(shell pkg-config --cflags nss)
++CFLAGS+=-I/usr/include/nspr -I/usr/include/nss
  endif
  
  ifeq ($(USE_NM),true)
---- a/lib/libopenswan/Makefile
-+++ b/lib/libopenswan/Makefile
+diff -Nru openswan-2.6.34.orig/lib/libopenswan/Makefile openswan-2.6.34/lib/libopenswan/Makefile
+--- openswan-2.6.34.orig/lib/libopenswan/Makefile	2011-06-08 14:02:31.000000000 -0400
++++ openswan-2.6.34/lib/libopenswan/Makefile	2011-06-25 16:47:13.296407685 -0400
 @@ -105,7 +105,7 @@
  
  ifeq ($(USE_LIBNSS),true)
  CFLAGS+=-DHAVE_LIBNSS
 -CFLAGS+=-I/usr/include/nspr4 -I/usr/include/nss3
-+CFLAGS+=$(shell pkg-config --cflags nss)
++CFLAGS+=-I/usr/include/nspr -I/usr/include/nss
  endif
  
  ifeq ($(USE_MODP_RFC5114),true)
---- a/programs/Makefile.program
-+++ b/programs/Makefile.program
-@@ -105,7 +105,7 @@
- 
- doinstall:: $(PROGRAM) $(CONFFILES) $(EXTRA8MAN) $(EXTRA5MAN) $(EXTRA5PROC) $(LIBFILES) $(CONFDFILES)
- 	# remove any old vendor file installed previously
--	@rm -f $(FINALLIBEXECDIR)/vendor
-+	@rm -f $(LIBEXECDIR)/vendor
- 	@mkdir -p $(PROGRAMDIR) $(MANDIR8) $(MANDIR5) $(LIBDIR) $(CONFDIR) $(CONFDDIR) $(CONFDDIR)/$(CONFDSUBDIR) $(EXAMPLECONFDIR)
- 	@if [ -n "$(PROGRAM)" ]; then $(INSTALL) $(INSTBINFLAGS) $(PROGRAM) $(PROGRAMDIR); fi
- 	@$(foreach f, $(addsuffix .8, $(PROGRAM)), \
-@@ -179,16 +179,12 @@
- ifeq ($(USE_LIBNSS),false)
- LDLIBS=${LIBS} ${USERLINK} ${LIBS} ${EXTRALIBS} -lgmp
- else
--LDLIBS=${LIBS} ${USERLINK} ${LIBS} ${EXTRALIBS} -lgmp -lnspr4 -lnss3
-+LDLIBS=${LIBS} ${USERLINK} ${LIBS} ${EXTRALIBS} -lgmp $(shell pkg-config --libs nss)
- endif
- 
- 
- %: %.o $(OBJS) ${LIBS}
--ifeq ($(USE_LIBNSS),true)
--	$(CC) $(CFLAGS) -o $@ $@.o ${OBJS} $(LDFLAGS) $(LDLIBS) $(USERLINK) -lnspr4 -lnss3
--else
- 	$(CC) $(CFLAGS) -o $@ $@.o ${OBJS} $(LDFLAGS) $(LDLIBS) $(USERLINK)
--endif
- 
- # cancel direct version
- %: %.c
---- a/programs/pluto/Makefile.options
-+++ b/programs/pluto/Makefile.options
+diff -Nru openswan-2.6.34.orig/programs/pluto/Makefile.options openswan-2.6.34/programs/pluto/Makefile.options
+--- openswan-2.6.34.orig/programs/pluto/Makefile.options	2011-06-08 14:02:31.000000000 -0400
++++ openswan-2.6.34/programs/pluto/Makefile.options	2011-06-25 16:47:13.299407619 -0400
 @@ -58,7 +58,7 @@
  
  # Use LIBNSS
  ifeq ($(USE_LIBNSS),true)
 -HDRDIRS+= -I/usr/include/nspr4 -I/usr/include/nss3	
-+HDRDIRS+= $(shell pkg-config --cflags nss)	
++HDRDIRS+= -I/usr/include/nspr -I/usr/include/nss	
  endif
  
  # BYTE_ORDER = -DBIG_ENDIAN=4321 -DLITTLE_ENDIAN=1234 -DBYTE_ORDER=BIG_ENDIAN
-@@ -313,10 +313,7 @@
- ifeq ($(USE_LIBNSS),true)
- HAVE_LIBNSS=1
- DEFINES+=-DHAVE_LIBNSS
--LIBSPLUTO+= -lnspr4
--LIBSPLUTO+= -lnss3
--# For avoiding implicit DSO linking
--LIBSPLUTO+= -lpthread
-+LIBSPLUTO+=$(shell pkg-config --libs nss)
- ifeq ($(USE_FIPSCHECK),true)
- FIPS_CHECK=1
- DEFINES+=-DFIPS_CHECK
---- a/programs/rsasigkey/Makefile
-+++ b/programs/rsasigkey/Makefile
-@@ -21,13 +21,13 @@
+diff -Nru openswan-2.6.34.orig/programs/rsasigkey/Makefile openswan-2.6.34/programs/rsasigkey/Makefile
+--- openswan-2.6.34.orig/programs/rsasigkey/Makefile	2011-06-08 14:02:31.000000000 -0400
++++ openswan-2.6.34/programs/rsasigkey/Makefile	2011-06-25 16:47:13.300407597 -0400
+@@ -21,7 +21,7 @@
  FIPS_CHECK=1
  CFLAGS+=-DFIPS_CHECK
  endif
 -INCLUDES+=-I/usr/include/nspr4 -I/usr/include/nss3
-+INCLUDES+=$(shell pkg-config --cflags nss)
++INCLUDES+=-I/usr/include/nspr -I/usr/include/nss
  endif
  
  PROGRAM=rsasigkey
- LIBS=${OPENSWANLIB} -lgmp
- ifeq ($(USE_LIBNSS),true)
--LIBS+= -lnspr4 -lnss3 -lplc4
-+LIBS+=$(shell pkg-config --libs nss)
- ifeq ($(USE_FIPSCHECK),true)
- LIBS+=  -lfipscheck
- endif
---- a/programs/showhostkey/Makefile
-+++ b/programs/showhostkey/Makefile
+diff -Nru openswan-2.6.34.orig/programs/setup/Makefile openswan-2.6.34/programs/setup/Makefile
+--- openswan-2.6.34.orig/programs/setup/Makefile	2011-06-08 14:02:31.000000000 -0400
++++ openswan-2.6.34/programs/setup/Makefile	2011-06-25 16:54:49.591775066 -0400
+@@ -16,11 +16,7 @@
+ OPENSWANSRCDIR?=$(shell cd ../..; pwd)
+ include ${OPENSWANSRCDIR}/Makefile.inc
+ 
+-# this dance is because setup has to get installed as /etc/rc.d/init.d/ipsec
+-# not as /etc/rc.d/init.d/setup.
+-PROGRAMDIR=$(RCDIR)
+ PROGRAM=setup
+-NOINSTALL=true
+ EXTRA8MAN=setup.8
+ 
+ include ${srcdir}../Makefile.program
+@@ -34,10 +30,9 @@
+ 	# remove any old vendor file installed previously
+ 	@rm -f $(BINDIR)/setup
+ 	# check the directories we need exist (ie., make install DESTDIR=/tmp/IPsec)
+-	@mkdir -p $(RCDIR) $(BINDIR)
++	@mkdir -p $(BINDIR)
+ 	# install and link everything
+-	@$(INSTALL) $(INSTBINFLAGS) setup $(RCDIR)/ipsec
+-	@ln -s $(FINALRCDIR)/ipsec $(BINDIR)/setup
++	@$(INSTALL) $(INSTBINFLAGS) setup $(BINDIR)/setup
+ 
+ install_file_list::
+ 	@echo $(RCDIR)/ipsec
+diff -Nru openswan-2.6.34.orig/programs/showhostkey/Makefile openswan-2.6.34/programs/showhostkey/Makefile
+--- openswan-2.6.34.orig/programs/showhostkey/Makefile	2011-06-08 14:02:31.000000000 -0400
++++ openswan-2.6.34/programs/showhostkey/Makefile	2011-06-25 16:47:13.301407575 -0400
 @@ -16,7 +16,7 @@
  include ${OPENSWANSRCDIR}/Makefile.inc
  ifeq ($(USE_LIBNSS),true)
  CFLAGS+=-DHAVE_LIBNSS
 -INCLUDES+=-I/usr/include/nspr4 -I/usr/include/nss3
-+INCLUDES+=$(shell pkg-config --cflags nss)
++INCLUDES+=-I/usr/include/nspr -I/usr/include/nss
  endif
  
  PROGRAM=showhostkey
