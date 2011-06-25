@@ -56,6 +56,18 @@ diff -Nru openswan-2.6.34.orig/lib/libopenswan/Makefile openswan-2.6.34/lib/libo
  endif
  
  ifeq ($(USE_MODP_RFC5114),true)
+diff -Nru openswan-2.6.34.orig/programs/Makefile.program openswan-2.6.34/programs/Makefile.program
+--- openswan-2.6.34.orig/programs/Makefile.program	2011-06-08 14:02:31.000000000 -0400
++++ openswan-2.6.34/programs/Makefile.program	2011-06-25 17:05:07.650064638 -0400
+@@ -105,7 +105,7 @@
+ 
+ doinstall:: $(PROGRAM) $(CONFFILES) $(EXTRA8MAN) $(EXTRA5MAN) $(EXTRA5PROC) $(LIBFILES) $(CONFDFILES)
+ 	# remove any old vendor file installed previously
+-	@rm -f $(FINALLIBEXECDIR)/vendor
++	@rm -f $(LIBEXECDIR)/vendor
+ 	@mkdir -p $(PROGRAMDIR) $(MANDIR8) $(MANDIR5) $(LIBDIR) $(CONFDIR) $(CONFDDIR) $(CONFDDIR)/$(CONFDSUBDIR) $(EXAMPLECONFDIR)
+ 	@if [ -n "$(PROGRAM)" ]; then $(INSTALL) $(INSTBINFLAGS) $(PROGRAM) $(PROGRAMDIR); fi
+ 	@$(foreach f, $(addsuffix .8, $(PROGRAM)), \
 diff -Nru openswan-2.6.34.orig/programs/pluto/Makefile.options openswan-2.6.34/programs/pluto/Makefile.options
 --- openswan-2.6.34.orig/programs/pluto/Makefile.options	2011-06-08 14:02:31.000000000 -0400
 +++ openswan-2.6.34/programs/pluto/Makefile.options	2011-06-25 16:47:13.299407619 -0400
