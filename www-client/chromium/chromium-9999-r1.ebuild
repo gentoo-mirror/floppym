@@ -71,7 +71,7 @@ src_unpack() {
 	ESVN_REVISION= subversion_fetch "http://src.chromium.org/svn/trunk/tools/depot_tools"
 	mv "${S}" "${WORKDIR}"/depot_tools || die
 
-	cd "${ESVN_STORE_DIR}/${PN}" > /dev/null || die
+	cd "${ESVN_STORE_DIR}"/${PN} || die
 
 	if [[ ! -f .gclient ]]; then
 		"${WORKDIR}"/depot_tools/gclient config "${ESVN_REPO_URI}" || die
