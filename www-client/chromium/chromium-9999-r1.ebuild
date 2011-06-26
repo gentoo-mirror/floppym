@@ -78,9 +78,9 @@ src_unpack() {
 	fi
 
 	if [[ -n ${ESVN_REVISION} ]]; then
-		"${WORKDIR}"/depot_tools/gclient sync -nD -r "${ESVN_REVISION}" || die
+		"${WORKDIR}"/depot_tools/gclient sync -nD -j 7 -r "${ESVN_REVISION}" || die
 	else
-		"${WORKDIR}"/depot_tools/gclient sync -nD || die
+		"${WORKDIR}"/depot_tools/gclient sync -nD -j 7 || die
 	fi
 
 	"$(PYTHON)" src/build/download_nacl_irt.py
