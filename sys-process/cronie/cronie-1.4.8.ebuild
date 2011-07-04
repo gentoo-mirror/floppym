@@ -20,6 +20,10 @@ RDEPEND="${DEPEND}"
 #cronie supports /etc/crontab
 CRON_SYSTEM_CRONTAB="yes"
 
+pkg_setup() {
+	enewgroup crontab
+}
+
 src_configure() {
 	SPOOL_DIR="/var/spool/cron/crontabs" econf \
 		$(use_with inotify ) \
@@ -32,9 +36,9 @@ src_configure() {
 src_install() {
 	emake install DESTDIR="${D}" || die "install failed"
 
-	docrondir
-	fowners root:cron /usr/bin/crontab
-	fperms 4750 /usr/bin/crontab
+	docrondir -m 1730 -o root -g crontab
+	fowners root:crontab /usr/bin/crontab
+	fperms 2755 /usr/bin/crontab
 
 	insinto /etc
 	newins "${FILESDIR}/${PN}-1.2-crontab" crontab
