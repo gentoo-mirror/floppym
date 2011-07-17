@@ -179,6 +179,7 @@ src_prepare() {
 		\! -path 'third_party/tcmalloc/*' \
 		\! -path 'third_party/tlslite/*' \
 		\! -path 'third_party/undoview/*' \
+		\! -path 'third_party/webrtc/*' \
 		\! -path 'third_party/zlib/contrib/minizip/*' \
 		-delete || die
 
