@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.34 2011/07/17 00:25:26 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.39 2011/07/20 21:39:37 phajdan.jr Exp $
 
 EAPI="3"
 PYTHON_DEPEND="2:2.6"
@@ -16,7 +16,7 @@ ESVN_REPO_URI="http://src.chromium.org/svn/trunk/tools/depot_tools"
 LICENSE="BSD"
 SLOT="live"
 KEYWORDS=""
-IUSE="cups gnome gnome-keyring kerberos xinerama"
+IUSE="cups gnome gnome-keyring kerberos"
 
 # en_US is ommitted on purpose from the list below. It must always be available.
 LANGS="am ar bg bn ca cs da de el en_GB es es_LA et fa fi fil fr gu he hi hr
@@ -44,17 +44,18 @@ RDEPEND="app-arch/bzip2
 	media-libs/speex
 	cups? ( >=net-print/cups-1.3.11 )
 	sys-libs/zlib
+	>=virtual/ffmpeg-0.6.90[threads]
 	x11-libs/gtk+:2
+	x11-libs/libXinerama
 	x11-libs/libXScrnSaver
 	x11-libs/libXtst"
 DEPEND="${RDEPEND}
 	dev-lang/perl
-	dev-lang/yasm
 	>=dev-util/gperf-3.0.3
 	>=dev-util/pkgconfig-0.23
+	>=sys-devel/bison-2.4.3
 	sys-devel/flex
 	>=sys-devel/make-3.81-r2
-	x11-libs/libXinerama
 	test? (
 		dev-python/pyftpdlib
 		dev-python/simplejson
@@ -63,7 +64,6 @@ DEPEND="${RDEPEND}
 RDEPEND+="
 	!=www-client/chromium-9999
 	kerberos? ( virtual/krb5 )
-	xinerama? ( x11-libs/libXinerama )
 	x11-misc/xdg-utils
 	virtual/ttf-fonts"
 
@@ -177,6 +177,7 @@ src_prepare() {
 		\! -path 'third_party/tcmalloc/*' \
 		\! -path 'third_party/tlslite/*' \
 		\! -path 'third_party/undoview/*' \
+		\! -path 'third_party/webrtc/*' \
 		\! -path 'third_party/zlib/contrib/minizip/*' \
 		-delete || die
 
@@ -193,12 +194,12 @@ src_configure() {
 	myconf+=" -Ddisable_sse2=1"
 
 	# Use system-provided libraries.
-	# TODO: use_system_ffmpeg (bug #71931). That makes yasm unneeded.
 	# TODO: use_system_hunspell (upstream changes needed).
 	# TODO: use_system_ssl (http://crbug.com/58087).
 	# TODO: use_system_sqlite (http://crbug.com/22208).
 	myconf+="
 		-Duse_system_bzip2=1
+		-Duse_system_ffmpeg=1
 		-Duse_system_flac=1
 		-Duse_system_icu=1
 		-Duse_system_libevent=1
@@ -209,7 +210,6 @@ src_configure() {
 		-Duse_system_speex=1
 		-Duse_system_vpx=1
 		-Duse_system_xdg_utils=1
-		-Duse_system_yasm=1
 		-Duse_system_zlib=1"
 
 	# Optional dependencies.
@@ -232,8 +232,7 @@ src_configure() {
 
 	# Our system ffmpeg should support more codecs than the bundled one
 	# for Chromium.
-	# TODO: uncomment when bug #371931 is fixed.
-	# myconf+=" -Dproprietary_codecs=1"
+	myconf+=" -Dproprietary_codecs=1"
 
 	local myarch="$(tc-arch)"
 	if [[ $myarch = amd64 ]] ; then
@@ -320,11 +319,11 @@ src_install() {
 
 	newexe "${FILESDIR}"/chromium-launcher-r2.sh chromium-launcher.sh || die
 	sed "s:chromium-browser:chromium-browser${SUFFIX}:g" \
-		-i "${D}"/"${CHROMIUM_HOME}"/chromium-launcher.sh || die
+		-i "${ED}"/"${CHROMIUM_HOME}"/chromium-launcher.sh || die
 	sed "s:chromium.desktop:chromium${SUFFIX}.desktop:g" \
-		-i "${D}"/"${CHROMIUM_HOME}"/chromium-launcher.sh || die
+		-i "${ED}"/"${CHROMIUM_HOME}"/chromium-launcher.sh || die
 	sed "s:plugins:plugins --user-data-dir=\${HOME}/.config/chromium${SUFFIX}:" \
-		-i "${D}"/"${CHROMIUM_HOME}"/chromium-launcher.sh || die
+		-i "${ED}"/"${CHROMIUM_HOME}"/chromium-launcher.sh || die
 
 	# It is important that we name the target "chromium-browser",
 	# xdg-utils expect it; bug #355517.
@@ -387,12 +386,11 @@ src_install() {
 
 	# Chromium looks for these in its folder
 	# See media_posix.cc and base_paths_linux.cc
-	# TODO: uncomment when bug #371931 is fixed.
-	#dosym /usr/$(get_libdir)/libavcodec.so.52 "${CHROMIUM_HOME}" || die
-	#dosym /usr/$(get_libdir)/libavformat.so.52 "${CHROMIUM_HOME}" || die
-	#dosym /usr/$(get_libdir)/libavutil.so.50 "${CHROMIUM_HOME}" || die
-	doexe out/Release/ffmpegsumo_nolink || die
-	doexe out/Release/libffmpegsumo.so || die
+	dosym /usr/$(get_libdir)/libavcodec.so.52 "${CHROMIUM_HOME}" || die
+	dosym /usr/$(get_libdir)/libavformat.so.52 "${CHROMIUM_HOME}" || die
+	dosym /usr/$(get_libdir)/libavutil.so.50 "${CHROMIUM_HOME}" || die
+	#doexe out/Release/ffmpegsumo_nolink || die
+	#doexe out/Release/libffmpegsumo.so || die
 
 	# Install icons and desktop entry.
 	for SIZE in 16 22 24 32 48 64 128 256 ; do
@@ -405,7 +403,7 @@ src_install() {
 	make_desktop_entry chromium-browser${SUFFIX} "Chromium ${SLOT}" chromium-browser${SUFFIX} \
 		"Network;WebBrowser"
 		"MimeType=${mime_types}\nStartupWMClass=chromium-browser"
-	sed -e "/^Exec/s/$/ %U/" -i "${D}"/usr/share/applications/*.desktop || die
+	sed -e "/^Exec/s/$/ %U/" -i "${ED}"/usr/share/applications/*.desktop || die
 
 	# Install GNOME default application entry (bug #303100).
 	if use gnome; then
@@ -413,7 +411,7 @@ src_install() {
 		insinto /usr/share/gnome-control-center/default-apps
 		newins "${FILESDIR}"/chromium-browser.xml chromium-browser${SUFFIX}.xml || die
 		sed "s:chromium-browser:chromium-browser${SUFFIX}:g" -i \
-			"${D}"/usr/share/gnome-control-center/default-apps/chromium-browser${SUFFIX}.xml
+			"${ED}"/usr/share/gnome-control-center/default-apps/chromium-browser${SUFFIX}.xml
 	fi
 }
 
