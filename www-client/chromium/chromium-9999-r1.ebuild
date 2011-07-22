@@ -41,9 +41,11 @@ RDEPEND="app-arch/bzip2
 	>=media-libs/libvpx-0.9.5
 	>=media-libs/libwebp-0.1.2
 	media-libs/speex
+	media-sound/pulseaudio
 	cups? ( >=net-print/cups-1.3.11 )
 	sys-libs/zlib
-	>=virtual/ffmpeg-0.6.90[threads]
+	|| ( >=media-video/ffmpeg-0.8[threads]
+		>=media-video/libav-0.7[threads] )
 	x11-libs/gtk+:2
 	x11-libs/libXinerama
 	x11-libs/libXScrnSaver
@@ -149,13 +151,14 @@ src_prepare() {
 	# Make sure we don't use bundled libvpx headers.
 	epatch "${FILESDIR}/${PN}-system-vpx-r4.patch"
 
+	epatch "${FILESDIR}/${PN}-expat-header.patch"
+
 	# Remove most bundled libraries. Some are still needed.
 	find third_party -type f \! -iname '*.gyp*' \
 		\! -path 'third_party/WebKit/*' \
 		\! -path 'third_party/angle/*' \
 		\! -path 'third_party/cacheinvalidation/*' \
 		\! -path 'third_party/cld/*' \
-		\! -path 'third_party/expat/*' \
 		\! -path 'third_party/ffmpeg/*' \
 		\! -path 'third_party/flac/flac.h' \
 		\! -path 'third_party/gpsd/*' \
@@ -166,7 +169,7 @@ src_prepare() {
 		\! -path 'third_party/leveldb/*' \
 		\! -path 'third_party/libjingle/*' \
 		\! -path 'third_party/libphonenumber/*' \
-		\! -path 'third_party/libvpx/libvpx.h' \
+		\! -path 'third_party/libvpx/*' \
 		\! -path 'third_party/mesa/*' \
 		\! -path 'third_party/modp_b64/*' \
 		\! -path 'third_party/npapi/*' \
@@ -179,7 +182,9 @@ src_prepare() {
 		\! -path 'third_party/tcmalloc/*' \
 		\! -path 'third_party/tlslite/*' \
 		\! -path 'third_party/undoview/*' \
+		\! -path 'third_party/webgl_conformance/*' \
 		\! -path 'third_party/webrtc/*' \
+		\! -path 'third_party/yasm/*' \
 		\! -path 'third_party/zlib/contrib/minizip/*' \
 		-delete || die
 
