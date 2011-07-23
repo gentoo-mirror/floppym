@@ -396,9 +396,9 @@ src_install() {
 
 	# Chromium looks for these in its folder
 	# See media_posix.cc and base_paths_linux.cc
-	dosym /usr/$(get_libdir)/libavcodec.so.52 "${CHROMIUM_HOME}" || die
-	dosym /usr/$(get_libdir)/libavformat.so.52 "${CHROMIUM_HOME}" || die
-	dosym /usr/$(get_libdir)/libavutil.so.50 "${CHROMIUM_HOME}" || die
+	dosym /usr/$(get_libdir)/libavcodec.so.53 "${CHROMIUM_HOME}" || die
+	dosym /usr/$(get_libdir)/libavformat.so.53 "${CHROMIUM_HOME}" || die
+	dosym /usr/$(get_libdir)/libavutil.so.51 "${CHROMIUM_HOME}" || die
 	#doexe out/Release/ffmpegsumo_nolink || die
 	#doexe out/Release/libffmpegsumo.so || die
 
