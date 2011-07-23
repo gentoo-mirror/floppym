@@ -179,6 +179,7 @@ src_prepare() {
 		\! -path 'third_party/openmax/*' \
 		\! -path 'third_party/ots/*' \
 		\! -path 'third_party/protobuf/*' \
+		\! -path 'third_party/sfntly/*' \
 		\! -path 'third_party/skia/*' \
 		\! -path 'third_party/speex/speex.h' \
 		\! -path 'third_party/sqlite/*' \
