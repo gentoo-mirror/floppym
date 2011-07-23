@@ -43,6 +43,7 @@ DEPEND="alsa? ( media-libs/alsa-lib )
 RDEPEND="${DEPEND}"
 
 DOCS=( AUTHORS ChangeLog NEWS README )
+PATCHES=( "${FILESDIR}/${PN}-ffmpeg-0.8-compat.patch" )
 
 pkg_setup() {
 	crypto=(
