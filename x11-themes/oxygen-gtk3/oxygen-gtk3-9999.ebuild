@@ -40,8 +40,8 @@ src_install() {
 
 	cmake-utils_src_install
 
-	cat <<-EOF > 99oxygen-gtk
-CONFIG_PROTECT="${EPREFIX}/usr/share/themes/oxygen-gtk/gtk-2.0"
+	cat <<-EOF > 99oxygen-gtk3
+CONFIG_PROTECT="${EPREFIX}/usr/share/themes/oxygen-gtk/gtk-3.0"
 EOF
 	doenvd 99oxygen-gtk
 }
