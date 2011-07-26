@@ -80,9 +80,9 @@ src_unpack() {
 	fi
 
 	if [[ -n ${ESVN_REVISION} ]]; then
-		"${WORKDIR}"/depot_tools/gclient sync -nD -j 7 -r "${ESVN_REVISION}" || die
+		"${WORKDIR}"/depot_tools/gclient sync -nD -j 16 -r "${ESVN_REVISION}" || die
 	else
-		"${WORKDIR}"/depot_tools/gclient sync -nD -j 7 || die
+		"${WORKDIR}"/depot_tools/gclient sync -nD -j 16 || die
 	fi
 
 	"$(PYTHON)" src/build/download_nacl_irt.py
@@ -148,9 +148,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# bug #374903 - ICU 4.8 compatibility
-	epatch "${FILESDIR}/${PN}-icu-compatibility-r0.patch"
-
 	# Make sure we don't use bundled libvpx headers.
 	epatch "${FILESDIR}/${PN}-system-vpx-r4.patch"
 
