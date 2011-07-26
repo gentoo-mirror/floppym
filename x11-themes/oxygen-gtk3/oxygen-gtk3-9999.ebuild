@@ -43,5 +43,5 @@ src_install() {
 	cat <<-EOF > 99oxygen-gtk3
 CONFIG_PROTECT="${EPREFIX}/usr/share/themes/oxygen-gtk/gtk-3.0"
 EOF
-	doenvd 99oxygen-gtk
+	doenvd 99oxygen-gtk3
 }
