@@ -148,6 +148,9 @@ pkg_setup() {
 }
 
 src_prepare() {
+	# bug #374903 - ICU 4.8 compatibility
+	epatch "${FILESDIR}/${PN}-icu-compatibility-r0.patch"
+
 	# Make sure we don't use bundled libvpx headers.
 	epatch "${FILESDIR}/${PN}-system-vpx-r4.patch"
 
