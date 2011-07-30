@@ -148,9 +148,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# bug #374903 - ICU 4.8 compatibility
-	epatch "${FILESDIR}/${PN}-icu-compatibility-r0.patch"
-
 	# Make sure we don't use bundled libvpx headers.
 	epatch "${FILESDIR}/${PN}-system-vpx-r4.patch"
 
@@ -175,6 +172,7 @@ src_prepare() {
 		\! -path 'third_party/libvpx/*' \
 		\! -path 'third_party/mesa/*' \
 		\! -path 'third_party/modp_b64/*' \
+		\! -path 'third_party/mongoose/*' \
 		\! -path 'third_party/npapi/*' \
 		\! -path 'third_party/openmax/*' \
 		\! -path 'third_party/ots/*' \
@@ -186,6 +184,7 @@ src_prepare() {
 		\! -path 'third_party/tcmalloc/*' \
 		\! -path 'third_party/tlslite/*' \
 		\! -path 'third_party/undoview/*' \
+		\! -path 'third_party/webdriver/*' \
 		\! -path 'third_party/webgl_conformance/*' \
 		\! -path 'third_party/webrtc/*' \
 		\! -path 'third_party/yasm/*' \
@@ -272,7 +271,7 @@ src_configure() {
 }
 
 src_compile() {
-	emake chrome chrome_sandbox BUILDTYPE=Release V=1 || die
+	emake chrome chrome_sandbox chromedriver BUILDTYPE=Release V=1 || die
 	pax-mark m out/Release/chrome
 	if use test; then
 		emake {base,crypto,googleurl,net}_unittests BUILDTYPE=Release V=1 || die
