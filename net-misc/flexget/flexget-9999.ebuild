@@ -25,7 +25,8 @@ RDEPEND="dev-python/setuptools
 	>=dev-python/sqlalchemy-0.7
 	dev-python/pyyaml
 	dev-python/beautifulsoup
-	>=dev-python/html5lib-0.11
+	dev-python/html5lib
+	dev-python/jinja
 	dev-python/PyRSS2Gen
 	dev-python/pynzb
 	dev-python/progressbar
@@ -33,7 +34,7 @@ RDEPEND="dev-python/setuptools
 	dev-python/cherrypy"
 DEPEND="${RDEPEND}
 	dev-python/paver
-	test? ( >=dev-python/nose-0.11 )"
+	test? ( dev-python/nose )"
 
 src_prepare() {
 	# Prevent setup from grabbing nose from pypi
