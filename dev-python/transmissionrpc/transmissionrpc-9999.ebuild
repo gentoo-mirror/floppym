@@ -9,26 +9,17 @@ SUPPORT_PYTHON_ABIS=1
 RESTRICT_PYTHON_ABIS="2.[45] 3.*"
 DISTUTILS_SRC_TEST="setup.py"
 
-inherit distutils eutils
+inherit distutils eutils mercurial
 
 DESCRIPTION="Python module that implements the Transmission bittorrent client RPC protocol"
 HOMEPAGE="https://bitbucket.org/blueluna/transmissionrpc"
-SRC_URI="https://bitbucket.org/blueluna/${PN}/get/release-${PV}.tar.bz2 -> ${P}.tar.bz2"
+SRC_URI=""
+EHG_REPO_URI="https://bitbucket.org/blueluna/${PN}"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS=""
 IUSE=""
 
 DEPEND="dev-python/setuptools"
 RDEPEND=""
-
-src_unpack() {
-	default
-	mv blueluna-${PN}-* "${S}" || die
-}
-
-src_prepare() {
-	epatch "${FILESDIR}/fix-test.patch"
-	distutils_src_prepare
-}
