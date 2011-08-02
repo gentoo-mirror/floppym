@@ -34,7 +34,6 @@ RDEPEND="dev-python/setuptools
 	dev-python/flask
 	dev-python/cherrypy"
 DEPEND="${RDEPEND}
-	dev-python/paver
 	test? ( dev-python/nose )"
 
 S="${WORKDIR}/${MY_P}"
@@ -42,9 +41,6 @@ S="${WORKDIR}/${MY_P}"
 src_prepare() {
 	# Prevent setup from grabbing nose from pypi
 	sed -e /setup_requires/d -i pavement.py || die
-
-	# Remove bundled paver
-	rm paver-minilib.zip || die
 
 	epatch_user
 	distutils_src_prepare
