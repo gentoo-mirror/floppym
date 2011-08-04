@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.39 2011/07/20 21:39:37 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.40 2011/08/04 21:21:41 phajdan.jr Exp $
 
 EAPI="3"
 PYTHON_DEPEND="2:2.6"
@@ -39,12 +39,11 @@ RDEPEND="app-arch/bzip2
 	media-libs/flac
 	virtual/jpeg
 	media-libs/libpng
-	>=media-libs/libvpx-0.9.5
 	>=media-libs/libwebp-0.1.2
 	media-libs/speex
+	media-sound/pulseaudio
 	cups? ( >=net-print/cups-1.3.11 )
 	sys-libs/zlib
-	>=virtual/ffmpeg-0.6.90[threads]
 	x11-libs/gtk+:2
 	x11-libs/libXinerama
 	x11-libs/libXScrnSaver
@@ -144,9 +143,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Make sure we don't use bundled libvpx headers.
-	epatch "${FILESDIR}/${PN}-system-vpx-r4.patch"
-
 	# Remove most bundled libraries. Some are still needed.
 	find third_party -type f \! -iname '*.gyp*' \
 		\! -path 'third_party/WebKit/*' \
@@ -164,20 +160,23 @@ src_prepare() {
 		\! -path 'third_party/leveldb/*' \
 		\! -path 'third_party/libjingle/*' \
 		\! -path 'third_party/libphonenumber/*' \
-		\! -path 'third_party/libvpx/libvpx.h' \
+		\! -path 'third_party/libvpx/*' \
 		\! -path 'third_party/mesa/*' \
 		\! -path 'third_party/modp_b64/*' \
 		\! -path 'third_party/npapi/*' \
 		\! -path 'third_party/openmax/*' \
 		\! -path 'third_party/ots/*' \
 		\! -path 'third_party/protobuf/*' \
+		\! -path 'third_party/sfntly/*' \
 		\! -path 'third_party/skia/*' \
 		\! -path 'third_party/speex/speex.h' \
 		\! -path 'third_party/sqlite/*' \
 		\! -path 'third_party/tcmalloc/*' \
 		\! -path 'third_party/tlslite/*' \
 		\! -path 'third_party/undoview/*' \
+		\! -path 'third_party/webgl_conformance/*' \
 		\! -path 'third_party/webrtc/*' \
+		\! -path 'third_party/yasm/*' \
 		\! -path 'third_party/zlib/contrib/minizip/*' \
 		-delete || die
 
@@ -193,13 +192,17 @@ src_configure() {
 	# additions, bug #336871.
 	myconf+=" -Ddisable_sse2=1"
 
+	# Disable NaCl temporarily, this tarball doesn't have IRT.
+	myconf+=" -Ddisable_nacl=1"
+
 	# Use system-provided libraries.
+	# TODO: use_system_ffmpeg
 	# TODO: use_system_hunspell (upstream changes needed).
 	# TODO: use_system_ssl (http://crbug.com/58087).
 	# TODO: use_system_sqlite (http://crbug.com/22208).
+	# TODO: use_system_vpx
 	myconf+="
 		-Duse_system_bzip2=1
-		-Duse_system_ffmpeg=1
 		-Duse_system_flac=1
 		-Duse_system_icu=1
 		-Duse_system_libevent=1
@@ -208,7 +211,6 @@ src_configure() {
 		-Duse_system_libwebp=1
 		-Duse_system_libxml=1
 		-Duse_system_speex=1
-		-Duse_system_vpx=1
 		-Duse_system_xdg_utils=1
 		-Duse_system_zlib=1"
 
@@ -232,7 +234,7 @@ src_configure() {
 
 	# Our system ffmpeg should support more codecs than the bundled one
 	# for Chromium.
-	myconf+=" -Dproprietary_codecs=1"
+	# myconf+=" -Dproprietary_codecs=1"
 
 	local myarch="$(tc-arch)"
 	if [[ $myarch = amd64 ]] ; then
@@ -305,17 +307,17 @@ src_install() {
 	fperms 4755 "${CHROMIUM_HOME}/chrome_sandbox"
 
 	# Install Native Client files on platforms that support it.
-	insinto "${CHROMIUM_HOME}"
-	case "$(tc-arch)" in
-		amd64)
-			doins native_client/irt_binaries/nacl_irt_x86_64.nexe || die
-			doins out/Release/libppGoogleNaClPluginChrome.so || die
-		;;
-		x86)
-			doins native_client/irt_binaries/nacl_irt_x86_32.nexe || die
-			doins out/Release/libppGoogleNaClPluginChrome.so || die
-		;;
-	esac
+	# insinto "${CHROMIUM_HOME}"
+	# case "$(tc-arch)" in
+	# 	amd64)
+	# 		doins native_client/irt_binaries/nacl_irt_x86_64.nexe || die
+	# 		doins out/Release/libppGoogleNaClPluginChrome.so || die
+	# 	;;
+	# 	x86)
+	# 		doins native_client/irt_binaries/nacl_irt_x86_32.nexe || die
+	# 		doins out/Release/libppGoogleNaClPluginChrome.so || die
+	# 	;;
+	# esac
 
 	newexe "${FILESDIR}"/chromium-launcher-r2.sh chromium-launcher.sh || die
 	sed "s:chromium-browser:chromium-browser${SUFFIX}:g" \
@@ -386,11 +388,11 @@ src_install() {
 
 	# Chromium looks for these in its folder
 	# See media_posix.cc and base_paths_linux.cc
-	dosym /usr/$(get_libdir)/libavcodec.so.52 "${CHROMIUM_HOME}" || die
-	dosym /usr/$(get_libdir)/libavformat.so.52 "${CHROMIUM_HOME}" || die
-	dosym /usr/$(get_libdir)/libavutil.so.50 "${CHROMIUM_HOME}" || die
-	#doexe out/Release/ffmpegsumo_nolink || die
-	#doexe out/Release/libffmpegsumo.so || die
+	# dosym /usr/$(get_libdir)/libavcodec.so.52 "${CHROMIUM_HOME}" || die
+	# dosym /usr/$(get_libdir)/libavformat.so.52 "${CHROMIUM_HOME}" || die
+	# dosym /usr/$(get_libdir)/libavutil.so.50 "${CHROMIUM_HOME}" || die
+	doexe out/Release/ffmpegsumo_nolink || die
+	doexe out/Release/libffmpegsumo.so || die
 
 	# Install icons and desktop entry.
 	for SIZE in 16 22 24 32 48 64 128 256 ; do
