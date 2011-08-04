@@ -43,7 +43,6 @@ RDEPEND="app-arch/bzip2
 	media-sound/pulseaudio
 	cups? ( >=net-print/cups-1.3.11 )
 	sys-libs/zlib
-		>=media-video/libav-0.7[threads] )
 	x11-libs/gtk+:2
 	x11-libs/libXinerama
 	x11-libs/libXScrnSaver
@@ -238,7 +237,8 @@ src_configure() {
 
 	# Our system ffmpeg should support more codecs than the bundled one
 	# for Chromium.
-	# myconf+=" -Dproprietary_codecs=1"
+	myconf+=" -Dproprietary_codecs=1"
+	myconf+=" -Dffmpeg_branding=Chrome"
 
 	local myarch="$(tc-arch)"
 	if [[ $myarch = amd64 ]] ; then
