@@ -395,7 +395,7 @@ src_install() {
 	# dosym /usr/$(get_libdir)/libavcodec.so.52 "${CHROMIUM_HOME}" || die
 	# dosym /usr/$(get_libdir)/libavformat.so.52 "${CHROMIUM_HOME}" || die
 	# dosym /usr/$(get_libdir)/libavutil.so.50 "${CHROMIUM_HOME}" || die
-	doexe out/Release/ffmpegsumo_nolink || die
+	#doexe out/Release/ffmpegsumo_nolink || die
 	doexe out/Release/libffmpegsumo.so || die
 
 	# Install icons and desktop entry.
