@@ -400,7 +400,7 @@ src_install() {
 	doexe out/Release/libffmpegsumo.so || die
 
 	# Install icons and desktop entry.
-	for SIZE in 16 22 24 32 48 64 128 256 ; do
+	for SIZE in 16 22 24 32 48 128 256 ; do
 		insinto /usr/share/icons/hicolor/${SIZE}x${SIZE}/apps
 		newins chrome/app/theme/chromium/product_logo_${SIZE}.png \
 			chromium-browser${SUFFIX}.png || die
