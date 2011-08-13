@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.40 2011/08/04 21:21:41 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.44 2011/08/12 23:29:22 phajdan.jr Exp $
 
 EAPI="3"
 PYTHON_DEPEND="2:2.6"
@@ -41,8 +41,10 @@ RDEPEND="app-arch/bzip2
 	media-libs/libpng
 	>=media-libs/libwebp-0.1.2
 	media-libs/speex
-	media-sound/pulseaudio
-	cups? ( >=net-print/cups-1.3.11 )
+	cups? (
+		dev-libs/libgcrypt
+		>=net-print/cups-1.3.11
+	)
 	sys-libs/zlib
 	x11-libs/gtk+:2
 	x11-libs/libXinerama
@@ -195,6 +197,10 @@ src_configure() {
 	# Disable NaCl temporarily, this tarball doesn't have IRT.
 	myconf+=" -Ddisable_nacl=1"
 
+	# Disable WebRTC until they make PulseAudio dependency optional,
+	# bug #377847.
+	myconf+=" -Denable_webrtc=0"
+
 	# Use system-provided libraries.
 	# TODO: use_system_ffmpeg
 	# TODO: use_system_hunspell (upstream changes needed).
@@ -295,9 +301,10 @@ src_test() {
 	LC_ALL="${mylocale}" VIRTUALX_COMMAND=out/Release/googleurl_unittests virtualmake
 
 	# NetUtilTest: bug #361885.
+	# NetUtilTest.GenerateFileName: some locale-related mismatch.
 	# UDP: unstable, active development. We should revisit this later.
 	LC_ALL="${mylocale}" VIRTUALX_COMMAND=out/Release/net_unittests virtualmake \
-		'--gtest_filter=-NetUtilTest.IDNToUnicode*:NetUtilTest.FormatUrl*:*UDP*'
+		'--gtest_filter=-NetUtilTest.IDNToUnicode*:NetUtilTest.FormatUrl*:NetUtilTest.GenerateFileName:*UDP*'
 }
 
 src_install() {
@@ -391,11 +398,11 @@ src_install() {
 	# dosym /usr/$(get_libdir)/libavcodec.so.52 "${CHROMIUM_HOME}" || die
 	# dosym /usr/$(get_libdir)/libavformat.so.52 "${CHROMIUM_HOME}" || die
 	# dosym /usr/$(get_libdir)/libavutil.so.50 "${CHROMIUM_HOME}" || die
-	doexe out/Release/ffmpegsumo_nolink || die
 	doexe out/Release/libffmpegsumo.so || die
 
 	# Install icons and desktop entry.
-	for SIZE in 16 22 24 32 48 64 128 256 ; do
+	# size 64: bug #378777.
+	for SIZE in 16 22 24 32 48 128 256 ; do
 		insinto /usr/share/icons/hicolor/${SIZE}x${SIZE}/apps
 		newins chrome/app/theme/chromium/product_logo_${SIZE}.png \
 			chromium-browser${SUFFIX}.png || die
@@ -403,7 +410,7 @@ src_install() {
 	local mime_types="text/html;text/xml;application/xhtml+xml;"
 	mime_types+="x-scheme-handler/http;x-scheme-handler/https;" # bug #360797
 	make_desktop_entry chromium-browser${SUFFIX} "Chromium ${SLOT}" chromium-browser${SUFFIX} \
-		"Network;WebBrowser"
+		"Network;WebBrowser" \
 		"MimeType=${mime_types}\nStartupWMClass=chromium-browser"
 	sed -e "/^Exec/s/$/ %U/" -i "${ED}"/usr/share/applications/*.desktop || die
 
