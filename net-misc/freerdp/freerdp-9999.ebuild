@@ -15,8 +15,8 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="alsa cups debug-assert debug-channel debug-gdi debug-kbd debug-nla
-	debug-proto debug-rdp5 debug-serial debug-smartcard debug-sound
+IUSE="alsa cups debug-assert debug-gdi debug-kbd debug-nla
+	debug-proto debug-serial debug-smartcard debug-sound
 	debug-stream-assert directfb ffmpeg gnutls iconv ipv6 nss polarssl
 	pulseaudio smartcard static-libs X xv"
 
@@ -69,12 +69,10 @@ src_configure() {
 		--with-crypto=${crypto[0]}
 		$(use_with cups printer cups)
 		$(use_with debug-assert)
-		$(use_with debug-channel)
 		$(use_with debug-gdi)
 		$(use_with debug-kbd)
 		$(use_with debug-nla)
 		$(use_with debug-proto debug)
-		$(use_with debug-rdp5)
 		$(use_with debug-serial)
 		$(use_with debug-smartcard)
 		$(use_with debug-sound)
