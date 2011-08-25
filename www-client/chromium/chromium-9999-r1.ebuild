@@ -230,7 +230,8 @@ src_configure() {
 		$(gyp_use cups use_cups)
 		$(gyp_use gnome use_gconf)
 		$(gyp_use gnome-keyring use_gnome_keyring)
-		$(gyp_use gnome-keyring linux_link_gnome_keyring)"
+		$(gyp_use gnome-keyring linux_link_gnome_keyring)
+		$(gyp_use kerberos use_kerberos)"
 
 	# Enable sandbox.
 	myconf+="
