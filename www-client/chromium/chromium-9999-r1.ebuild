@@ -84,7 +84,10 @@ src_unpack() {
 		"${WORKDIR}"/depot_tools/gclient sync -nD -j 16 || die
 	fi
 
-	"$(PYTHON)" src/build/download_nacl_irt.py
+	# We need to run some hooks, but not gyp_chromium
+	epatch "${FILESDIR}/${PN}-deps-nogyp.patch"
+	"${WORKDIR}"/depot_tools/gclient runhooks || die
+	svn revert src/DEPS || die
 
 	mkdir -p "${S}" || die
 	rsync -rlpgo --exclude=".svn/" src/ "${S}" || die
