@@ -75,12 +75,16 @@ src_unpack() {
 	unpack ./data.tar.lzma || die
 }
 
-src_install() {
-	local CHROME_HOME="opt/google/chrome/"
+src_prepare() {
+	CHROME_HOME="opt/google/chrome/"
+
+	pax-mark m ${CHROME_HOME}chrome || die
+	rm -rf usr/share/menu || die
 
 	# Support LINGUAS, bug #332751.
+	cd "${CHROME_HOME}locales" || die
 	local pak
-	for pak in "${CHROME_HOME}locales"/*.pak; do
+	for pak in *.pak; do
 		local pakbasename="$(basename ${pak})"
 		local pakname="${pakbasename%.pak}"
 		local langname="${pakname//-/_}"
@@ -107,7 +111,7 @@ src_install() {
 	local lang
 	for lang in ${LANGS}; do
 		local crlang="$(chromium_lang ${lang})"
-		local pakfile="${CHROME_HOME}locales/${crlang//_/-}.pak"
+		local pakfile="${crlang//_/-}.pak"
 		if [ ! -f "${pakfile}" ]; then
 			ewarn "LINGUAS warning: no .pak file for ${lang} (${pakfile} not found)"
 		fi
@@ -116,9 +120,9 @@ src_install() {
 		fi
 	done
 
-	pax-mark m ${CHROME_HOME}chrome \
-		${CHROME_HOME}lib{ffmpegsumo,pdf,ppGoogleNaClPluginChrome}.so || die
+}
 
+src_install() {
 	mv opt usr "${D}" || die
 
 	chmod u+s "${D}${CHROME_HOME}chrome-sandbox" || die
