@@ -85,9 +85,10 @@ src_unpack() {
 	fi
 
 	# We need to run some hooks, but not gyp_chromium
-	epatch "${FILESDIR}/${PN}-deps-nogyp.patch"
-	"${WORKDIR}"/depot_tools/gclient runhooks || die
-	svn revert src/DEPS || die
+	# Disabled while nacl is disabled
+	#sed -e 's:"python", "src/build/gyp_chromium":"true":' -i src/DEPS || die
+	#"${WORKDIR}"/depot_tools/gclient runhooks || die
+	#svn revert src/DEPS || die
 
 	mkdir -p "${S}" || die
 	rsync -rlpgo --exclude=".svn/" src/ "${S}" || die
@@ -448,6 +449,7 @@ src_install() {
 
 pkg_preinst() {
 	gnome2_icon_savelist
+	subversion_pkg_preinst
 }
 
 pkg_postinst() {
