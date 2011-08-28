@@ -12,7 +12,7 @@ DISTUTILS_SRC_TEST="setup.py"
 inherit distutils eutils
 
 MY_P="FlexGet-${PV/_beta/r}"
-DESCRIPTION="A multipurpose automation tool for content like torrents, nzbs, podcasts, comics, etc."
+DESCRIPTION="A multipurpose automation tool for content like torrents, nzbs, podcasts, comics, etc"
 HOMEPAGE="http://flexget.com/"
 SRC_URI="http://download.flexget.com/unstable/${MY_P}.tar.gz"
 
