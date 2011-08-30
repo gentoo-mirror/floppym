@@ -67,6 +67,17 @@ RDEPEND+="
 	x11-misc/xdg-utils
 	virtual/ttf-fonts"
 
+gclient_runhooks() {
+	# Run all hooks except gyp_chromium
+	# Moved from src_unpack to avoid repoman warning about sed
+	cp src/DEPS src/DEPS.orig || die
+	sed -e 's:"python", "src/build/gyp_chromium":"true":' -i src/DEPS || die
+	"${WORKDIR}"/depot_tools/gclient runhooks --force
+	local ret=$?
+	mv src/DEPS.orig src/DEPS || die
+	[[ ${ret} -eq 0 ]] || die "gclient runhooks failed"
+}
+
 src_unpack() {
 	# First grab depot_tools
 	ESVN_REVISION= subversion_fetch "http://src.chromium.org/svn/trunk/tools/depot_tools"
@@ -84,11 +95,7 @@ src_unpack() {
 		"${WORKDIR}"/depot_tools/gclient sync -nD -j 16 || die
 	fi
 
-	# We need to run some hooks, but not gyp_chromium
-	# Disabled while nacl is disabled
-	#sed -e 's:"python", "src/build/gyp_chromium":"true":' -i src/DEPS || die
-	#"${WORKDIR}"/depot_tools/gclient runhooks || die
-	#svn revert src/DEPS || die
+	gclient_runhooks
 
 	mkdir -p "${S}" || die
 	rsync -rlpgo --exclude=".svn/" src/ "${S}" || die
