@@ -161,6 +161,8 @@ pkg_setup() {
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-expat-header.patch"
 
+	epatch_user
+
 	# Remove most bundled libraries. Some are still needed.
 	find third_party -type f \! -iname '*.gyp*' \
 		\! -path 'third_party/WebKit/*' \
