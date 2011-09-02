@@ -15,23 +15,21 @@ SRC_URI=""
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
-IUSE="alsa cups pulseaudio X xinerama"
+IUSE="alsa cups pulseaudio X"
 
 DEPEND="dev-libs/openssl
 	alsa? ( media-libs/alsa-lib )
 	pulseaudio? ( media-sound/pulseaudio )
 	cups? ( net-print/cups )
 	sys-libs/zlib
-	x11-libs/libX11
-	x11-libs/libxkbfile
-	X? ( x11-libs/libXext x11-libs/libXcursor )
-	xinerama? ( x11-libs/libXinerama )"
+	X? (
+		x11-libs/libX11
+		x11-libs/libxkbfile
+		x11-libs/libXext
+		x11-libs/libXcursor
+		x11-libs/libXinerama
+	)"
 RDEPEND="${DEPEND}"
-
-PATCHES=(
-	"${FILESDIR}/${PN}-gentoo-release.patch"
-	"${FILESDIR}/${PN}-install.patch"
-)
 
 freerdp_use_with() {
 	local opt=${2:-$(echo "${1}" | tr '[:lower:]' '[:upper:]')}
@@ -51,9 +49,6 @@ src_configure() {
 		$(freerdp_use_with alsa)
 		$(freerdp_use_with cups)
 		$(freerdp_use_with pulseaudio)
-		$(freerdp_use_with X XEXT)
-		$(freerdp_use_with X XCURSOR)
-		$(freerdp_use_with xinerama)
 	)
 	cmake-utils_src_configure
 }
