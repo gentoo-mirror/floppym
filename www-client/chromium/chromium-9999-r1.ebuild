@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.45 2011/08/26 20:56:05 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.48 2011/08/30 23:41:44 floppym Exp $
 
 EAPI="3"
 PYTHON_DEPEND="2:2.6"
@@ -72,7 +72,7 @@ gclient_runhooks() {
 	# Moved from src_unpack to avoid repoman warning about sed
 	cp src/DEPS src/DEPS.orig || die
 	sed -e 's:"python", "src/build/gyp_chromium":"true":' -i src/DEPS || die
-	"${WORKDIR}"/depot_tools/gclient runhooks --force
+	"${WORKDIR}/depot_tools/gclient" runhooks
 	local ret=$?
 	mv src/DEPS.orig src/DEPS || die
 	[[ ${ret} -eq 0 ]] || die "gclient runhooks failed"
@@ -96,6 +96,7 @@ src_unpack() {
 	fi
 
 	gclient_runhooks
+	einfo "   working copy: ${ESVN_STORE_DIR}/${PN}"
 
 	mkdir -p "${S}" || die
 	rsync -rlpgo --exclude=".svn/" src/ "${S}" || die
@@ -240,13 +241,13 @@ src_configure() {
 		-Duse_system_zlib=1"
 
 	# Optional dependencies.
-	# TODO: linux_link_kerberos
 	myconf+="
 		$(gyp_use cups use_cups)
 		$(gyp_use gnome use_gconf)
 		$(gyp_use gnome-keyring use_gnome_keyring)
 		$(gyp_use gnome-keyring linux_link_gnome_keyring)
 		$(gyp_use kerberos use_kerberos)
+		$(gyp_use kerberos linux_link_kerberos)
 		$(gyp_use pulseaudio use_pulseaudio)"
 
 	# Enable sandbox.
@@ -431,8 +432,7 @@ src_install() {
 	doexe out/Release/libffmpegsumo.so || die
 
 	# Install icons and desktop entry.
-	# size 64: bug #378777.
-	for SIZE in 16 22 24 32 48 128 256 ; do
+	for SIZE in 16 22 24 32 48 64 128 256 ; do
 		insinto /usr/share/icons/hicolor/${SIZE}x${SIZE}/apps
 		newins chrome/app/theme/chromium/product_logo_${SIZE}.png \
 			chromium-browser${SUFFIX}.png || die
