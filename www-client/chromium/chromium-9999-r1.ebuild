@@ -61,7 +61,6 @@ DEPEND="${RDEPEND}
 	>=sys-devel/make-3.81-r2
 	test? (
 		dev-python/pyftpdlib
-		dev-python/simplejson
 	)"
 RDEPEND+="
 	!=www-client/chromium-9999
