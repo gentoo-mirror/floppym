@@ -53,6 +53,7 @@ RDEPEND="app-arch/bzip2
 	kerberos? ( virtual/krb5 )"
 DEPEND="${RDEPEND}
 	dev-lang/perl
+	dev-python/simplejson
 	>=dev-util/gperf-3.0.3
 	>=dev-util/pkgconfig-0.23
 	>=sys-devel/bison-2.4.3
