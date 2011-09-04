@@ -11,17 +11,13 @@
 		moving forward and implement features that rdesktop lacks the most.
 	</longdescription>
 	<use>
-		<flag name="debug-assert">Enable assert debugging</flag>
 		<flag name="debug-channel">Enable debugging of virtual channel code</flag>
-		<flag name="debug-gdi">Enable debugging of GDI</flag>
 		<flag name="debug-kbd">Enable debugging of keyboard handling</flag>
-		<flag name="debug-nla">Enable debugging of network level authentication</flag>
 		<flag name="debug-proto">Enable protocol debugging output</flag>
 		<flag name="debug-rdp5">Enable debugging of drawing code</flag>
 		<flag name="debug-serial">Enable debugging of serial code</flag>
 		<flag name="debug-smartcard">Enable debugging of smard-card code</flag>
 		<flag name="debug-sound">Enable debugging of sound code</flag>
-		<flag name="debug-stream-assert">Enable stream assert debugging</flag>
 		<flag name="gnutls">Use GnuTLS as crypto backend</flag>
 		<flag name="nss">Use NSS as crypto backend</flag>
 		<flag name="polarssl">Use PolarSSL as crypto backend</flag>
