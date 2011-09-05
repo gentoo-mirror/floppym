@@ -6,7 +6,9 @@ EAPI="4"
 
 inherit cmake-utils git-2
 
-EGIT_REPO_URI="git://github.com/FreeRDP/FreeRDP-1.0.git"
+#EGIT_REPO_URI="git://github.com/FreeRDP/FreeRDP-1.0.git"
+EGIT_REPO_URI="/home/floppym/src/FreeRDP-1.0"
+EGIT_BRANCH="gentoo-patches"
 
 DESCRIPTION="A Remote Desktop Protocol Client, forked from rdesktop"
 HOMEPAGE="http://www.freerdp.com/"
@@ -15,40 +17,42 @@ SRC_URI=""
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
-IUSE="alsa cups pulseaudio X"
+IUSE="+alsa +cups directfb pulseaudio test +X +xcursor +xext +xinerama +xkbfile"
 
-DEPEND="dev-libs/openssl
-	alsa? ( media-libs/alsa-lib )
-	pulseaudio? ( media-sound/pulseaudio )
-	cups? ( net-print/cups )
+RDEPEND="
+	dev-libs/openssl
 	sys-libs/zlib
+	alsa? ( media-libs/alsa-lib )
+	cups? ( net-print/cups )
+	directfb? ( dev-libs/DirectFB )
+	pulseaudio? ( media-sound/pulseaudio )
 	X? (
 		x11-libs/libX11
-		x11-libs/libxkbfile
-		x11-libs/libXext
-		x11-libs/libXcursor
-		x11-libs/libXinerama
-	)"
-RDEPEND="${DEPEND}"
-
-freerdp_use_with() {
-	local opt=${2:-$(echo "${1}" | tr '[:lower:]' '[:upper:]')}
-
-	if use "${1}"; then
-		echo "-DWITH_${opt}=ON"
-		echo "-DWITHOUT_${opt}=OFF"
-	else
-		echo "-DWITH_${opt}=OFF"
-		echo "-DWITHOUT_${opt}=ON"
-	fi
-}
+		xcursor? ( x11-libs/libXcursor )
+		xext? ( x11-libs/libXext )
+		xinerama? ( x11-libs/libXinerama )
+	)
+	xkbfile? ( x11-libs/libxkbfile )
+"
+DEPEND="${RDEPEND}
+	app-text/xmlto
+	test? ( dev-util/cunit )
+"
 
 src_configure() {
 	# TODO: Add option to disable X entirely
 	local mycmakeargs=(
-		$(freerdp_use_with alsa)
-		$(freerdp_use_with cups)
-		$(freerdp_use_with pulseaudio)
+		-DWITH_MANPAGES=ON
+		$(cmake-utils_use_with alsa)
+		$(cmake-utils_use_with cups)
+		$(cmake-utils_use_with directfb)
+		$(cmake-utils_use_with pulseaudio)
+		$(cmake-utils_use_with test CUNIT)
+		$(cmake-utils_use_with X X11)
+		$(cmake-utils_use_with xcursor)
+		$(cmake-utils_use_with xext)
+		$(cmake-utils_use_with xinerama)
+		$(cmake-utils_use_with xkbfile)
 	)
 	cmake-utils_src_configure
 }
