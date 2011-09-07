@@ -6,13 +6,11 @@ EAPI="4"
 
 inherit cmake-utils git-2
 
-#EGIT_REPO_URI="git://github.com/FreeRDP/FreeRDP-1.0.git"
-EGIT_REPO_URI="/home/floppym/src/FreeRDP-1.0"
-EGIT_BRANCH="gentoo-patches"
-
 DESCRIPTION="A Remote Desktop Protocol Client, forked from rdesktop"
 HOMEPAGE="http://www.freerdp.com/"
 SRC_URI=""
+EGIT_REPO_URI="git://github.com/FreeRDP/FreeRDP.git
+	https://github.com/FreeRDP/FreeRDP.git"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -38,6 +36,9 @@ DEPEND="${RDEPEND}
 	app-text/xmlto
 	test? ( dev-util/cunit )
 "
+
+# Test suite segfaults
+RESTRICT="test"
 
 src_configure() {
 	# TODO: Add option to disable X entirely
