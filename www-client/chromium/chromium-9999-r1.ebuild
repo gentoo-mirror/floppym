@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.48 2011/08/30 23:41:44 floppym Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.50 2011/09/03 22:50:34 floppym Exp $
 
 EAPI="3"
 PYTHON_DEPEND="2:2.6"
@@ -54,14 +54,15 @@ RDEPEND="app-arch/bzip2
 	kerberos? ( virtual/krb5 )"
 DEPEND="${RDEPEND}
 	dev-lang/perl
+	dev-python/simplejson
 	>=dev-util/gperf-3.0.3
 	>=dev-util/pkgconfig-0.23
+	dev-util/scons
 	>=sys-devel/bison-2.4.3
 	sys-devel/flex
 	>=sys-devel/make-3.81-r2
 	test? (
 		dev-python/pyftpdlib
-		dev-python/simplejson
 	)"
 RDEPEND+="
 	!=www-client/chromium-9999
