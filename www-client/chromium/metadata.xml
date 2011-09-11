@@ -7,5 +7,6 @@
 		<flag name="chromedriver">Also build and install ChromeDriver, a tool that
 		can control the browser using automation proxy framework. This is mostly
 		intended for automated testing of web applications.</flag>
+		<flag name="safesync">Use the safesync url to avoid possibly broken revisions</flag>
 	</use>
 </pkgmetadata>

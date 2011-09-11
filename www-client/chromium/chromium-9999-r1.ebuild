@@ -15,7 +15,7 @@ ESVN_REPO_URI="http://src.chromium.org/svn/trunk/src"
 LICENSE="BSD"
 SLOT="live"
 KEYWORDS=""
-IUSE="chromedriver cups gnome gnome-keyring kerberos pulseaudio"
+IUSE="chromedriver cups gnome gnome-keyring kerberos pulseaudio +safesync"
 
 # en_US is ommitted on purpose from the list below. It must always be available.
 LANGS="am ar bg bn ca cs da de el en_GB es es_LA et fa fi fil fr gu he hi hr
@@ -68,9 +68,25 @@ RDEPEND+="
 	x11-misc/xdg-utils
 	virtual/ttf-fonts"
 
+gclient_config() {
+	einfo "gclient config -->"
+	# Allow the user to keep their config if they know what they are doing
+	if ! grep -q KEEP .gclient; then
+		cp -f "${FILESDIR}/dot-gclient" .gclient || die
+	fi
+	cat .gclient || die
+}
+
+gclient_sync() {
+	einfo "gclient sync -->"
+	"${WORKDIR}/depot_tools/gclient" sync --nohooks --jobs=16 \
+		--delete_unversioned_trees $(use safesync || echo --head) || die
+}
+
 gclient_runhooks() {
 	# Run all hooks except gyp_chromium
 	# Moved from src_unpack to avoid repoman warning about sed
+	einfo "gclient runhooks -->"
 	cp src/DEPS src/DEPS.orig || die
 	sed -e 's:"python", "src/build/gyp_chromium":"true":' -i src/DEPS || die
 	"${WORKDIR}/depot_tools/gclient" runhooks
@@ -84,29 +100,22 @@ src_unpack() {
 	ESVN_REVISION= subversion_fetch "http://src.chromium.org/svn/trunk/tools/depot_tools"
 	mv "${S}" "${WORKDIR}"/depot_tools || die
 
-	cd "${ESVN_STORE_DIR}"/${PN} || die
+	cd "${ESVN_STORE_DIR}/${PN}" || die
 
-	if [[ ! -f .gclient ]]; then
-		"${WORKDIR}"/depot_tools/gclient config "${ESVN_REPO_URI}" || die
-	fi
-
-	if [[ -n ${ESVN_REVISION} ]]; then
-		"${WORKDIR}"/depot_tools/gclient sync -nD -j 16 -r "${ESVN_REVISION}" || die
-	else
-		"${WORKDIR}"/depot_tools/gclient sync -nD -j 16 || die
-	fi
-
+	gclient_config
+	gclient_sync
 	gclient_runhooks
-	einfo "   working copy: ${ESVN_STORE_DIR}/${PN}"
+
+	subversion_wc_info
 
 	mkdir -p "${S}" || die
+	einfo "Copying source to ${S}"
 	rsync -rlpgo --exclude=".svn/" src/ "${S}" || die
 
 	# Display correct svn revision in about box, and log new version.
-	local CREV=$(subversion__svn_info "src" "Revision")
-	echo ${CREV} > "${S}"/build/LASTCHANGE.in || die
+	echo "${ESVN_WC_REVISION}" > "${S}"/build/LASTCHANGE.in || die
 	. src/chrome/VERSION
-	elog "Installing/updating to version ${MAJOR}.${MINOR}.${BUILD}.${PATCH} (Developer Build ${CREV})"
+	elog "Installing/updating to version ${MAJOR}.${MINOR}.${BUILD}.${PATCH} (Developer Build ${ESVN_WC_REVISION})"
 }
 
 gyp_use() {
@@ -160,8 +169,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-expat-header.patch"
-
 	epatch_user
 
 	# Remove most bundled libraries. Some are still needed.
@@ -170,6 +177,7 @@ src_prepare() {
 		\! -path 'third_party/angle/*' \
 		\! -path 'third_party/cacheinvalidation/*' \
 		\! -path 'third_party/cld/*' \
+		\! -path 'third_party/expat/*' \
 		\! -path 'third_party/ffmpeg/*' \
 		\! -path 'third_party/flac/flac.h' \
 		\! -path 'third_party/gpsd/*' \
@@ -177,7 +185,6 @@ src_prepare() {
 		\! -path 'third_party/hunspell/*' \
 		\! -path 'third_party/iccjpeg/*' \
 		\! -path 'third_party/launchpad_translations/*' \
-		\! -path 'third_party/leveldatabase/*' \
 		\! -path 'third_party/leveldb/*' \
 		\! -path 'third_party/leveldatabase/*' \
 		\! -path 'third_party/libjingle/*' \
@@ -459,7 +466,6 @@ src_install() {
 
 pkg_preinst() {
 	gnome2_icon_savelist
-	subversion_pkg_preinst
 }
 
 pkg_postinst() {
