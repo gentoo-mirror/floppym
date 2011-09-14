@@ -86,7 +86,6 @@ gclient_sync() {
 gclient_runhooks() {
 	# Run all hooks except gyp_chromium.
 	einfo "gclient runhooks -->"
-	einfo "gclient runhooks -->"
 	cp src/DEPS src/DEPS.orig || die
 	sed -e 's:"python", "src/build/gyp_chromium":"true":' -i src/DEPS || die
 	"${WORKDIR}/depot_tools/gclient" runhooks
