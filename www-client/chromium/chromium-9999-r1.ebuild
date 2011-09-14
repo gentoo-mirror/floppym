@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.50 2011/09/03 22:50:34 floppym Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-9999-r1.ebuild,v 1.51 2011/09/14 01:50:03 floppym Exp $
 
 EAPI="3"
 PYTHON_DEPEND="2:2.6"
@@ -70,7 +70,7 @@ RDEPEND+="
 
 gclient_config() {
 	einfo "gclient config -->"
-	# Allow the user to keep their config if they know what they are doing
+	# Allow the user to keep their config if they know what they are doing.
 	if ! grep -q KEEP .gclient; then
 		cp -f "${FILESDIR}/dot-gclient" .gclient || die
 	fi
@@ -80,12 +80,12 @@ gclient_config() {
 gclient_sync() {
 	einfo "gclient sync -->"
 	"${WORKDIR}/depot_tools/gclient" sync --nohooks --jobs=16 \
-		--delete_unversioned_trees $(use safesync || echo --head) || die
+		--delete_unversioned_trees || die
 }
 
 gclient_runhooks() {
-	# Run all hooks except gyp_chromium
-	# Moved from src_unpack to avoid repoman warning about sed
+	# Run all hooks except gyp_chromium.
+	einfo "gclient runhooks -->"
 	einfo "gclient runhooks -->"
 	cp src/DEPS src/DEPS.orig || die
 	sed -e 's:"python", "src/build/gyp_chromium":"true":' -i src/DEPS || die
@@ -96,7 +96,7 @@ gclient_runhooks() {
 }
 
 src_unpack() {
-	# First grab depot_tools
+	# First grab depot_tools.
 	ESVN_REVISION= subversion_fetch "http://src.chromium.org/svn/trunk/tools/depot_tools"
 	mv "${S}" "${WORKDIR}"/depot_tools || die
 
