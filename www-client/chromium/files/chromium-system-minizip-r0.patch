@@ -1,0 +1,15 @@
+diff --git a/chrome/common/zip.cc b/chrome/common/zip.cc
+index b834b9a..1cd8628 100644
+--- a/chrome/common/zip.cc
++++ b/chrome/common/zip.cc
+@@ -11,8 +11,8 @@
+ #include "base/string_util.h"
+ #include "base/utf_string_conversions.h"
+ #include "net/base/file_stream.h"
+-#include "third_party/zlib/contrib/minizip/unzip.h"
+-#include "third_party/zlib/contrib/minizip/zip.h"
++#include <minizip/unzip.h>
++#include <minizip/zip.h>
+ #if defined(OS_WIN)
+ #include "third_party/zlib/contrib/minizip/iowin32.h"
+ #endif
