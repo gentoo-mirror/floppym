@@ -17,7 +17,8 @@ IUSE=""
 
 RDEPEND=">=virtual/jre-1.6.0
 	media-libs/libmediainfo
-	media-libs/libzen"
+	media-libs/libzen
+	media-video/tsmuxer"
 
 QA_PREBUILT="*"
 S="${WORKDIR}/pms-linux-${PV}"
@@ -30,8 +31,8 @@ src_install() {
 	exeinto /opt/${PN}
 	doexe PMS.sh
 
-	exeinto /opt/${PN}/linux
-	doexe linux/tsMuxeR
+	dodir /opt/${PN}/linux
+	dosym ../../bin/tsMuxeR /opt/${PN}/linux/tsMuxeR
 
 	dodoc CHANGELOG README
 	dohtml -r documentation/*
@@ -41,8 +42,7 @@ src_install() {
 	export PMS_HOME="${EPREFIX}/opt/${PN}"
 	exec "${EPREFIX}/opt/${PN}/PMS.sh" "\$@"
 	EOF
-	exeinto /usr/bin
-	doexe ${PN}
+	dobin ${PN}
 
 	jar -xf pms.jar resources/images/icon-{32,256}.png || die
 	insinto /usr/share/icons/hicolor/32x32/apps
