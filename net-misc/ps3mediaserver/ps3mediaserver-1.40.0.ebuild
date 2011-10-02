@@ -4,6 +4,8 @@
 
 EAPI="4"
 
+inherit eutils
+
 DESCRIPTION="DLNA compliant Upnp Media Server for the PS3"
 HOMEPAGE="http://ps3mediaserver.org"
 SRC_URI="http://${PN}.googlecode.com/files/pms-generic-linux-unix-${PV}.tgz"
@@ -31,6 +33,9 @@ src_install() {
 	exeinto /opt/${PN}/linux
 	doexe linux/tsMuxeR
 
+	dodoc CHANGELOG README
+	dohtml -r documentation/*
+
 	cat > ${PN} <<-EOF
 	#!/bin/sh
 	export PMS_HOME="${EPREFIX}/opt/${PN}"
@@ -39,6 +44,20 @@ src_install() {
 	exeinto /usr/bin
 	doexe ${PN}
 
-	dodoc CHANGELOG README
-	dohtml -r documentation/*
+	jar -xf pms.jar resources/images/icon-{32,256}.png || die
+	insinto /usr/share/icons/hicolor/32x32/apps
+	newins resources/images/icon-32.png ${PN}.png
+	insinto /usr/share/icons/hicolor/256x256/apps
+	newins resources/images/icon-256.png ${PN}.png
+
+	cat > ${PN}.desktop <<-EOF
+	[Desktop Entry]
+	Name=PS3 Media Server
+	GenericName=Media Server
+	Exec=${PN}
+	Icon=${PN}
+	Type=Application
+	Categories=Network;
+	EOF
+	domenu ${PN}.desktop
 }
