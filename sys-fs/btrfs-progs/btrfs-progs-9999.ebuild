@@ -20,14 +20,14 @@ DEPEND="debug-utils? ( dev-python/matplotlib )
 	)"
 RDEPEND="${DEPEND}"
 
-EGIT_REPO_URI="git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs-unstable.git"
+EGIT_REPO_URI="http://git.darksatanic.net/repo/btrfs-progs-unstable.git"
+EGIT_BRANCH="integration-20110805"
 
 src_unpack() {
 	git-2_src_unpack
 	cd "${S}"
 
-	# Fix hardcoded "gcc" and "make"
-	sed -i -e 's:gcc $(CFLAGS):$(CC) $(CFLAGS):' Makefile
+	# Fix hardcoded "make"
 	sed -i -e 's:make:$(MAKE):' Makefile
 }
 
