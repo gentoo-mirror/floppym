@@ -31,12 +31,11 @@ src_install() {
 
 	insinto /usr/share/${PN}
 	doins logback*.xml WEB.conf
-	doins -r plugins renderers
+	doins -r documentation plugins renderers
 
 	dosym /opt/tsmuxer/bin/tsMuxeR /usr/share/${PN}/linux/tsMuxeR
 
 	dodoc CHANGELOG README
-	dohtml -r documentation/*
 
 	unzip -j pms.jar resources/images/icon-{32,256}.png || die
 	insinto /usr/share/icons/hicolor/32x32/apps
