@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit eutils
+inherit eutils java-pkg-2
 
 DESCRIPTION="DLNA compliant Upnp Media Server for the PS3"
 HOMEPAGE="http://ps3mediaserver.org"
@@ -15,7 +15,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND=">=virtual/jre-1.6.0
+DEPEND="app-arch/unzip"
+RDEPEND=">=virtual/jre-1.5
 	media-libs/libmediainfo
 	media-libs/libzen
 	media-video/tsmuxer"
@@ -24,31 +25,24 @@ QA_PREBUILT="*"
 S="${WORKDIR}/pms-linux-${PV}"
 
 src_install() {
-	insinto /opt/${PN}
-	doins logback*.xml pms.jar WEB.conf
+	java-pkg_dojar pms.jar
+	java-pkg_dolauncher ps3mediaserver --main net.pms.PMS \
+		--pwd /usr/share/${PN}
+
+	insinto /usr/share/${PN}
+	doins logback*.xml WEB.conf
 	doins -r plugins renderers
 
-	exeinto /opt/${PN}
-	doexe PMS.sh
-
-	dodir /opt/${PN}/linux
-	dosym ../../bin/tsMuxeR /opt/${PN}/linux/tsMuxeR
+	dosym /opt/tsmuxer/bin/tsMuxeR /usr/share/${PN}/linux/tsMuxeR
 
 	dodoc CHANGELOG README
 	dohtml -r documentation/*
 
-	cat > ${PN} <<-EOF
-	#!/bin/sh
-	export PMS_HOME="${EPREFIX}/opt/${PN}"
-	exec "${EPREFIX}/opt/${PN}/PMS.sh" "\$@"
-	EOF
-	dobin ${PN}
-
-	jar -xf pms.jar resources/images/icon-{32,256}.png || die
+	unzip -j pms.jar resources/images/icon-{32,256}.png || die
 	insinto /usr/share/icons/hicolor/32x32/apps
-	newins resources/images/icon-32.png ${PN}.png
+	newins icon-32.png ${PN}.png
 	insinto /usr/share/icons/hicolor/256x256/apps
-	newins resources/images/icon-256.png ${PN}.png
+	newins icon-256.png ${PN}.png
 
 	cat > ${PN}.desktop <<-EOF
 	[Desktop Entry]
