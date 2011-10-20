@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PMS" default="jar">
+	<target name="init">
+		<mkdir dir="build"/>
+		<mkdir dir="docs"/>
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="." destdir="build" encoding="iso-8859-1"
+			classpath="${gentoo.classpath}" includeantruntime="false"/>
+	</target>
+	<target name="jar" depends="compile">
+		<jar jarfile="pms.jar" basedir="build"/>
+	</target>
+	<target name="javadoc" depends="init">
+		<javadoc sourcepath="." destdir="docs" encoding="iso-8859-1"/>
+	</target>
+	<target name="clean">
+		<delete dir="build"/>
+		<delete dir="docs"/>
+		<delete file="pms.jar"/>
+	</target>
+</project>
