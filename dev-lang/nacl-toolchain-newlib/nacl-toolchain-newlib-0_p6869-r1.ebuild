@@ -45,8 +45,7 @@ DEPEND="${RDEPEND}
 	app-arch/unzip
 	dev-libs/mpc
 	dev-libs/cloog-ppl
-	dev-libs/ppl
-	>=media-libs/libart_lgpl-2.1
+	dev-libs/ppl >=media-libs/libart_lgpl-2.1
 	>=sys-apps/texinfo-4.8
 	>=sys-devel/binutils-2.15.94
 	>=sys-devel/bison-1.875
@@ -79,4 +78,13 @@ src_install() {
 	local TOOLCHAIN_HOME="/usr/$(get_libdir)"
 	dodir "${TOOLCHAIN_HOME}"
 	mv "${WORKDIR}/${PN}" "${ED}/${TOOLCHAIN_HOME}" || die
+
+	local ctarget=x86_64-nacl
+	local bindir=${ED%/}${TOOLCHAIN_HOME}/${PN}/bin
+	RESTRICT= prepstrip "${bindir}"
+	RESTRICT= \
+		STRIP="${bindir}/${ctarget}-strip" \
+		READELF="${bindir}/${ctarget}-readelf" \
+		OBJCOPY="${bindir}/${ctarget}-objcopy" \
+		prepstrip "${ED%/}${TOOLCHAIN_HOME}"/${PN}/x86_64-nacl/lib{,32}
 }
