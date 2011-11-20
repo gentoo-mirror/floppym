@@ -24,48 +24,46 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	rm -r libusb-1.0 || die
-	chmod +x libpit/configure || die
 	edos2unix heimdall-frontend/heimdall-frontend.pro || die
 
-	cd "${S}"/heimdall || die
-	chmod +x configure || die
-	edos2unix Makefile.am || die
-	sed -ibak -e /sudo/d Makefile.am || die
+	cd "${S}/heimdall" || die
+	edos2unix configure.ac Makefile.am || die
+	sed -i -e /sudo/d Makefile.am || die
 	eautoreconf
 }
 
 src_configure() {
-	cd "${S}"/libpit || die
+	cd "${S}/libpit" || die
 	econf
 
-	cd "${S}"/heimdall || die
+	cd "${S}/heimdall" || die
 	econf
 
 	if use qt4; then
-		cd "${S}"/heimdall-frontend || die
+		cd "${S}/heimdall-frontend" || die
 		eqmake4 heimdall-frontend.pro OUTPUTDIR=/usr/bin || die
 	fi
 }
 
 src_compile() {
-	cd "${S}"/libpit || die
+	cd "${S}/libpit" || die
 	emake
 
-	cd "${S}"/heimdall || die
+	cd "${S}/heimdall" || die
 	emake
 
 	if use qt4; then
-		cd "${S}"/heimdall-frontend || die
+		cd "${S}/heimdall-frontend" || die
 		emake
 	fi
 }
 
 src_install() {
-	cd "${S}"/heimdall || die
+	cd "${S}/heimdall" || die
 	emake DESTDIR="${D}" install
 
 	if use qt4; then
-		cd "${S}"/heimdall-frontend || die
+		cd "${S}/heimdall-frontend" || die
 		emake INSTALL_ROOT="${D}" install
 	fi
 }
