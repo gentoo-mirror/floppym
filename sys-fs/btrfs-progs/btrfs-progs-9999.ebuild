@@ -20,8 +20,7 @@ DEPEND="debug-utils? ( dev-python/matplotlib )
 	)"
 RDEPEND="${DEPEND}"
 
-EGIT_REPO_URI="http://git.darksatanic.net/repo/btrfs-progs-unstable.git"
-EGIT_BRANCH="for-chris"
+EGIT_REPO_URI="git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs.git"
 
 src_unpack() {
 	git-2_src_unpack
