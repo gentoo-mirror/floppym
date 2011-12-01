@@ -5,6 +5,8 @@
 EAPI=4
 
 PYTHON_DEPEND="2"
+SUPPORT_PYTHON_ABIS=1
+RESTRICT_PYTHON_ABIS="3.*"
 
 inherit git-2 python
 
@@ -19,11 +21,27 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-src_compile() {
-	:
+src_install() {
+	installing() {
+		insinto "$(python_get_sitedir)"
+		doins -r youtube_dl
+		cp youtube-dl.dev youtube-dl-${PYTHON_ABI} || die
+		python_convert_shebangs ${PYTHON_ABI} youtube-dl-${PYTHON_ABI}
+		dobin youtube-dl-${PYTHON_ABI}
+	}
+	python_execute_function installing
+
+	rm youtube-dl || die
+	python_generate_wrapper_scripts youtube-dl
+	dobin youtube-dl
+
+	dodoc README.md
 }
 
-src_install() {
-	python_convert_shebangs 2 youtube-dl
-	dobin youtube-dl
+pkg_postinst() {
+	python_mod_optimize youtube_dl
+}
+
+pkg_postrm() {
+	python_mod_cleanup youtube_dl
 }
