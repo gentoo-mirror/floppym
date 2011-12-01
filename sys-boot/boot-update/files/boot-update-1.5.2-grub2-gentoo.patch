@@ -1,0 +1,72 @@
+From 999cc6c9a3e2eb4d75d0f41682348d9729617cf5 Mon Sep 17 00:00:00 2001
+From: Mike Gilbert <floppym@gentoo.org>
+Date: Thu, 1 Dec 2011 00:12:07 -0500
+Subject: [PATCH] Modify grub extension for gentoo
+
+---
+ python/modules/funtoo/boot/extensions/grub.py |   20 ++++++++++----------
+ 1 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/python/modules/funtoo/boot/extensions/grub.py b/python/modules/funtoo/boot/extensions/grub.py
+index b154e32..b1f055d 100644
+--- a/python/modules/funtoo/boot/extensions/grub.py
++++ b/python/modules/funtoo/boot/extensions/grub.py
+@@ -15,7 +15,7 @@ class GRUBExtension(Extension):
+ 	""" implements an extension for the grub bootloader """
+ 	def __init__(self, config, testing = False):
+ 		Extension.__init__(self,config)
+-		self.fn = "%s/grub/grub.cfg" % self.config["boot/path"]
++		self.fn = "%s/grub2/grub.cfg" % self.config["boot/path"]
+ 		self.bootitems = []
+ 		self.testing = testing
+ 		self.GuppyMap()
+@@ -25,8 +25,8 @@ class GRUBExtension(Extension):
+ 	def isAvailable(self):
+ 		msgs = []
+ 		ok = True
+-		if not os.path.exists("/sbin/grub-probe"):
+-			msgs.append(["fatal", "/sbin/grub-probe, required for boot/generate = grub,  does not exist"])
++		if not os.path.exists("/sbin/grub2-probe"):
++			msgs.append(["fatal", "/sbin/grub2-probe, required for boot/generate = grub,  does not exist"])
+ 			ok = False
+ 		return [ok, msgs]
+ 	
+@@ -119,8 +119,8 @@ class GRUBExtension(Extension):
+ 			else:
+ 				font = "unifont.pf2"
+ 
+-			src_font = "/usr/share/grub/fonts/%s" % font
+-			dst_font = "%s/grub/%s" % (c["boot/path"], font)
++			src_font = "/usr/share/grub2/fonts/%s" % font
++			dst_font = "%s/grub2/%s" % (c["boot/path"], font)
+ 	
+ 			if not os.path.exists(dst_font):
+ 				if os.path.exists(src_font):
+@@ -197,19 +197,19 @@ class GRUBExtension(Extension):
+ 		""" creates the device map """
+ 		out = None
+ 		if self.testing:
+-			out = commands.getstatusoutput("/sbin/grub-mkdevicemap --no-floppy -m /dev/null")
++			out = commands.getstatusoutput("/sbin/grub2-mkdevicemap --no-floppy -m /dev/null")
+ 		else:
+-			out = commands.getstatusoutput("/sbin/grub-mkdevicemap --no-floppy")
++			out = commands.getstatusoutput("/sbin/grub2-mkdevicemap --no-floppy")
+ 		if out[0] != 0:
+-			print "grub-mkdevicemap"
++			print "grub2-mkdevicemap"
+ 			print out[1]
+ 			sys.exit(1)
+ 
+ 	def Guppy(self, argstring, fatal=True):
+ 		""" probes a device """
+-		out = commands.getstatusoutput("/sbin/grub-probe " + argstring)
++		out = commands.getstatusoutput("/sbin/grub2-probe " + argstring)
+ 		if fatal and out[0] != 0:
+-			print "grub-probe " + argstring
++			print "grub2-probe " + argstring
+ 			print out[1]
+ 			sys.exit(1)
+ 		else:
+-- 
+1.7.3.4
+

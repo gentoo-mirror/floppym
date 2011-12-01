@@ -8,7 +8,7 @@ PYTHON_DEPEND="2"
 SUPPORT_PYTHON_ABIS=1
 RESTRICT_PYTHON_ABIS="3.*"
 
-inherit python
+inherit eutils python
 
 DESCRIPTION="Funtoo Core Boot Framework for global boot loader configuration"
 HOMEPAGE="http://www.funtoo.org/en/funtoo/core/boot"
@@ -18,6 +18,10 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~sparc ~x86"
 IUSE=""
+
+src_prepare() {
+	epatch "${FILESDIR}/${P}-grub2-gentoo.patch"
+}
 
 src_compile() {
 	:
