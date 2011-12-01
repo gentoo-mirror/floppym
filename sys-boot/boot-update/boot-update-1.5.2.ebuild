@@ -1,7 +1,14 @@
 # Copyright 2010 Funtoo Technologies
 # Distributed under the terms of the GNU General Public License v2
+# $Header: $
 
-EAPI="2"
+EAPI="4"
+
+PYTHON_DEPEND="2"
+SUPPORT_PYTHON_ABIS=1
+RESTRICT_PYTHON_ABIS="3.*"
+
+inherit python
 
 DESCRIPTION="Funtoo Core Boot Framework for global boot loader configuration"
 HOMEPAGE="http://www.funtoo.org/en/funtoo/core/boot"
@@ -9,19 +16,14 @@ SRC_URI="http://www.funtoo.org/archive/boot-update/${P}.tar.bz2"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86 sparc"
+KEYWORDS="~amd64 ~sparc ~x86"
+IUSE=""
 
-DEPEND=""
-RDEPEND="dev-lang/python >=sys-boot/grub-1.98-r2"
-RESTRICT="nomirror"
+src_compile() {
+	:
+}
 
 src_install() {
-	insinto /usr/lib/`eselect python show --python2`/site-packages
-	cd ${S}/python/modules
-	doins -r .
-
-	cd ${S}
-
 	dodoc doc/*.rst
 
 	doman doc/boot-update.8
@@ -33,8 +35,19 @@ src_install() {
 	dodoc etc/boot.conf.example
 	insinto /etc
 	doins etc/boot.conf
+
+	installing() {
+		insinto "$(python_get_sitedir)"
+		doins -r funtoo
+	}
+	cd python/modules || die
+	python_execute_function installing
 }
 
-src_compile() {
-	return
+pkg_postinst() {
+	python_mod_optimize funtoo
+}
+
+pkg_postrm() {
+	python_mod_cleanup funtoo
 }
