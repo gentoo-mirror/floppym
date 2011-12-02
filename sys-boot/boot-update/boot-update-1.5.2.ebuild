@@ -33,7 +33,6 @@ src_install() {
 	doman doc/boot-update.8
 	doman doc/boot.conf.5
 
-	into /
 	dosbin sbin/boot-update
 
 	dodoc etc/boot.conf.example
