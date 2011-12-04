@@ -21,8 +21,6 @@ DEPEND=">=app-arch/unzip-5.41
 	>=app-text/build-docbook-catalog-1.2"
 
 sgml-catalog_cat_include "/etc/sgml/xml-docbook-${PV}.cat" \
-	"/etc/sgml/sgml-docbook.cat"
-sgml-catalog_cat_include "/etc/sgml/xml-docbook-${PV}.cat" \
 	"/usr/share/sgml/docbook/xml-dtd-${PV}/docbook.cat"
 
 S=${WORKDIR}
