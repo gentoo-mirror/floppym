@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit cmake-utils flag-o-matic 
+inherit cmake-utils flag-o-matic
 
 DESCRIPTION="RStudio™ is a new integrated development environment (IDE) for R. RStudio combines an intuitive user interface with powerful coding tools to help you get the most out of R."
 HOMEPAGE="http://rstudio.org/"
@@ -24,17 +24,24 @@ KEYWORDS="~x86 ~amd64"
 
 #RESTRICT="strip"
 
-DEPEND="dev-util/cmake
-		dev-java/ant"
+DEPEND="
+	>=dev-lang/R-2.11.1
+	dev-util/cmake
+	dev-java/ant
+"
 
 RDEPEND="${DEPEND}
-		dev-libs/openssl
-		sys-libs/pam
-		app-arch/bzip2
-		x11-libs/pango
-		dev-libs/boost
-		virtual/jdk
-		dev-lang/R"
+	dev-libs/openssl
+	sys-libs/pam
+	app-arch/bzip2
+	x11-libs/pango
+	dev-libs/boost
+	virtual/jdk
+"
+
+PATCHES=("${FILESDIR}/cmake-linker-flags.patch")
+
+CMAKE_VERBOSE=1
 
 src_unpack() {
 	unpack ${P}.tar.gz
@@ -49,8 +56,12 @@ src_unpack() {
 	mv "${LIB_DIR}/gwt-${GWT_SDK_VER}" "${LIB_DIR}/gwt/${GWT_SDK_VER}"
 }
 
+src_prepare() {
+	cmake-utils_src_prepare
+}
+
 src_configure() {
 	strip-unsupported-flags
-	local mycmakeargs=(-DRSTUDIO_TARGET=Desktop -DCMAKE_BUILD_TYPE=Release)
+	local mycmakeargs=(-DRSTUDIO_TARGET=Desktop)
 	cmake-utils_src_configure
 }
