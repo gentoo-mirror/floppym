@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit cmake-utils flag-o-matic
+inherit cmake-utils flag-o-matic 
 
 DESCRIPTION="RStudio™ is a new integrated development environment (IDE) for R. RStudio combines an intuitive user interface with powerful coding tools to help you get the most out of R."
 HOMEPAGE="http://rstudio.org/"
@@ -33,7 +33,8 @@ RDEPEND="${DEPEND}
 		app-arch/bzip2
 		x11-libs/pango
 		dev-libs/boost
-		virtual/jdk"
+		virtual/jdk
+		dev-lang/R"
 
 src_unpack() {
 	unpack ${P}.tar.gz
@@ -49,17 +50,7 @@ src_unpack() {
 }
 
 src_configure() {
-	mkdir build
-	cd build
-	cmake -DRSTUDIO_TARGET=Desktop -DCMAKE_BUILD_TYPE=Release ..
-}
-
-src_compile() {
-	cd build
-	emake
-}
-
-src_install() {
-	cd build
-	emake install
+	strip-unsupported-flags
+	local mycmakeargs=(-DRSTUDIO_TARGET=Desktop -DCMAKE_BUILD_TYPE=Release)
+	cmake-utils_src_configure
 }
