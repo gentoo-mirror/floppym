@@ -19,7 +19,11 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
+src_compile() {
+	:
+}
+
 src_install() {
-	python_convert_shebangs 2 youtube-dl
-	dobin youtube-dl
+	python_convert_shebangs 2 ${PN}
+	dobin ${PN}
 }
