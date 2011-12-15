@@ -20,16 +20,22 @@ KEYWORDS="~amd64 ~sparc ~x86"
 IUSE=""
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-grub2-gentoo.patch"
+	epatch "${FILESDIR}/${PN}-1.5.2-grub2-gentoo.patch"
 }
 
 src_compile() {
 	:
 }
 
-src_install() {
-	dodoc doc/*.rst
+src_test() {
+	testing() {
+		PYTHONPATH="${S}/python/modules" "$(PYTHON)" FuntooSuite.py
+	}
+	cd tests || die
+	python_execute_function testing
+}
 
+src_install() {
 	doman doc/boot-update.8
 	doman doc/boot.conf.5
 
