@@ -58,6 +58,8 @@ src_compile() {
 }
 
 src_install() {
+	dodoc Linux/README
+
 	cd "${S}/heimdall" || die
 	emake DESTDIR="${D}" install
 
