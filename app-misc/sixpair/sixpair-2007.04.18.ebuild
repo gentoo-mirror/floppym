@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-DEPEND="dev-libs/libusb"
+DEPEND="dev-libs/libusb:0"
 RDEPEND="${DEPEND}
 	net-wireless/bluez"
 
