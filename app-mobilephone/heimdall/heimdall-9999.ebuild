@@ -24,7 +24,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	rm -r libusb-1.0 || die
-	edos2unix heimdall-frontend/heimdall-frontend.pro || die
 
 	cd "${S}/heimdall" || die
 	edos2unix configure.ac Makefile.am || die
