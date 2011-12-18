@@ -25,9 +25,9 @@ src_unpack() {
 }
 
 src_compile() {
-	local args=("$(tc-getCC)" ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} sixpair.c -lusb -o sixpair)
-	echo "${args[*]}"
-	"${args[@]}" || die
+	local args="$(tc-getCC) ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} sixpair.c -lusb -o sixpair"
+	echo "${args}"
+	${args} || die
 }
 
 src_install() {
