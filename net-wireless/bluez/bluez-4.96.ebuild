@@ -70,6 +70,8 @@ src_prepare() {
 			-e "s:cupsdir = \$(libdir)/cups:cupsdir = `cups-config --serverbin`:" \
 			Makefile.tools Makefile.in || die
 	fi
+
+	epatch "${FILESDIR}/bluez-sixaxis.patch"
 }
 
 src_configure() {
