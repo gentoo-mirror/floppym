@@ -16,7 +16,8 @@ KEYWORDS="~amd64"
 IUSE=""
 
 DEPEND="dev-libs/libusb"
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	net-wireless/bluez"
 
 S=${WORKDIR}
 
