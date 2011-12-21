@@ -20,8 +20,12 @@ KEYWORDS=""
 IUSE="test"
 
 RDEPEND=">=dev-vcs/mercurial-1.4
-		>=dev-vcs/subversion-1.5[python]"
-DEPEND="test? ( dev-python/nose )"
+	|| (
+		dev-python/subvertpy
+		>=dev-vcs/subversion-1.5[python]
+	)"
+DEPEND="dev-python/setuptools
+	test? ( dev-python/nose )"
 
 DOCS="README"
 
