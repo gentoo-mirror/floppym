@@ -34,8 +34,8 @@ RDEPEND="
 # $2: Optional slot
 # $3: Optional use-dep
 java_dep() {
-	DEPEND+=" dev-java/$1${2:+:$2}${3:+[$3]}"
-	RDEPEND+=" dev-java/$1${2:+:$2}${3:+[$3]}"
+	DEPEND+=" dev-java/$1:${2:-0}${3:+[$3]}"
+	RDEPEND+=" dev-java/$1:${2:-0}${3:+[$3]}"
 	EANT_GENTOO_CLASSPATH+=" $1${2:+-$2}"
 	REMOVE_JARS+=" $1-*.jar"
 }
