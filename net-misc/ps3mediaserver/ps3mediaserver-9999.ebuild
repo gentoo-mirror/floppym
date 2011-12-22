@@ -18,7 +18,6 @@ IUSE="+transcode tsmuxer"
 
 DEPEND="
 	>=virtual/jdk-1.6
-	app-arch/unzip
 "
 RDEPEND="
 	>=virtual/jre-1.6
@@ -56,11 +55,10 @@ java_dep rome
 # TODO: Needs slf4j-1.6.2?
 #java_dep slf4j-api
 
-JAVA_PKG_STRICT=1
 EANT_BUILD_TARGET="PMS"
 JAVA_ANT_REWRITE_CLASSPATH=1
 
-src_prepare() {
+java_prepare() {
 	rm -rf osx win32 || die
 
 	if [[ -n ${REMOVE_JARS} ]]; then
@@ -68,8 +66,6 @@ src_prepare() {
 		rm -v ${REMOVE_JARS} || die
 		popd > /dev/null
 	fi
-
-	java-pkg-2_src_prepare
 }
 
 src_install() {
