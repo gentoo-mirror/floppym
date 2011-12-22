@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit eutils java-pkg-2 java-ant-2 subversion
+inherit eutils subversion java-pkg-2 java-ant-2
 
 DESCRIPTION="DLNA compliant UPNP server for streaming media to Playstation 3"
 HOMEPAGE="http://code.google.com/p/ps3mediaserver"
@@ -59,6 +59,7 @@ EANT_BUILD_TARGET="PMS"
 JAVA_ANT_REWRITE_CLASSPATH=1
 
 java_prepare() {
+	echo "java_prepare"
 	rm -rf osx win32 || die
 
 	if [[ -n ${REMOVE_JARS} ]]; then
