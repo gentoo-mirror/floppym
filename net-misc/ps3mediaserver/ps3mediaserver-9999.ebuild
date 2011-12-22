@@ -28,7 +28,7 @@ RDEPEND="
 	transcode? ( media-video/mplayer[encode] )
 "
 
-# Add a java pacakge to [R]DEPEND and EANT_GENTOO_CLASSPATH
+# Add a java package to [R]DEPEND and EANT_GENTOO_CLASSPATH
 # Also remove bundled jar files
 # $1: Pacakge name
 # $2: Optional slot
@@ -52,6 +52,8 @@ java_dep jgoodies-forms
 java_dep jgoodies-looks 2.0
 java_dep jna
 java_dep rome
+
+# TODO: Needs slf4j-1.6.2?
 #java_dep slf4j-api
 
 JAVA_PKG_STRICT=1
@@ -77,7 +79,7 @@ src_install() {
 	insinto /usr/share/${PN}
 	doins -r *.conf documentation logback*.xml plugins renderers
 	dodoc CHANGELOG README
-	use tsmuxer && dosym /opt/tsmuxer/bin/tsMuxer /usr/share/${PN}/linux/tsMuxer
+	use tsmuxer && dosym /opt/tsmuxer/bin/tsMuxeR /usr/share/${PN}/linux/tsMuxeR
 
 	insinto /usr/share/icons/hicolor/32x32/apps
 	newins resources/images/icon-32.png ${PN}.png
