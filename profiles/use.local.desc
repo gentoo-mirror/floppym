@@ -1,7 +1,0 @@
-# This file is deprecated as per GLEP 56 in favor of metadata.xml. Please add
-# your descriptions to your package's metadata.xml ONLY.
-# * generated automatically using egencache *
-
-app-vim/gentoo-syntax:ignore-glep31 - Remove GLEP 31 (UTF-8 file encodings) settings
-net-misc/ps3mediaserver:transcode - Install optional dependencies for transcoding support via media-video/mplayer
-net-misc/ps3mediaserver:tsmuxer - Install optional dependencies for transcoding support via media-video/tsmuxer
