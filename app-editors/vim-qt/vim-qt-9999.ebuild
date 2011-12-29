@@ -14,7 +14,7 @@ EGIT_REPO_URI="git://gitorious.org/vim-qt/vim-qt.git
 
 LICENSE="vim"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS=""
 IUSE=""
 
 DEPEND=""
