@@ -46,6 +46,7 @@ java_dep commons-configuration
 java_dep commons-io 1
 java_dep commons-lang 2.1
 java_dep commons-logging
+java_dep gson
 java_dep jdom 1.0
 java_dep jgoodies-forms
 java_dep jgoodies-looks 2.0
