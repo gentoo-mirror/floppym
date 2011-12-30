@@ -17,14 +17,9 @@ SLOT="0"
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE=""
 
-#CDEPEND="dev-java/junit:0"
-RDEPEND="${CDEPEND}
-	>=virtual/jre-1.4"
-DEPEND="${CDEPEND}
-	>=virtual/jdk-1.4
+RDEPEND=">=virtual/jre-1.4"
+DEPEND=">=virtual/jdk-1.4
 	app-arch/unzip"
-
-#EANT_GENTOO_CLASSPATH="junit"
 
 S="${WORKDIR}/${P/-api/}/${PN}"
 
