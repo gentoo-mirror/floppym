@@ -10,20 +10,27 @@ inherit eutils java-pkg-2 java-ant-2
 DESCRIPTION="Simple Logging Facade for Java"
 HOMEPAGE="http://www.slf4j.org/"
 # Extract from http://www.slf4j.org/dist/${P/-api/}.tar.gz
-SRC_URI="mirror://gentoo/${P}-sources.jar"
+#SRC_URI="mirror://gentoo/${P}-sources.jar"
+SRC_URI="http://www.slf4j.org/dist/${P/-api/}.tar.gz"
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 ppc ppc64 x86"
+KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE=""
 
-RDEPEND=">=virtual/jre-1.4"
-DEPEND=">=virtual/jdk-1.4
+#CDEPEND="dev-java/junit:0"
+RDEPEND="${CDEPEND}
+	>=virtual/jre-1.4"
+DEPEND="${CDEPEND}
+	>=virtual/jdk-1.4
 	app-arch/unzip"
 
-S="${WORKDIR}"
+#EANT_GENTOO_CLASSPATH="junit"
+
+S="${WORKDIR}/${P/-api/}/${PN}"
 
 java_prepare() {
 	cp -v "${FILESDIR}"/build.xml . || die
+	rm -rv src/test || die
 }
 
 src_install() {
