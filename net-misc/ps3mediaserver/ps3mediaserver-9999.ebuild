@@ -51,9 +51,7 @@ java_dep jgoodies-forms
 java_dep jgoodies-looks 2.0
 java_dep jna
 java_dep rome
-
-# TODO: Needs slf4j-1.6.2?
-#java_dep slf4j-api
+java_dep slf4j-api
 
 EANT_BUILD_TARGET="PMS"
 JAVA_ANT_REWRITE_CLASSPATH=1
