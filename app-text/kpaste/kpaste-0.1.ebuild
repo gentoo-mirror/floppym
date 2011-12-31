@@ -23,5 +23,5 @@ src_compile() {
 
 src_install() {
 	dobin kpaste
-	dodoc README TODO
+	dodoc README
 }
