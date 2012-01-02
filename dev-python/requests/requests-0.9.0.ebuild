@@ -19,4 +19,4 @@ KEYWORDS="~amd64 ~x86"
 IUSE="test"
 
 DEPEND="dev-python/setuptools"
-#RDEPEND="dev-python/certifi"
+RDEPEND="dev-python/certifi"
