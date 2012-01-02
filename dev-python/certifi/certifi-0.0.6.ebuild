@@ -9,7 +9,7 @@ RESTRICT_PYTHON_ABIS="3.*"
 
 inherit distutils
 
-DESCRIPTION="Mozilla's SSL Certs"
+DESCRIPTION="SSL root certificate bundle"
 HOMEPAGE="http://python-requests.org/"
 SRC_URI="mirror://pypi/${P:0:1}/${PN}/${P}.tar.gz"
 
