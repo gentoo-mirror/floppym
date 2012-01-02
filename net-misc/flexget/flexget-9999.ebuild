@@ -33,6 +33,7 @@ RDEPEND="
 	dev-python/progressbar
 	dev-python/flask
 	dev-python/cherrypy
+	>=dev-python/requests-0.8.7
 "
 DEPEND="
 	dev-python/setuptools
