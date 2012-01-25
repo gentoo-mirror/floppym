@@ -43,6 +43,7 @@ java_dep bsh
 java_dep commons-codec
 java_dep commons-collections '' test-framework
 java_dep commons-configuration
+java_dep commons-httpclient 3
 java_dep commons-io 1
 java_dep commons-lang 2.1
 java_dep commons-logging
