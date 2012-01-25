@@ -6,7 +6,9 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<jar destfile="slf4j-api.jar" basedir="build"/>
+		<jar destfile="slf4j-api.jar" basedir="build">
+			<exclude name="org/slf4j/impl/**"/>
+		</jar>
 	</target>
 
 	<target name="javadoc" depends="compile">
