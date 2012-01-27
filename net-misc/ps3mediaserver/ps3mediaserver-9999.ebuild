@@ -41,7 +41,6 @@ java_dep() {
 
 java_dep bsh
 java_dep commons-codec
-java_dep commons-collections '' test-framework
 java_dep commons-configuration
 java_dep commons-httpclient 3
 java_dep commons-io 1
@@ -55,8 +54,17 @@ java_dep jna
 java_dep rome
 java_dep slf4j-api
 
+REMOVE_JARS+=" commons-collections*.jar jgoodies-common*.jar"
+
 EANT_BUILD_TARGET="PMS"
 JAVA_ANT_REWRITE_CLASSPATH=1
+
+src_unpack() {
+	(
+		umask 002
+		subversion_fetch
+	) || die
+}
 
 java_prepare() {
 	rm -rf osx win32 || die
