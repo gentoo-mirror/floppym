@@ -1,45 +1,32 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-
-WANT_AUTOMAKE="1.11"
-AT_M4DIR=./config  # for aclocal called by eautoreconf
-
-EGIT_REPO_URI="git://github.com/zfsonlinux/zfs.git"
+EAPI="4"
 
 inherit autotools eutils git-2 linux-mod
 
 DESCRIPTION="Native ZFS for Linux"
 HOMEPAGE="http://zfsonlinux.org/"
 SRC_URI=""
+EGIT_REPO_URI="git://github.com/zfsonlinux/zfs.git"
 
 LICENSE="CDDL GPL-2"
 SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-DEPEND="
-		>=sys-devel/spl-${PV}
-		virtual/linux-sources
-		"
-RDEPEND="
-		!sys-fs/zfs-fuse
-		"
+DEPEND=">=sys-devel/spl-${PV}"
+RDEPEND="!sys-fs/zfs-fuse"
 
 pkg_setup() {
-	linux-mod_pkg_setup
-	kernel_is gt 2 6 32 || die "Your kernel is too old. ${CATEGORY}/${PN} need 2.6.32 or newer."
-	linux_config_exists || die "Your kernel sources are unconfigured."
-	if linux_chkconfig_present PREEMPT; then
-		eerror "${CATEGORY}/${PN} doesn't currently work with PREEMPT kernel."
-		eerror "Please look at bug https://github.com/behlendorf/zfs/issues/83"
-		die "PREEMPT kernel"
-	fi
+	CONFIG_CHECK="!PREEMPT !DEBUG_LOCK_ALLOC"
+	kernel_is ge 2 6 32 || die "Linux 2.6.32 or newer required"
+	check_extra_config
 }
 
 src_prepare() {
+	AT_M4DIR="config"
 	eautoreconf
 }
 
@@ -47,18 +34,14 @@ src_configure() {
 	set_arch_to_kernel
 	econf \
 		--with-config=all \
-		--with-linux="${KBUILD_OUTPUT}" \
-		--with-linux-obj="${KBUILD_OUTPUT}"
+		--with-linux="${KV_DIR}" \
+		--with-linux-obj="${KV_OUT}"
 }
 
 src_compile() {
-	set_arch_to_kernel
-	default # _not_ the one from linux-mod
+	emake
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die 'emake install failed'
-	# Drop unwanted files
-	rm -rf "${D}/usr/src" || die "removing unwanted files die"
+	emake DESTDIR="${D}" install
 }
-
