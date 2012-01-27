@@ -16,9 +16,8 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-AT_M4DIR="config"
-
 src_prepare() {
+	AT_M4DIR="config"
 	eautoreconf
 }
 
