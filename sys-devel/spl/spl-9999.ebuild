@@ -1,12 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 
-WANT_AUTOMAKE="1.11"
-AT_M4DIR=./config  # for aclocal called by eautoreconf
-inherit git-2 linux-info eutils autotools
+inherit autotools eutils git-2 linux-mod
 
 DESCRIPTION="Solaris Porting Layer - a Linux kernel module providing some Solaris kernel APIs"
 HOMEPAGE="http://zfsonlinux.org/"
@@ -18,10 +16,7 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-DEPEND="
-		virtual/linux-sources
-		"
-RDEPEND=""
+AT_M4DIR="config"
 
 src_prepare() {
 	eautoreconf
@@ -31,12 +26,14 @@ src_configure() {
 	set_arch_to_kernel
 	econf \
 		--with-config=all \
-		--with-linux="${KBUILD_OUTPUT}" \
-		--with-linux-obj="${KBUILD_OUTPUT}"
+		--with-linux="${KV_DIR}" \
+		--with-linux-obj="${KV_OUT}"
+}
+
+src_compile() {
+	emake
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die 'emake install failed'
-	dosym /usr/include/spl/spl_config.h /usr/include/spl/module/spl_config.h \
-		|| die
+	emake DESTDIR="${D}" install
 }
