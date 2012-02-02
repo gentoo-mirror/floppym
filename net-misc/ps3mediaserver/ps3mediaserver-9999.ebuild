@@ -60,10 +60,9 @@ EANT_BUILD_TARGET="PMS"
 JAVA_ANT_REWRITE_CLASSPATH=1
 
 src_unpack() {
-	(
-		umask 002
-		subversion_fetch
-	) || die
+	eumask_push 002
+	subversion_fetch
+	eumask_pop
 }
 
 java_prepare() {
