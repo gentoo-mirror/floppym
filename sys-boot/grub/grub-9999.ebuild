@@ -155,6 +155,7 @@ grub_src_configure() {
 }
 
 grub_src_compile() {
+	use zfs && addpredict /etc/dfs
 	default_src_compile
 }
 
