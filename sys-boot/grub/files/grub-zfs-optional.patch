@@ -1,0 +1,33 @@
+--- configure.ac
++++ configure.ac
+@@ -974,16 +974,21 @@
+                         [Define to 1 if you have the LZMA library.])],)
+ AC_SUBST([LIBLZMA])
+ 
+-AC_CHECK_LIB([zfs], [libzfs_init],
+-             [LIBZFS="-lzfs"
+-              AC_DEFINE([HAVE_LIBZFS], [1],
+-                        [Define to 1 if you have the ZFS library.])],)
++AC_ARG_WITH([libzfs],
++              [AS_HELP_STRING([--without-libzfs], [Do not use libzfs.])])
++
++if test x"$with_libzfs" != xno; then
++  AC_CHECK_LIB([zfs], [libzfs_init],
++               [LIBZFS="-lzfs"
++                AC_DEFINE([HAVE_LIBZFS], [1],
++                          [Define to 1 if you have the ZFS library.])],)
++
++  AC_CHECK_LIB([nvpair], [nvlist_print],
++               [LIBNVPAIR="-lnvpair"
++                AC_DEFINE([HAVE_LIBNVPAIR], [1],
++                          [Define to 1 if you have the NVPAIR library.])],)
++fi
+ AC_SUBST([LIBZFS])
+-
+-AC_CHECK_LIB([nvpair], [nvlist_print],
+-             [LIBNVPAIR="-lnvpair"
+-              AC_DEFINE([HAVE_LIBNVPAIR], [1],
+-                        [Define to 1 if you have the NVPAIR library.])],)
+ AC_SUBST([LIBNVPAIR])
+ 
+ LIBS=""

@@ -149,7 +149,7 @@ grub_src_configure() {
 		$(use_enable efiemu) \
 		$(use_enable nls) \
 		$(use_enable truetype grub-mkfont) \
-		$(use_enable zfs) \
+		$(use_with zfs libzfs) \
 		$(use sdl && use_enable debug grub-emu-sdl) \
 		${platform}
 }
@@ -166,7 +166,7 @@ grub_src_install() {
 src_prepare() {
 	local i j archs
 
-	epatch "${FILESDIR}"/grub2-zfs-optional.patch
+	epatch "${FILESDIR}"/grub-zfs-optional.patch
 
 	epatch_user
 
