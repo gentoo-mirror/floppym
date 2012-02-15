@@ -2,12 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit eutils subversion vim-plugin
+inherit eutils git-2 vim-plugin
 
 DESCRIPTION="vim plugin: Gentoo Ebuild, Eclass, GLEP, ChangeLog and Portage Files syntax highlighting, filetype and indent settings"
 HOMEPAGE="http://www.gentoo.org/"
 SRC_URI=""
-ESVN_REPO_URI="svn://anonsvn.gentoo.org/gentoo-syntax/trunk/gentoo-syntax"
+EGIT_REPO_URI="git://git.overlays.gentoo.org/proj/gentoo-syntax.git
+	http://git.overlays.gentoo.org/proj/gentoo-syntax.git"
 
 LICENSE="vim"
 KEYWORDS=""
@@ -17,7 +18,7 @@ VIM_PLUGIN_HELPFILES="gentoo-syntax"
 VIM_PLUGIN_MESSAGES="filetype"
 
 src_unpack() {
-	subversion_src_unpack
+	git-2_src_unpack
 
 	if use ignore-glep31 ; then
 		for f in ftplugin/*.vim ; do
