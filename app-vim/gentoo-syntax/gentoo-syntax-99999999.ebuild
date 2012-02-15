@@ -1,8 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit eutils git-2 vim-plugin
+EAPI=4
+
+inherit git-2 vim-plugin
 
 DESCRIPTION="vim plugin: Gentoo Ebuild, Eclass, GLEP, ChangeLog and Portage Files syntax highlighting, filetype and indent settings"
 HOMEPAGE="http://www.gentoo.org/"
@@ -17,9 +19,7 @@ IUSE="ignore-glep31"
 VIM_PLUGIN_HELPFILES="gentoo-syntax"
 VIM_PLUGIN_MESSAGES="filetype"
 
-src_unpack() {
-	git-2_src_unpack
-
+src_prepare() {
 	if use ignore-glep31 ; then
 		for f in ftplugin/*.vim ; do
 			ebegin "Removing UTF-8 rules from ${f} ..."
@@ -28,8 +28,7 @@ src_unpack() {
 			eend $?
 		done
 	fi
-
-	rm Makefile || die
+	rm -r .git Makefile || die
 }
 
 pkg_postinst() {
