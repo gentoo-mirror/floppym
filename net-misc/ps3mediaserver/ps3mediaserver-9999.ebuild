@@ -100,6 +100,5 @@ src_install() {
 	EOF
 	domenu ${PN}.desktop
 
-	newconfd "${FILESDIR}/${PN}.confd" ${PN}
 	newinitd "${FILESDIR}/${PN}.initd" ${PN}
 }
