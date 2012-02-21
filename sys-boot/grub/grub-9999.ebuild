@@ -166,6 +166,7 @@ grub_src_install() {
 src_prepare() {
 	local i j archs
 
+	epatch "${FILESDIR}"/grub-fix-mkconfig.patch
 	epatch "${FILESDIR}"/grub-zfs-optional.patch
 
 	epatch_user
@@ -182,6 +183,9 @@ src_prepare() {
 		sed -i -e '/^autoreconf/s:^:set +e; e:' autogen.sh || die
 		(. ./autogen.sh) || die
 	fi
+
+	# Regenerate POTFILES.in
+	find . -name '*.c' -print | LC_COLLATE=C sort > po/POTFILES.in || die
 
 	# install into the right dir for eselect #372735
 	sed -i \
@@ -223,6 +227,8 @@ src_install() {
 		grub_run_phase ${FUNCNAME} ${i}
 	done
 
+	sed -i -e 's:usr/share/grub/:usr/share/grub2/:' "${ED}etc/grub.d"/* || die
+
 	# No need to move the info file with the live ebuild since we
 	# already changed the generated file name during the preparation
 	# phase.
@@ -254,7 +260,7 @@ src_install() {
 	dodoc AUTHORS ChangeLog NEWS README THANKS TODO
 	insinto /etc/default
 	newins "${FILESDIR}"/grub.default grub
-	cat <<EOF >> "${ED}"/lib*/grub2/grub-mkconfig_lib
+	cat <<EOF >> "${ED}usr/share/grub2/grub-mkconfig_lib"
 	GRUB_DISTRIBUTOR="Gentoo"
 EOF
 
