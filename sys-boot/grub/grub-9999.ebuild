@@ -183,9 +183,6 @@ src_prepare() {
 		(. ./autogen.sh) || die
 	fi
 
-	# Regenerate POTFILES.in
-	find . -name '*.c' -print | LC_COLLATE=C sort > po/POTFILES.in || die
-
 	# install into the right dir for eselect #372735
 	sed -i \
 		-e '/^bashcompletiondir =/s:=.*:= $(datarootdir)/bash-completion:' \
@@ -225,8 +222,6 @@ src_install() {
 	for i in ${GRUB_ENABLED_PLATFORMS}; do
 		grub_run_phase ${FUNCNAME} ${i}
 	done
-
-	sed -i -e 's:usr/share/grub/:usr/share/grub2/:' "${ED}etc/grub.d"/* || die
 
 	# No need to move the info file with the live ebuild since we
 	# already changed the generated file name during the preparation
