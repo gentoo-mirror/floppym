@@ -70,25 +70,25 @@ fi
 
 export STRIP_MASK="*/grub*/*/*.{mod,img}"
 QA_EXECSTACK="
-	lib64/grub2/*/setjmp.mod
-	lib64/grub2/*/kernel.img
-	sbin/grub2-probe
-	sbin/grub2-setup
-	sbin/grub2-mkdevicemap
-	bin/grub2-script-check
-	bin/grub2-fstest
-	bin/grub2-mklayout
-	bin/grub2-menulst2cfg
-	bin/grub2-mkrelpath
-	bin/grub2-mkpasswd-pbkdf2
-	bin/grub2-mkfont
-	bin/grub2-editenv
-	bin/grub2-mkimage
+	lib64/grub/*/setjmp.mod
+	lib64/grub/*/kernel.img
+	sbin/grub-probe
+	sbin/grub-setup
+	sbin/grub-mkdevicemap
+	bin/grub-script-check
+	bin/grub-fstest
+	bin/grub-mklayout
+	bin/grub-menulst2cfg
+	bin/grub-mkrelpath
+	bin/grub-mkpasswd-pbkdf2
+	bin/grub-mkfont
+	bin/grub-editenv
+	bin/grub-mkimage
 "
 
 QA_WX_LOAD="
-	lib*/grub2/*/kernel.img
-	lib*/grub2/*/setjmp.mod
+	lib*/grub/*/kernel.img
+	lib*/grub/*/setjmp.mod
 "
 
 grub_run_phase() {
@@ -142,7 +142,6 @@ grub_src_configure() {
 		--sbindir=/sbin \
 		--bindir=/bin \
 		--libdir=/$(get_libdir) \
-		--program-transform-name=s,grub,grub2, \
 		$(use_enable debug mm-debug) \
 		$(use_enable debug grub-emu-usb) \
 		$(use_enable device-mapper) \
@@ -170,14 +169,6 @@ src_prepare() {
 
 	epatch_user
 
-	# fix texinfo file name, as otherwise the grub2.info file will be
-	# useless
-	sed -i \
-		-e '/setfilename/s:grub.info:grub2.info:' \
-		-e 's:(grub):(grub2):' \
-		"${S}"/docs/grub.texi
-
-	# autogen.sh does more than just run autotools
 	if [[ -n ${DO_AUTORECONF} ]] ; then
 		sed -i -e '/^autoreconf/s:^:set +e; e:' autogen.sh || die
 		(. ./autogen.sh) || die
@@ -223,28 +214,18 @@ src_install() {
 		grub_run_phase ${FUNCNAME} ${i}
 	done
 
-	# No need to move the info file with the live ebuild since we
-	# already changed the generated file name during the preparation
-	# phase.
-	if [[ ${PV} != "9999" ]]; then
-		# slot all collisions with grub legacy
-		mv "${ED}"/usr/share/info/grub.info \
-			"${ED}"/usr/share/info/grub2.info || die
-	fi
-
-	# Do pax marking
 	local PAX=(
-		"sbin/grub2-probe"
-		"sbin/grub2-setup"
-		"sbin/grub2-mkdevicemap"
-		"bin/grub2-script-check"
-		"bin/grub2-fstest"
-		"bin/grub2-mklayout"
-		"bin/grub2-menulst2cfg"
-		"bin/grub2-mkrelpath"
-		"bin/grub2-mkpasswd-pbkdf2"
-		"bin/grub2-editenv"
-		"bin/grub2-mkimage"
+		"sbin/grub-probe"
+		"sbin/grub-setup"
+		"sbin/grub-mkdevicemap"
+		"bin/grub-script-check"
+		"bin/grub-fstest"
+		"bin/grub-mklayout"
+		"bin/grub-menulst2cfg"
+		"bin/grub-mkrelpath"
+		"bin/grub-mkpasswd-pbkdf2"
+		"bin/grub-editenv"
+		"bin/grub-mkimage"
 	)
 	for e in ${PAX[@]}; do
 		pax-mark -mpes "${ED}/${e}"
@@ -254,7 +235,7 @@ src_install() {
 	dodoc AUTHORS ChangeLog NEWS README THANKS TODO
 	insinto /etc/default
 	newins "${FILESDIR}"/grub.default grub
-	cat <<EOF >> "${ED}usr/share/grub2/grub-mkconfig_lib"
+	cat <<EOF >> "${ED}usr/share/grub/grub-mkconfig_lib"
 	GRUB_DISTRIBUTOR="Gentoo"
 EOF
 
@@ -279,7 +260,7 @@ setup_boot_dir() {
 	# Make sure target directory exists
 	mkdir -p "${dir}"
 
-	if [[ -e ${dir/2/}/menu.lst ]] ; then
+	if [[ -e ${dir}/menu.lst ]] ; then
 		# Legacy config exists, ask user what to do
 		einfo "Found legacy GRUB configuration.  Do you want to convert it"
 		einfo "instead of using autoconfig (y/N)?"
@@ -289,7 +270,7 @@ setup_boot_dir() {
 	fi
 
 	if [[ ${use_legacy} == y* ]] ; then
-		grub1_cfg=${dir/2/}/menu.lst
+		grub1_cfg=${dir}/menu.lst
 		grub2_cfg=${dir}/grub.cfg
 
 		# GRUB legacy configuration exists.  Use it instead of doing
@@ -297,8 +278,8 @@ setup_boot_dir() {
 		#
 
 		einfo "Converting legacy config at '${grub1_cfg}' for use by GRUB2."
-		ebegin "Running: grub2-menulst2cfg '${grub1_cfg}' '${grub2_cfg}'"
-		grub2-menulst2cfg "${grub1_cfg}" "${grub2_cfg}" &> /dev/null
+		ebegin "Running: grub-menulst2cfg '${grub1_cfg}' '${grub2_cfg}'"
+		grub-menulst2cfg "${grub1_cfg}" "${grub2_cfg}" &> /dev/null
 		eend $?
 
 		ewarn
@@ -310,13 +291,13 @@ setup_boot_dir() {
 	else
 		# Run GRUB 2 autoconfiguration
 		einfo "Running GRUB 2 autoconfiguration."
-		ebegin "grub2-mkconfig -o '${dir}/grub.cfg'"
-		grub2-mkconfig -o "${dir}/grub.cfg" &> /dev/null
+		ebegin "grub-mkconfig -o '${dir}/grub.cfg'"
+		grub-mkconfig -o "${dir}/grub.cfg" &> /dev/null
 		eend $?
 	fi
 
 	einfo
-	einfo "Remember to run grub2-install to activate GRUB2 as your default"
+	einfo "Remember to run grub-install to activate GRUB2 as your default"
 	einfo "bootloader."
 }
 
@@ -325,10 +306,10 @@ pkg_config() {
 
 	mount-boot_mount_boot_partition
 
-	einfo "Enter the directory where you want to setup grub2 ('${ROOT}boot/grub2/'):"
+	einfo "Enter the directory where you want to setup grub ('${ROOT}boot/grub/'):"
 	read dir
 
-	[[ -z ${dir} ]] && dir="${ROOT}"boot/grub2
+	[[ -z ${dir} ]] && dir="${ROOT}"boot/grub
 
 	setup_boot_dir "${dir}"
 
