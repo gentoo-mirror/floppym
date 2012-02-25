@@ -166,7 +166,6 @@ grub_src_install() {
 src_prepare() {
 	local i j archs
 
-	epatch "${FILESDIR}"/grub-fix-mkconfig.patch
 	epatch "${FILESDIR}"/grub-zfs-optional.patch
 
 	epatch_user
