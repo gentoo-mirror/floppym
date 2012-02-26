@@ -27,7 +27,7 @@ HOMEPAGE="http://www.gnu.org/software/grub/"
 
 LICENSE="GPL-3"
 SLOT="2"
-IUSE="custom-cflags debug device-mapper efiemu nls static sdl truetype zfs"
+IUSE="custom-cflags debug device-mapper efiemu nls static sdl truetype libzfs"
 
 GRUB_PLATFORMS=(
 	# everywhere:
@@ -54,7 +54,7 @@ RDEPEND="
 		sdl? ( media-libs/libsdl )
 	)
 	device-mapper? ( >=sys-fs/lvm2-2.02.45 )
-	zfs? ( sys-fs/zfs )
+	libzfs? ( sys-fs/zfs )
 	truetype? ( media-libs/freetype >=media-fonts/unifont-5 )"
 DEPEND="${RDEPEND}
 	>=dev-lang/python-2.5.2
@@ -148,7 +148,7 @@ grub_src_configure() {
 		$(use_enable efiemu) \
 		$(use_enable nls) \
 		$(use_enable truetype grub-mkfont) \
-		$(use_with zfs libzfs) \
+		$(use_enable libzfs) \
 		$(use sdl && use_enable debug grub-emu-sdl) \
 		${platform}
 }
