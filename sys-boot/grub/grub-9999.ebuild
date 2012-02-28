@@ -68,28 +68,13 @@ else
 	DEPEND+=" app-arch/xz-utils"
 fi
 
-export STRIP_MASK="*/grub*/*/*.{mod,img}"
-QA_EXECSTACK="
-	lib64/grub/*/setjmp.mod
-	lib64/grub/*/kernel.img
-	sbin/grub-probe
-	sbin/grub-setup
-	sbin/grub-mkdevicemap
-	bin/grub-script-check
-	bin/grub-fstest
-	bin/grub-mklayout
-	bin/grub-menulst2cfg
-	bin/grub-mkrelpath
-	bin/grub-mkpasswd-pbkdf2
-	bin/grub-mkfont
-	bin/grub-editenv
-	bin/grub-mkimage
-"
+export STRIP_MASK="*.{mod,img}"
+#QA_EXECSTACK=""
 
-QA_WX_LOAD="
-	lib*/grub/*/kernel.img
-	lib*/grub/*/setjmp.mod
-"
+#QA_WX_LOAD="
+#	lib*/grub/*/kernel.img
+#	lib*/grub/*/setjmp.mod
+#"
 
 grub_run_phase() {
 	local phase=$1
@@ -139,9 +124,7 @@ grub_src_configure() {
 	ECONF_SOURCE="${WORKDIR}/${P}/" \
 	econf \
 		--disable-werror \
-		--sbindir=/sbin \
-		--bindir=/bin \
-		--libdir=/$(get_libdir) \
+		--program-transform-name=s,grub,grub2, \
 		$(use_enable debug mm-debug) \
 		$(use_enable debug grub-emu-usb) \
 		$(use_enable device-mapper) \
@@ -154,8 +137,9 @@ grub_src_configure() {
 }
 
 grub_src_compile() {
-	use zfs && addpredict /etc/dfs
 	default_src_compile
+	pax-mark -mpes grub-{editenv,fstest,menulst2cfg,mkfont,mkimage,mklayout} \
+		grub-{mkpasswd-pbkdf2,mkrelpath,mount,probe,script-check,setup}
 }
 
 grub_src_install() {
@@ -163,9 +147,7 @@ grub_src_install() {
 }
 
 src_prepare() {
-	local i j archs
-
-	epatch "${FILESDIR}"/grub-zfs-optional.patch
+	local i j
 
 	epatch_user
 
@@ -192,6 +174,7 @@ src_configure() {
 	local i
 
 	use custom-cflags || unset CFLAGS CPPFLAGS LDFLAGS
+	use libzfs && addpredict /etc/dfs
 	use static && append-ldflags -static
 
 	for i in ${GRUB_ENABLED_PLATFORMS}; do
@@ -212,23 +195,6 @@ src_install() {
 
 	for i in ${GRUB_ENABLED_PLATFORMS}; do
 		grub_run_phase ${FUNCNAME} ${i}
-	done
-
-	local PAX=(
-		"sbin/grub-probe"
-		"sbin/grub-setup"
-		"sbin/grub-mkdevicemap"
-		"bin/grub-script-check"
-		"bin/grub-fstest"
-		"bin/grub-mklayout"
-		"bin/grub-menulst2cfg"
-		"bin/grub-mkrelpath"
-		"bin/grub-mkpasswd-pbkdf2"
-		"bin/grub-editenv"
-		"bin/grub-mkimage"
-	)
-	for e in ${PAX[@]}; do
-		pax-mark -mpes "${ED}/${e}"
 	done
 
 	# can't be in docs array as we use default_src_install in different builddir
