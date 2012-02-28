@@ -114,36 +114,36 @@ grub_run_phase() {
 grub_src_configure() {
 	local platform=$1
 	local target
+	local transform="grub2"
 	local with_platform
 
 	[[ -z ${platform} ]] && die "${FUNCNAME} [platform]"
 
-	# if we have no platform then --with-platform=guessed does not work
-	[[ ${platform} == "guessed" ]] && with_platform=""
+	if [[ ${platform} != "guessed" ]]; then
+		transform="grub2-${platform}"
+	fi
 
 	# check if we have to specify the target (EFI)
 	# or just append correct --with-platform
-	if [[ -n ${platform} ]]; then
-		if [[ ${platform} == efi* ]]; then
-			# EFI platform hack
-			[[ ${platform/*-} == 32 ]] && target=i386
-			[[ ${platform/*-} == 64 ]] && target=x86_64
-			# program-prefix is required empty because otherwise it is equal to
-			# target variable, which we do not want at all
-			with_platform="
-				--with-platform=${platform/-*}
-				--target=${target}
-				--program-prefix=
-			"
-		else
-			with_platform=" --with-platform=${platform}"
-		fi
+	if [[ ${platform} == efi* ]]; then
+		# EFI platform hack
+		[[ ${platform/*-} == 32 ]] && target=i386
+		[[ ${platform/*-} == 64 ]] && target=x86_64
+		# program-prefix is required empty because otherwise it is equal to
+		# target variable, which we do not want at all
+		with_platform="
+			--with-platform=${platform/-*}
+			--target=${target}
+			--program-prefix=
+		"
+	elif [[ ${platform} != "guessed" ]]; then
+		with_platform=" --with-platform=${platform}"
 	fi
 
 	ECONF_SOURCE="${WORKDIR}/${P}/" \
 	econf \
 		--disable-werror \
-		--program-transform-name="s,grub,grub-${platform}," \
+		--program-transform-name="s,grub,${transform}," \
 		$(use_enable debug mm-debug) \
 		$(use_enable debug grub-emu-usb) \
 		$(use_enable device-mapper) \
@@ -231,13 +231,12 @@ src_install() {
 		grub_run_phase ${FUNCNAME} ${i}
 	done
 
+	mv "${ED}"usr/share/info/grub{,2}.info || die
+
 	# can't be in docs array as we use default_src_install in different builddir
 	dodoc AUTHORS ChangeLog NEWS README THANKS TODO
 	insinto /etc/default
 	newins "${FILESDIR}"/grub.default grub
-	cat <<EOF >> "${ED}usr/share/grub/grub-mkconfig_lib"
-	GRUB_DISTRIBUTOR="Gentoo"
-EOF
 
 	elog
 	elog "To configure GRUB 2, check the defaults in /etc/default/grub and"
