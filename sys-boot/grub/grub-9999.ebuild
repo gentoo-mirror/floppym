@@ -11,8 +11,12 @@ if [[ ${PV} == "9999" ]] ; then
 	DO_AUTORECONF="true"
 else
 	MY_P=${P/_/\~}
-	SRC_URI="mirror://gnu/${PN}/${MY_P}.tar.xz
+	if [[ ${PV} == *_alpha* || ${PV} == *_beta* ]]; then
+		SRC_URI="http://alpha.gnu.org/gnu/${PN}/${MY_P}.tar.xz"
+	else
+		SRC_URI="mirror://gnu/${PN}/${MY_P}.tar.xz
 		mirror://gentoo/${MY_P}.tar.xz"
+	fi
 	# Masked until documentation guys consolidate the guide and approve
 	# it for usage.
 	#KEYWORDS="~amd64 ~mips ~x86"
