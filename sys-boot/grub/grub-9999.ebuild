@@ -71,13 +71,8 @@ fi
 export STRIP_MASK="*/grub/*/*.{mod,img}"
 
 QA_EXECSTACK="
-	usr/bin/grub*-fstest
-	usr/bin/grub*-mkrelpath
-	usr/bin/grub*-mount
-	usr/bin/grub*-script-check
-	usr/sbin/grub*-bios-setup
-	usr/sbin/grub*-probe
-	usr/sbin/grub*-sparc64-setup
+	usr/bin/grub*
+	usr/sbin/grub*
 	usr/lib*/grub/*/*.mod
 	usr/lib*/grub/*/kernel.exec
 	usr/lib*/grub/*/kernel.img
