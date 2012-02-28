@@ -68,13 +68,31 @@ else
 	DEPEND+=" app-arch/xz-utils"
 fi
 
-export STRIP_MASK="*.{mod,img}"
-#QA_EXECSTACK=""
+export STRIP_MASK="*/grub/*/*.{mod,img}"
 
-#QA_WX_LOAD="
-#	lib*/grub/*/kernel.img
-#	lib*/grub/*/setjmp.mod
-#"
+QA_EXECSTACK="
+	usr/bin/grub*-fstest
+	usr/bin/grub*-mkrelpath
+	usr/bin/grub*-mount
+	usr/bin/grub*-script-check
+	usr/sbin/grub*-bios-setup
+	usr/sbin/grub*-probe
+	usr/sbin/grub*-sparc64-setup
+	usr/lib*/grub/*/*.mod
+	usr/lib*/grub/*/kernel.exec
+	usr/lib*/grub/*/kernel.img
+	usr/lib*/grub/*/setjmp.module
+"
+
+QA_WX_LOAD="
+	usr/lib*/grub/*/kernel.exec
+	usr/lib*/grub/*/kernel.img
+	usr/lib*/grub/*/*.image
+"
+
+QA_PRESTRIPPED="
+	usr/lib.*/grub/.*/kernel.img
+"
 
 grub_run_phase() {
 	local phase=$1
@@ -96,11 +114,12 @@ grub_run_phase() {
 grub_src_configure() {
 	local platform=$1
 	local target
+	local with_platform
 
 	[[ -z ${platform} ]] && die "${FUNCNAME} [platform]"
 
 	# if we have no platform then --with-platform=guessed does not work
-	[[ ${platform} == "guessed" ]] && platform=""
+	[[ ${platform} == "guessed" ]] && with_platform=""
 
 	# check if we have to specify the target (EFI)
 	# or just append correct --with-platform
@@ -111,20 +130,20 @@ grub_src_configure() {
 			[[ ${platform/*-} == 64 ]] && target=x86_64
 			# program-prefix is required empty because otherwise it is equal to
 			# target variable, which we do not want at all
-			platform="
+			with_platform="
 				--with-platform=${platform/-*}
 				--target=${target}
 				--program-prefix=
 			"
 		else
-			platform=" --with-platform=${platform}"
+			with_platform=" --with-platform=${platform}"
 		fi
 	fi
 
 	ECONF_SOURCE="${WORKDIR}/${P}/" \
 	econf \
 		--disable-werror \
-		--program-transform-name=s,grub,grub2, \
+		--program-transform-name="s,grub,grub-${platform}," \
 		$(use_enable debug mm-debug) \
 		$(use_enable debug grub-emu-usb) \
 		$(use_enable device-mapper) \
@@ -133,13 +152,28 @@ grub_src_configure() {
 		$(use_enable truetype grub-mkfont) \
 		$(use_enable libzfs) \
 		$(use sdl && use_enable debug grub-emu-sdl) \
-		${platform}
+		${with_platform}
 }
 
 grub_src_compile() {
 	default_src_compile
-	pax-mark -mpes grub-{editenv,fstest,menulst2cfg,mkfont,mkimage,mklayout} \
-		grub-{mkpasswd-pbkdf2,mkrelpath,mount,probe,script-check,setup}
+	local binaries="
+		grub-editenv
+		grub-fstest
+		grub-menulst2cfg
+		grub-mkfont
+		grub-mkimage
+		grub-mklayout
+		grub-mkpasswd-pbkdf2
+		grub-mkrelpath
+		grub-mount
+		grub-script-check
+		grub-bios-setup
+		grub-ofpathname
+		grub-probe
+		grub-sparc64-setup
+	"
+	pax-mark -mpes ${binaries}
 }
 
 grub_src_install() {
