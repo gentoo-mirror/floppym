@@ -9,6 +9,9 @@
 	<flag name='efiemu'>
 		Build and install the efiemu runtimes
 	</flag>
+	<flag name='mount'>
+		Build and install the grub-mount utility
+	</flag>
 	<flag name='libzfs'>
 		Enable support for <pkg>sys-fs/zfs</pkg>
 	</flag>
