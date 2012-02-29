@@ -23,7 +23,7 @@ else
 	S=${WORKDIR}/${MY_P}
 fi
 
-inherit mount-boot eutils flag-o-matic pax-utils toolchain-funcs ${DO_AUTORECONF:+autotools} ${LIVE_ECLASS}
+inherit eutils flag-o-matic pax-utils toolchain-funcs ${DO_AUTORECONF:+autotools} ${LIVE_ECLASS}
 unset LIVE_ECLASS
 
 DESCRIPTION="GNU GRUB boot loader"
@@ -240,80 +240,10 @@ src_install() {
 	dodoc AUTHORS ChangeLog NEWS README THANKS TODO
 	insinto /etc/default
 	newins "${FILESDIR}"/grub.default grub
+}
 
-	elog
-	elog "To configure GRUB 2, check the defaults in /etc/default/grub and"
-	elog "then run 'emerge --config =${CATEGORY}/${PF}'."
-
+pkg_postinst() {
 	# display the link to guide
-	show_doc_url
-}
-
-show_doc_url() {
-	elog
-	elog "For informations how to configure grub-2 please refer to the guide:"
+	elog "For information on how to configure grub-2 please refer to the guide:"
 	elog "    http://dev.gentoo.org/~scarabeus/grub-2-guide.xml"
-}
-
-setup_boot_dir() {
-	local dir=$1
-	local use_legacy='n'
-
-	# Make sure target directory exists
-	mkdir -p "${dir}"
-
-	if [[ -e ${dir}/menu.lst ]] ; then
-		# Legacy config exists, ask user what to do
-		einfo "Found legacy GRUB configuration.  Do you want to convert it"
-		einfo "instead of using autoconfig (y/N)?"
-		read use_legacy
-
-		use_legacy=${use_legacy,,[A-Z]}
-	fi
-
-	if [[ ${use_legacy} == y* ]] ; then
-		grub1_cfg=${dir}/menu.lst
-		grub2_cfg=${dir}/grub.cfg
-
-		# GRUB legacy configuration exists.  Use it instead of doing
-		# our normal autoconfigure.
-		#
-
-		einfo "Converting legacy config at '${grub1_cfg}' for use by GRUB2."
-		ebegin "Running: grub-menulst2cfg '${grub1_cfg}' '${grub2_cfg}'"
-		grub-menulst2cfg "${grub1_cfg}" "${grub2_cfg}" &> /dev/null
-		eend $?
-
-		ewarn
-		ewarn "Even though the conversion above succeeded, you are STRONGLY"
-		ewarn "URGED to upgrade to the new GRUB2 configuration format."
-
-		# Remind the user about the documentation
-		show_doc_url
-	else
-		# Run GRUB 2 autoconfiguration
-		einfo "Running GRUB 2 autoconfiguration."
-		ebegin "grub-mkconfig -o '${dir}/grub.cfg'"
-		grub-mkconfig -o "${dir}/grub.cfg" &> /dev/null
-		eend $?
-	fi
-
-	einfo
-	einfo "Remember to run grub-install to activate GRUB2 as your default"
-	einfo "bootloader."
-}
-
-pkg_config() {
-	local dir
-
-	mount-boot_mount_boot_partition
-
-	einfo "Enter the directory where you want to setup grub ('${ROOT}boot/grub/'):"
-	read dir
-
-	[[ -z ${dir} ]] && dir="${ROOT}"boot/grub
-
-	setup_boot_dir "${dir}"
-
-	mount-boot_pkg_postinst
 }
