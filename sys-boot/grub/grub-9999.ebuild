@@ -144,6 +144,7 @@ grub_src_configure() {
 	econf \
 		--disable-werror \
 		--program-transform-name="s,grub,${transform}," \
+		--with-grubdir=grub2 \
 		$(use_enable debug mm-debug) \
 		$(use_enable debug grub-emu-usb) \
 		$(use_enable device-mapper) \
