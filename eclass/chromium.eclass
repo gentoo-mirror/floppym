@@ -9,7 +9,7 @@
 # Mike Gilbert <floppym@gentoo.org
 # @BLURB: Shared functions for chromium and google-chrome
 
-inherit fdo-mime gnome2-utils linux-info
+inherit eutils fdo-mime gnome2-utils linux-info
 
 EXPORT_FUNCTIONS pkg_preinst pkg_postinst pkg_postrm
 
@@ -28,44 +28,65 @@ chromium_check_kernel_config() {
 	fi
 }
 
-# @FUNCTION: chromium_lang
-# @USAGE: <locale code in chromium format>
-# @RETURN: <locale code in system format>
-chromium_lang() {
-	if [[ "$1" == "es_LA" ]]; then
-		echo "es_419"
-	else
-		echo "$1"
-	fi
+_chromium_crlang() {
+	local x
+	for x in "$@"; do
+		case $x in
+			es_LA) echo es-419 ;;
+			*) echo "${x/_/-}" ;;
+		esac
+	done
+}
+
+_chromium_syslang() {
+	local x
+	for x in "$@"; do
+		case $x in
+			es-419) echo es_LA ;;
+			*) echo "${x/-/_}" ;;
+		esac
+	done
+}
+
+_chromium_strip_pak() {
+	local x
+	for x in "$@"; do
+		echo "${x%.pak}"
+	done
 }
 
 # @FUNCTION: chromium_remove_language_paks
-# @USAGE: <path to .pak files>
+# @USAGE:
 # @DESCRIPTION:
-# Remove pak files for languages that the user has not selected via the
-# LINGUAS environment variable. Emulates gettext/intltool behavior.
+# Remove pak files from the current directory for languages that the user has
+# not selected via the LINGUAS variable.
 chromium_remove_language_paks() {
-	# Do nothing if LINGUAS is unset.
-	[[ -z ${LINGUAS} ]] && return
-	
-	# Always keep US English.
-	LINGUAS+=" en_US"
+	local crlangs=$(_chromium_crlang ${LANGS})
+	local present_crlangs=$(_chromium_strip_pak *.pak)
+	local present_langs=$(_chromium_syslang ${present_crlangs})
+	local lang
 
-	local crlang pak pakname syslang
-
-	pushd "$1" > /dev/null || die
-
-	for pak in *.pak; do
-		pakname=${pak%.pak}
-		langname=${pakname/-/_}
-		crlang=$(chromium_lang ${langname})
-
-		if ! has ${syslang} ${LINGUAS}; then
-			rm "${pak}" || die
+	# Look for missing pak files.
+	for lang in ${crlangs}; do
+		if ! has ${lang} ${present_crlangs}; then
+			eqawarn "LINGUAS warning: no .pak file for ${lang} (${lang}.pak not found)"
 		fi
 	done
 
-	popd > /dev/null
+	# Look for extra pak files.
+	# Remove pak files that the user does not want.
+	for lang in ${present_langs}; do
+		if [[ ${lang} == en_US ]]; then
+			continue
+		fi
+		if ! has ${lang} ${LANGS}; then
+			eqawarn "LINGUAS warning: no ${lang} in LANGS"
+			continue
+		fi
+		if ! use linguas_${lang}; then
+			rm -v "$(_chromium_crlang ${lang}).pak" || die
+		fi
+	done
 }
 
 chromium_pkg_preinst() {
