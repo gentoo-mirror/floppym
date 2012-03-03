@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit eutils fdo-mime gnome2-utils multilib pax-utils
+inherit chromium multilib pax-utils
 
 DESCRIPTION="The web browser from Google"
 HOMEPAGE="http://www.google.com/chrome"
@@ -36,6 +36,13 @@ SRC_URI="amd64? ( ${SRC_BASE}amd64.deb ) x86? ( ${SRC_BASE}i386.deb )"
 LICENSE="google-chrome"
 KEYWORDS="-* ~amd64 ~x86"
 IUSE="+plugins"
+LANGS="am ar bg bn ca cs da de el en_GB es es_LA et fa fi fil fr gu he hi hr
+hu id it ja kn ko lt lv ml mr ms nb nl pl pt_BR pt_PT ro ru sk sl sr sv sw ta te th
+tr uk vi zh_CN zh_TW"
+for lang in ${LANGS}; do
+	IUSE+=" linguas_${lang}"
+done
+
 RESTRICT="mirror strip"
 
 RDEPEND="
@@ -80,14 +87,8 @@ done
 QA_PREBUILT="*"
 S=${WORKDIR}
 
-# Chromium uses different names for some langs,
-# return Chromium name corresponding to a Gentoo lang.
-chromium_lang() {
-	if [[ "$1" == "es_LA" ]]; then
-		echo "es_419"
-	else
-		echo "$1"
-	fi
+pkg_setup() {
+	chromium_check_kernel_config
 }
 
 chrome_unpack() {
@@ -107,49 +108,17 @@ src_unpack() {
 	chrome_unpack ${A} ./data.tar.lzma
 }
 
-src_prepare() {
+src_install() {
 	CHROME_HOME="opt/google/chrome/"
 
-	pax-mark m ${CHROME_HOME}chrome || die
+	pax-mark -m ${CHROME_HOME}chrome || die
 	rm -rf usr/share/menu || die
 	mv usr/share/doc/${PN} usr/share/doc/${PF} || die
 
-	# Support LINGUAS, bug #332751.
-	# Emulate logic from po.m4.
-	if [[ "%UNSET%" != "${LINGUAS-%UNSET%}" ]]; then
-		local found desiredlang presentlang pak pakname
+	pushd "${CHROME_HOME}locales" > /dev/null || die
+	chromium_remove_language_paks
+	popd > /dev/null
 
-		pushd "${CHROME_HOME}locales" > /dev/null || die
-
-		for pak in *.pak; do
-			pakname="${pak%.pak}"
-			pakname="${pakname/-/_}"
-			presentlang="$(chromium_lang "${pakname}")"
-
-			# Do not issue warning for en_US locale. This is the fallback
-			# locale so it should always be installed.
-			if [[ "${presentlang}" == "en_US" ]]; then
-				continue
-			fi
-
-			found=
-			for desiredlang in ${LINGUAS}; do
-				if [[ "${desiredlang}" == "${presentlang}"* ]]; then
-					found=1
-					break
-				fi
-			done
-
-			if [[ -z ${found} ]]; then
-				rm "${pak}" || die
-			fi
-		done
-
-		popd > /dev/null
-	fi
-}
-
-src_install() {
 	mv opt usr "${D}" || die
 
 	fperms u+s "/${CHROME_HOME}chrome-sandbox" || die
@@ -167,18 +136,4 @@ src_install() {
 		insinto /usr/share/icons/hicolor/${size}x${size}/apps
 		newins "${D}${CHROME_HOME}product_logo_${size}.png" google-chrome.png
 	done
-}
-
-pkg_preinst() {
-	gnome2_icon_savelist
-}
-
-pkg_postinst() {
-	fdo-mime_desktop_database_update
-	gnome2_icon_cache_update
-}
-
-pkg_postrm() {
-	fdo-mime_desktop_database_update
-	gnome2_icon_cache_update
 }
