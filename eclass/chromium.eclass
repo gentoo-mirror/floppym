@@ -219,7 +219,7 @@ egyp_chromium() {
 #
 # If USE flag is not set, echo -D[GYP flag]=[false suffix].
 #
-# [GYP flag] defaults to use_[USE flag] with underscores converted to hyphens.
+# [GYP flag] defaults to use_[USE flag] with hyphens converted to underscores.
 #
 # [true suffix] defaults to 1. [false suffix] defaults to 0.
 gyp_use() {
@@ -227,7 +227,7 @@ gyp_use() {
 	usex "$1" "${gypflag}" "${gypflag}"  "${3-1}" "${4-0}"
 }
 
-# @FUNCTION: get_bundled_v8_version
+# @FUNCTION: chromium_bundled_v8_version
 # @USAGE: [path to version.cc]
 # @DESCRIPTION:
 # Outputs the version of v8 parsed from a (bundled) copy of the source code.
@@ -241,9 +241,9 @@ chromium_bundled_v8_version() {
 	echo "${major}.${minor}.${build}.${patch}"
 }
 
-# @FUNCTION: get_installed_v8_version
+# @FUNCTION: chromium_installed_v8_version
 # @USAGE:
-# @DESCRIPTION
+# @DESCRIPTION:
 # Outputs the version of dev-lang/v8 currently installed on the host system.
 chromium_installed_v8_version() {
 	local cpf=$(best_version dev-lang/v8)
