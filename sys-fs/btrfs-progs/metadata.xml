@@ -4,7 +4,4 @@
   <maintainer>
     <email>lavajoe@gentoo.org</email>
   </maintainer>
-  <use>
-    <flag name='debug-utils'>Build additional utils for debugging</flag>
-  </use>
 </pkgmetadata>
