@@ -3,12 +3,16 @@
 # $Header: /var/cvsroot/gentoo-x86/www-client/pybugz/pybugz-9999.ebuild,v 1.10 2012/03/02 08:11:33 williamh Exp $
 
 EAPI=3
-PYTHON_DEPEND="2:2.7"
+PYTHON_DEPEND="*"
+SUPPORT_PYTHON_ABIS="1"
+RESTRICT_PYTHON_ABIS="*-pypy-*"
 PYTHON_MODNAME="bugz"
 PYTHON_USE_WITH="readline"
 
 if [ "${PV}" = "9999" ]; then
-	EGIT_REPO_URI="git://github.com/williamh/pybugz.git"
+	#EGIT_REPO_URI="git://github.com/floppym/pybugz.git"
+	EGIT_REPO_URI="/home/floppym/src/pybugz"
+	EGIT_BRANCH="py3"
 	vcs=git-2
 else
 	SRC_URI="http://www.github.com/williamh/${PN}/tarball/${PV} -> ${P}.tar.gz"
@@ -29,10 +33,6 @@ RDEPEND="${DEPEND}
 	zsh-completion? ( app-shells/zsh )"
 
 DOCS="bugzrc.example"
-
-pkg_setup() {
-	python_set_active_version 2.7
-}
 
 src_install() {
 	distutils_src_install
