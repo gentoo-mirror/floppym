@@ -10,8 +10,7 @@ PYTHON_MODNAME="bugz"
 PYTHON_USE_WITH="readline"
 
 if [ "${PV}" = "9999" ]; then
-	#EGIT_REPO_URI="git://github.com/floppym/pybugz.git"
-	EGIT_REPO_URI="/home/floppym/src/pybugz"
+	EGIT_REPO_URI="git://github.com/williamh/pybugz.git"
 	EGIT_BRANCH="py3"
 	vcs=git-2
 else
