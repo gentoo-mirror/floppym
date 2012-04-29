@@ -11,7 +11,7 @@ PYTHON_USE_WITH="readline"
 
 if [ "${PV}" = "9999" ]; then
 	EGIT_REPO_URI="git://github.com/williamh/pybugz.git"
-	EGIT_BRANCH="py3"
+	EGIT_BRANCH="master"
 	vcs=git-2
 else
 	SRC_URI="http://www.github.com/williamh/${PN}/tarball/${PV} -> ${P}.tar.gz"
