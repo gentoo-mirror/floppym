@@ -20,7 +20,7 @@ IUSE="qt4"
 RDEPEND="virtual/libusb:1
 	qt4? ( x11-libs/qt-core x11-libs/qt-gui )"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 src_prepare() {
 	rm -r libusb-1.0 || die
