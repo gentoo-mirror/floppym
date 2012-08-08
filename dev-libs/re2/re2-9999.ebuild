@@ -39,7 +39,7 @@ src_test() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" prefix=usr libdir=usr/$(get_libdir) install
+	emake DESTDIR="${ED}" prefix=usr libdir=usr/$(get_libdir) install
 	dodoc AUTHORS CONTRIBUTORS README doc/syntax.txt
 	dohtml doc/syntax.html
 }
