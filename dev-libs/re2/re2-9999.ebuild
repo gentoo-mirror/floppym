@@ -7,7 +7,7 @@ EAPI=4
 inherit multilib toolchain-funcs
 
 if [[ ${PV} != 9999 ]]; then
-	KEYWORDS="~amd64"
+	KEYWORDS="~amd64 ~x86"
 	SRC_URI="mirror://gentoo/${P}.tar.xz
 		http://dev.gentoo.org/~floppym/distfiles/${P}.tar.xz"
 else
@@ -40,4 +40,6 @@ src_test() {
 
 src_install() {
 	emake DESTDIR="${D}" prefix=usr libdir=usr/$(get_libdir) install
+	dodoc AUTHORS CONTRIBUTORS README doc/syntax.txt
+	dohtml doc/syntax.html
 }
