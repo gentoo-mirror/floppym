@@ -2,25 +2,21 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/dev-lang/v8/v8-3.12.19.11.ebuild,v 1.1 2012/09/25 18:06:28 floppym Exp $
 
-EAPI="4"
+EAPI="5"
 
-PYTHON_DEPEND="2:2.6"
-
-inherit eutils multilib pax-utils python toolchain-funcs versionator
+inherit eutils multilib pax-utils toolchain-funcs versionator
 
 DESCRIPTION="Google's open source JavaScript engine"
 HOMEPAGE="http://code.google.com/p/v8"
 SRC_URI="http://commondatastorage.googleapis.com/chromium-browser-official/${P}.tar.bz2"
 LICENSE="BSD"
 
-SLOT="0"
+soname_version="$(get_version_component_range 1-3)"
+SLOT="0/${soname_version}"
 KEYWORDS="~amd64 ~x86 ~x86-fbsd ~x64-macos ~x86-macos"
 IUSE=""
 
-pkg_setup() {
-	python_set_active_version 2
-	python_pkg_setup
-}
+DEPEND="=dev-lang/python-2*"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.10.8.10-freebsd9.patch
@@ -29,6 +25,7 @@ src_prepare() {
 src_compile() {
 	tc-export AR CC CXX RANLIB
 	export LINK=${CXX}
+	export EPYTHON=python2
 
 	# Use target arch detection logic from bug #354601.
 	case ${CHOST} in
@@ -43,8 +40,6 @@ src_compile() {
 		*) die "Unrecognized CHOST: ${CHOST}"
 	esac
 	mytarget=${myarch}.release
-
-	soname_version="$(get_version_component_range 1-3)"
 
 	local snapshot=on
 	host-is-pax && snapshot=off
@@ -104,30 +99,4 @@ src_install() {
 	dosym libv8$(get_libname ${soname_version}) /usr/$(get_libdir)/libv8$(get_libname) || die
 
 	dodoc AUTHORS ChangeLog || die
-}
-
-pkg_preinst() {
-	preserved_libs=()
-	local baselib candidate
-
-	eshopts_push -s nullglob
-
-	for candidate in "${EROOT}usr/$(get_libdir)"/libv8$(get_libname).*; do
-		baselib=${candidate##*/}
-		if [[ ! -e "${ED}usr/$(get_libdir)/${baselib}" ]]; then
-			preserved_libs+=( "${EPREFIX}/usr/$(get_libdir)/${baselib}" )
-		fi
-	done
-
-	eshopts_pop
-
-	if [[ ${#preserved_libs[@]} -gt 0 ]]; then
-		preserve_old_lib "${preserved_libs[@]}"
-	fi
-}
-
-pkg_postinst() {
-	if [[ ${#preserved_libs[@]} -gt 0 ]]; then
-		preserve_old_lib_notify "${preserved_libs[@]}"
-	fi
 }
