@@ -2,15 +2,14 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-23.0.1271.1.ebuild,v 1.1 2012/09/23 12:37:33 phajdan.jr Exp $
 
-EAPI="4"
-PYTHON_DEPEND="2:2.6"
+EAPI="5"
 
 CHROMIUM_LANGS="am ar bg bn ca cs da de el en_GB es es_LA et fa fi fil fr gu he
 	hi hr hu id it ja kn ko lt lv ml mr ms nb nl pl pt_BR pt_PT ro ru sk sl sr
 	sv sw ta te th tr uk vi zh_CN zh_TW"
 
 inherit chromium eutils flag-o-matic multilib \
-	pax-utils portability python toolchain-funcs versionator virtualx
+	pax-utils portability toolchain-funcs versionator virtualx
 
 DESCRIPTION="Open-source version of Google Chrome web browser"
 HOMEPAGE="http://chromium.org/"
@@ -19,14 +18,14 @@ SRC_URI="http://commondatastorage.googleapis.com/chromium-browser-official/${P}.
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="bindist cups gnome gnome-keyring kerberos pulseaudio selinux"
+IUSE="bindist cups gnome gnome-keyring kerberos prefix pulseaudio selinux"
 
 RDEPEND="app-arch/bzip2
 	cups? (
 		dev-libs/libgcrypt
 		>=net-print/cups-1.3.11
 	)
-	>=dev-lang/v8-3.11.10.6
+	>=dev-lang/v8-3.11.10.6:=
 	dev-libs/dbus-glib
 	>=dev-libs/elfutils-0.149
 	dev-libs/expat
@@ -53,6 +52,7 @@ RDEPEND="app-arch/bzip2
 	selinux? ( sys-libs/libselinux )"
 DEPEND="${RDEPEND}
 	dev-lang/perl
+	|| ( =dev-lang/python-2.7* =dev-lang/python-2.6* )
 	dev-lang/yasm
 	dev-python/ply
 	dev-python/simplejson
@@ -204,6 +204,7 @@ src_prepare() {
 }
 
 src_configure() {
+	export EPYTHON=python2
 	local myconf=""
 
 	# Never tell the build system to "enable" SSE2, it has a few unexpected
