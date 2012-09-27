@@ -82,10 +82,6 @@ pkg_setup() {
 	# Make sure the build system will use the right tools, bug #340795.
 	tc-export AR CC CXX RANLIB
 
-	# Make sure the build system will use the right python, bug #344367.
-	python_set_active_version 2
-	python_pkg_setup
-
 	if ! use selinux; then
 		chromium_suid_sandbox_check_kernel_config
 	fi
@@ -197,10 +193,6 @@ src_prepare() {
 	# TODO: find a solution that can be upstreamed.
 	rmdir v8/include || die
 	ln -s /usr/include v8/include || die
-
-	# Make sure the build system will use the right python, bug #344367.
-	# Only convert directories that need it, to save time.
-	python_convert_shebangs -q -r 2 build tools
 }
 
 src_configure() {
