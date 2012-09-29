@@ -1,6 +1,5 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/v8/v8-3.13.7.1.ebuild,v 1.1 2012/09/23 12:57:32 phajdan.jr Exp $
 
 EAPI="5"
 
@@ -13,7 +12,7 @@ LICENSE="BSD"
 
 soname_version="$(get_version_component_range 1-3)"
 SLOT="0/${soname_version}"
-KEYWORDS="~amd64 ~arm ~x86 ~x86-fbsd ~x64-macos ~x86-macos"
+KEYWORDS="~amd64 ~x86 ~x86-fbsd ~x64-macos ~x86-macos"
 IUSE=""
 
 DEPEND="=dev-lang/python-2*"
@@ -27,8 +26,6 @@ src_compile() {
 	export LINK=${CXX}
 	export EPYTHON=python2
 
-	local hardfp=off
-
 	# Use target arch detection logic from bug #354601.
 	case ${CHOST} in
 		i?86-*) myarch=ia32 ;;
@@ -38,9 +35,6 @@ src_compile() {
 			else
 				myarch=x64
 			fi ;;
-		arm*-hardfloat-*)
-			hardfp=on
-			myarch=arm ;;
 		arm*-*) myarch=arm ;;
 		*) die "Unrecognized CHOST: ${CHOST}"
 	esac
@@ -57,7 +51,6 @@ src_compile() {
 		werror=no \
 		soname_version=${soname_version} \
 		snapshot=${snapshot} \
-		hardfp=${hardfp} \
 		${mytarget} || die
 
 	pax-mark m out/${mytarget}/{cctest,d8,shell} || die
