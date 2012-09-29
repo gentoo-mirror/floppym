@@ -1,15 +1,16 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-23.0.1271.1.ebuild,v 1.1 2012/09/23 12:37:33 phajdan.jr Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/chromium/chromium-23.0.1271.10.ebuild,v 1.1 2012/09/28 18:18:47 phajdan.jr Exp $
 
 EAPI="5"
+PYTHON_DEPEND="2:2.6"
 
 CHROMIUM_LANGS="am ar bg bn ca cs da de el en_GB es es_LA et fa fi fil fr gu he
 	hi hr hu id it ja kn ko lt lv ml mr ms nb nl pl pt_BR pt_PT ro ru sk sl sr
 	sv sw ta te th tr uk vi zh_CN zh_TW"
 
 inherit chromium eutils flag-o-matic multilib \
-	pax-utils portability toolchain-funcs versionator virtualx
+	pax-utils portability python toolchain-funcs versionator virtualx
 
 DESCRIPTION="Open-source version of Google Chrome web browser"
 HOMEPAGE="http://chromium.org/"
@@ -18,7 +19,7 @@ SRC_URI="http://commondatastorage.googleapis.com/chromium-browser-official/${P}.
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="bindist cups gnome gnome-keyring kerberos prefix pulseaudio selinux"
+IUSE="bindist cups gnome gnome-keyring kerberos pulseaudio selinux tcmalloc"
 
 RDEPEND="app-arch/bzip2
 	cups? (
@@ -26,7 +27,6 @@ RDEPEND="app-arch/bzip2
 		>=net-print/cups-1.3.11
 	)
 	>=dev-lang/v8-3.11.10.6:=
-	dev-libs/dbus-glib
 	>=dev-libs/elfutils-0.149
 	dev-libs/expat
 	>=dev-libs/icu-49.1.1-r1
@@ -52,7 +52,6 @@ RDEPEND="app-arch/bzip2
 	selinux? ( sys-libs/libselinux )"
 DEPEND="${RDEPEND}
 	dev-lang/perl
-	|| ( =dev-lang/python-2.7* =dev-lang/python-2.6* )
 	dev-lang/yasm
 	dev-python/ply
 	dev-python/simplejson
@@ -82,6 +81,10 @@ pkg_setup() {
 	# Make sure the build system will use the right tools, bug #340795.
 	tc-export AR CC CXX RANLIB
 
+	# Make sure the build system will use the right python, bug #344367.
+	python_set_active_version 2
+	python_pkg_setup
+
 	if ! use selinux; then
 		chromium_suid_sandbox_check_kernel_config
 	fi
@@ -105,6 +108,12 @@ src_prepare() {
 
 	# Fix build without NaCl glibc toolchain.
 	# epatch "${FILESDIR}/${PN}-ppapi-r0.patch"
+
+	# Fix unnecessary dependency on dbus-glib, bug #434346.
+	epatch "${FILESDIR}/${PN}-dbus-glib-r0.patch"
+
+	# Fix build with system ICU.
+	epatch "${FILESDIR}/${PN}-system-icu-r0.patch"
 
 	# Missing gyp files in tarball.
 	# https://code.google.com/p/chromium/issues/detail?id=144823
@@ -170,6 +179,7 @@ src_prepare() {
 		\! -path 'third_party/smhasher/*' \
 		\! -path 'third_party/speex/*' \
 		\! -path 'third_party/sqlite/*' \
+		\! -path 'third_party/tcmalloc/*' \
 		\! -path 'third_party/tlslite/*' \
 		\! -path 'third_party/trace-viewer/*' \
 		\! -path 'third_party/undoview/*' \
@@ -193,19 +203,22 @@ src_prepare() {
 	# TODO: find a solution that can be upstreamed.
 	rmdir v8/include || die
 	ln -s /usr/include v8/include || die
+
+	# Make sure the build system will use the right python, bug #344367.
+	# Only convert directories that need it, to save time.
+	python_convert_shebangs -q -r 2 build tools
 }
 
 src_configure() {
-	export EPYTHON=python2
 	local myconf=""
 
 	# Never tell the build system to "enable" SSE2, it has a few unexpected
 	# additions, bug #336871.
 	myconf+=" -Ddisable_sse2=1"
 
-	# Disable tcmalloc, it causes problems with e.g. NVIDIA
+	# Optional tcmalloc. Note it causes problems with e.g. NVIDIA
 	# drivers, bug #413637.
-	myconf+=" -Dlinux_use_tcmalloc=0"
+	myconf+=" $(gyp_use tcmalloc linux_use_tcmalloc)"
 
 	# TODO: re-enable nacl after fixing build errors, see
 	# http://forums.gentoo.org/viewtopic-t-937222-highlight-chromium.html
