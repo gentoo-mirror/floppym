@@ -3,7 +3,9 @@
 
 EAPI="5"
 
-inherit eutils multilib pax-utils toolchain-funcs versionator
+PYTHON_DEPEND="2:2.6"
+
+inherit eutils multilib pax-utils python toolchain-funcs versionator
 
 DESCRIPTION="Google's open source JavaScript engine"
 HOMEPAGE="http://code.google.com/p/v8"
@@ -15,7 +17,10 @@ SLOT="0/${soname_version}"
 KEYWORDS="~amd64 ~x86 ~x86-fbsd ~x64-macos ~x86-macos"
 IUSE=""
 
-DEPEND="=dev-lang/python-2*"
+pkg_setup() {
+	python_set_active_version 2
+	python_pkg_setup
+}
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.10.8.10-freebsd9.patch
@@ -24,7 +29,6 @@ src_prepare() {
 src_compile() {
 	tc-export AR CC CXX RANLIB
 	export LINK=${CXX}
-	export EPYTHON=python2
 
 	# Use target arch detection logic from bug #354601.
 	case ${CHOST} in
