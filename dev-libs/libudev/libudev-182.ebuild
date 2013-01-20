@@ -13,7 +13,7 @@ SRC_URI="mirror://kernel/linux/utils/kernel/hotplug/${MY_P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 # Unconditional pkg-config checks
