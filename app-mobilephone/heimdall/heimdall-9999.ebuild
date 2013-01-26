@@ -23,7 +23,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
-	rm -r libusb-1.0 || die
+	rm -r libusbx-1.0 || die
 
 	cd "${S}/heimdall" || die
 	edos2unix configure.ac Makefile.am || die
@@ -40,7 +40,8 @@ src_configure() {
 
 	if use qt4; then
 		cd "${S}/heimdall-frontend" || die
-		eqmake4 heimdall-frontend.pro OUTPUTDIR=/usr/bin || die
+		export OUTPUTDIR=/usr/bin
+		eqmake4 heimdall-frontend.pro OUTPUTDIR=${OUTPUTDIR} || die
 	fi
 }
 
