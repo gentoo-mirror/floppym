@@ -18,7 +18,7 @@ KEYWORDS=""
 IUSE="qt4"
 
 RDEPEND="virtual/libusb:1
-	qt4? ( qt-dev/qtcore qt-dev/qtgui )"
+	qt4? ( dev-qt/qtcore dev-qt/qtgui )"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
