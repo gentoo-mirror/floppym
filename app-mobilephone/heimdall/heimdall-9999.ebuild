@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit autotools eutils qt4-r2 git-2
+inherit autotools eutils qt4-r2 git-2 udev
 
 DESCRIPTION="Tool suite used to flash firmware onto Samsung Galaxy S devices"
 HOMEPAGE="http://www.glassechidna.com.au/products/heimdall/"
@@ -62,7 +62,7 @@ src_install() {
 	dodoc Linux/README
 
 	cd "${S}/heimdall" || die
-	emake DESTDIR="${D}" install
+	emake DESTDIR="${D}" udevrulesdir="$(get_udevdir)/rules.d" install
 
 	if use qt4; then
 		cd "${S}/heimdall-frontend" || die
