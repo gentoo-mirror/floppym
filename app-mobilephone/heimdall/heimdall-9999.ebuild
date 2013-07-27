@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit autotools eutils qt4-r2 git-2 udev
 
@@ -17,8 +17,8 @@ SLOT="0"
 KEYWORDS=""
 IUSE="qt4"
 
-RDEPEND="virtual/libusb:1
-	qt4? ( dev-qt/qtcore dev-qt/qtgui )"
+RDEPEND="dev-libs/libusbx:1=
+	qt4? ( dev-qt/qtcore:4= dev-qt/qtgui:4= )"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
@@ -46,11 +46,8 @@ src_configure() {
 }
 
 src_compile() {
-	cd "${S}/libpit" || die
-	emake
-
-	cd "${S}/heimdall" || die
-	emake
+	emake -C libpit
+	emake -C heimdall
 
 	if use qt4; then
 		cd "${S}/heimdall-frontend" || die
@@ -59,10 +56,8 @@ src_compile() {
 }
 
 src_install() {
+	emake -C heimdall DESTDIR="${D}" udevrulesdir="$(get_udevdir)/rules.d" install
 	dodoc Linux/README
-
-	cd "${S}/heimdall" || die
-	emake DESTDIR="${D}" udevrulesdir="$(get_udevdir)/rules.d" install
 
 	if use qt4; then
 		cd "${S}/heimdall-frontend" || die
