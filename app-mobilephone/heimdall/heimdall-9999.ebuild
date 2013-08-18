@@ -11,7 +11,7 @@ if [[ ${PV} != 9999 ]]; then
 	KEYWORDS="~amd64"
 	S="${WORKDIR}/Heimdall-${PV}"
 else
-	inherit git
+	inherit git-2
 	EGIT_REPO_URI="git://github.com/Benjamin-Dobell/Heimdall.git
 		https://github.com/Benjamin-Dobell/Heimdall.git"
 fi
