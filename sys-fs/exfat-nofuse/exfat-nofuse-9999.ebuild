@@ -6,7 +6,7 @@ EAPI=5
 
 inherit git-r3 linux-mod
 
-DESCRIPTION="Non-fuse read/write kernel driver for exFat and VFat"
+DESCRIPTION="Linux non-fuse read/write kernel driver for exFAT"
 HOMEPAGE="https://github.com/dorimanx/exfat-nofuse"
 EGIT_REPO_URI="https://github.com/dorimanx/exfat-nofuse.git"
 
