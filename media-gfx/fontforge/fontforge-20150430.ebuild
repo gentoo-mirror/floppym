@@ -12,16 +12,15 @@ GNULIB="b287b621969d5a3f56058ff01e554839814da4e1"
 UTHASH="ac47d4928e61c5abc6e977d91310d31ed74690e4"
 
 DESCRIPTION="postscript font editor and converter"
-HOMEPAGE="http://fontforge.sourceforge.net/"
+HOMEPAGE="http://fontforge.github.io/"
 SRC_URI="https://github.com/fontforge/fontforge/archive/${PV}.tar.gz -> ${P}.tar.gz
 	http://dev.gentoo.org/~floppym/dist/gnulib-${GNULIB}.tar.gz
 	https://github.com/troydhanson/uthash/archive/${UTHASH}.tar.gz -> uthash-${UTHASH}.tar.gz"
-#SRC_URI="https://github.com/fontforge/fontforge/releases/download/${PV}/${P}.tar.gz"
 
-LICENSE="BSD"
+LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos"
-IUSE="cairo doc truetype-debugger gif gtk jpeg png +python readline tiff svg unicode X"
+IUSE="cairo truetype-debugger gif gtk jpeg png +python readline tiff svg unicode X"
 
 RDEPEND="dev-libs/libltdl:0
 	gif? ( media-libs/giflib:0= )
