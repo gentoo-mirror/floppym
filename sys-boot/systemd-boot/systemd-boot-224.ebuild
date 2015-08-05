@@ -20,6 +20,9 @@ COMMON_DEPEND="
 	sys-libs/libcap:0=
 "
 DEPEND="${COMMON_DEPEND}
+	app-text/docbook-xml-dtd:4.2
+	app-text/docbook-xsl-stylesheets
+	dev-libs/libxslt:0
 	>=dev-util/intltool-0.50
 	>=sys-boot/gnu-efi-3.0.2
 "
