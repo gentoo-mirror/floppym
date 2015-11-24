@@ -1,0 +1,12 @@
+DEFINED_PHASES=install postinst prerm unpack
+DESCRIPTION=Create engaging, interactive HTML5-based designs and motion graphics that can run on any device
+EAPI=5
+HOMEPAGE=https://www.google.com/webdesigner/
+KEYWORDS=~amd64 ~x86
+LICENSE=google-chrome
+RDEPEND=dev-libs/glib:2 x11-libs/gdk-pixbuf:2 x11-libs/gtk+:2
+SLOT=0
+SRC_URI=amd64? ( https://dl.google.com/linux/webdesigner/deb/pool/main/g/google-webdesigner/google-webdesigner_1.0.1.0_amd64.deb ) x86? ( https://dl.google.com/linux/webdesigner/deb/pool/main/g/google-webdesigner/google-webdesigner_1.0.1.0_i386.deb )
+_eclass_exported_funcs=pkg_prerm:- pkg_postinst:- src_unpack:unpacker src_install:-
+_eclasses_=multilib	3972ca401cf7dbb430df9995f5d8d580	toolchain-funcs	7a212e5e01adfa4805c9978366e6ee85	unpacker	1d149d9bda7723e740cfd28118f27813
+_md5_=fcf141dd54f4498d2e3913755c2123bb
