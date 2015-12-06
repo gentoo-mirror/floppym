@@ -2,4 +2,5 @@ app-misc/google-webdesigner 1.0.1.0: Create engaging, interactive HTML5-based de
 app-misc/sixpair 2007.04.18: Utility to initiate bluetooth pairing with a PS3 controller
 app-misc/var-run 0: Dummy package to keep /var/run symlink from being removed
 dev-libs/libmspack 0.5: A library for Microsoft compression formats
+sys-apps/dbus 1.10.6: A message bus system, a simple way for applications to talk to each other
 sys-boot/systemd-boot 224: EFI boot loader from systemd (formerly gummiboot)
