@@ -16,6 +16,8 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~x86-freebsd ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
 IUSE="debug doc selinux static-libs systemd test X"
 
+RESTRICT="test"
+
 CDEPEND="
 	>=dev-libs/expat-2
 	selinux? (
@@ -37,7 +39,7 @@ DEPEND="${CDEPEND}
 	virtual/pkgconfig
 	doc? ( app-doc/doxygen )
 	test? (
-		>=dev-libs/glib-2.24:2
+		>=dev-libs/glib-2.36:2
 		${PYTHON_DEPS}
 		)
 "
@@ -197,7 +199,7 @@ multilib_src_install() {
 }
 
 multilib_src_install_all() {
-	newinitd "${FILESDIR}"/dbus.initd dbus
+	newinitd "${FILESDIR}"/dbus.initd-r1 dbus
 
 	if use X; then
 		# dbus X session script (#77504)

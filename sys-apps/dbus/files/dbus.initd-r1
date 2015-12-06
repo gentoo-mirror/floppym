@@ -5,46 +5,33 @@
 
 extra_started_commands="reload"
 
+description="An IPC message bus daemon"
+pidfile="/var/run/dbus.pid"
+command="/usr/bin/dbus-daemon"
+command_args="--system"
+
+dbus_socket="/var/run/dbus/system_bus_socket"
+
 depend() {
 	need localmount
 	after bootmisc
 }
 
-start() {
-	ebegin "Starting D-BUS system messagebus"
+start_pre() {
 	/usr/bin/dbus-uuidgen --ensure=/etc/machine-id
 
 	# We need to test if /var/run/dbus exists, since script will fail if it does not
-	[ ! -e /var/run/dbus ] && mkdir /var/run/dbus 
-
-	start-stop-daemon --start --pidfile /var/run/dbus.pid --exec /usr/bin/dbus-daemon -- --system
-	eend $?
+	checkpath -q -d /var/run/dbus 
 }
 
-stop() {
-	local retval
-
-	ebegin "Stopping D-BUS system messagebus"
-
-	start-stop-daemon --stop --pidfile /var/run/dbus.pid
-	retval=$?
-
-	eend ${retval}
-
-	[ -S /var/run/dbus/system_bus_socket ] && rm -f /var/run/dbus/system_bus_socket
-
-	return ${retval}
+stop_post() {
+	[ ! -S "${dbus_socket}" ] || rm -f "${dbus_socket}"
 }
 
 reload() {
-	local retval
-
 	ebegin "Reloading D-BUS messagebus config"
-	
 	/usr/bin/dbus-send --print-reply --system --type=method_call \
 			--dest=org.freedesktop.DBus \
 			/ org.freedesktop.DBus.ReloadConfig > /dev/null
-	retval=$?
-	eend ${retval}
-	return ${retval}
+	eend $?
 }
