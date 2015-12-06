@@ -116,6 +116,7 @@ multilib_src_configure() {
 		--with-dbus-user=messagebus
 		$(use_with X x)
 		"$(systemd_with_unitdir)"
+		--enable-user-session
 		)
 
 	if [[ ${CHOST} == *-darwin* ]]; then
