@@ -9,5 +9,5 @@ RDEPEND=virtual/libusb:0 net-wireless/bluez
 SLOT=0
 SRC_URI=http://www.pabr.org/sixlinux/sixpair.c -> sixpair-2007.04.18.c
 _eclass_exported_funcs=src_unpack:- src_compile:- src_install:-
-_eclasses_=multilib	d062ae4ba2fc40a19c11de2ad89b6616	toolchain-funcs	e886935aae2b45a545665444ab0667cf
+_eclasses_=multilib	d062ae4ba2fc40a19c11de2ad89b6616	toolchain-funcs	82165206dedb2075f9a0fb8f9b1f9441
 _md5_=02b497e2eeab0993c0416c5dce26e8f0
