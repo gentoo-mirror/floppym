@@ -1,0 +1,13 @@
+DEFINED_PHASES=configure
+DEPEND=libedit? ( dev-libs/libedit )
+DESCRIPTION=Debian Almquist shell
+EAPI=6
+HOMEPAGE=http://gondor.apana.org.au/~herbert/dash/
+IUSE=+lineno libedit
+KEYWORDS=~amd64 ~x86
+LICENSE=BSD
+RDEPEND=libedit? ( dev-libs/libedit ) !apps-shells/dash
+SLOT=0
+SRC_URI=http://gondor.apana.org.au/~herbert/dash/files/dash-0.5.9.tar.gz
+_eclass_exported_funcs=src_configure:-
+_md5_=482a7e0749c33217316c4791b89c1e41
