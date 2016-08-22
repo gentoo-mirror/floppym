@@ -17,6 +17,7 @@ IUSE=""
 
 COMMON_DEPEND="
 	>=sys-apps/util-linux-2.26:0=
+	sys-libs/libcap:=
 "
 DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xml-dtd:4.2
@@ -24,7 +25,6 @@ DEPEND="${COMMON_DEPEND}
 	dev-libs/libxslt:0
 	>=dev-util/intltool-0.50
 	>=sys-boot/gnu-efi-3.0.2
-	sys-libs/libcap
 "
 RDEPEND="${COMMON_DEPEND}
 	!sys-apps/systemd
