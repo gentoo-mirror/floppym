@@ -2,4 +2,4 @@ app-misc/sixpair 2007.04.18: Utility to initiate bluetooth pairing with a PS3 co
 app-misc/var-run 0: Dummy package to keep /var/run symlink from being removed
 app-shells/dash-vanilla 0.5.9: Debian Almquist shell
 sys-apps/sandbox 9999: sandbox'd LD_PRELOAD hack
-sys-boot/systemd-boot 229: UEFI boot manager from systemd (formerly gummiboot)
+sys-boot/systemd-boot 231: UEFI boot manager from systemd (formerly gummiboot)
