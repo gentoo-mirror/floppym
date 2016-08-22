@@ -4,7 +4,7 @@
 
 EAPI=6
 
-inherit autotools toolchain-funcs
+inherit autotools eutils toolchain-funcs
 
 DESCRIPTION="UEFI boot manager from systemd (formerly gummiboot)"
 HOMEPAGE="https://www.freedesktop.org/wiki/Software/systemd/systemd-boot/"
@@ -24,6 +24,7 @@ DEPEND="${COMMON_DEPEND}
 	dev-libs/libxslt:0
 	>=dev-util/intltool-0.50
 	>=sys-boot/gnu-efi-3.0.2
+	sys-libs/libcap
 "
 RDEPEND="${COMMON_DEPEND}
 	!sys-apps/systemd
@@ -38,6 +39,9 @@ src_prepare() {
 
 src_configure() {
 	local myeconfargs=(
+		EFI_CC="$(tc-getPROG "EFI_CC CC" gcc)"
+		cc_cv_CFLAGS__flto=no
+		cc_cv_LDFLAGS__Wl__fuse_ld_gold=no
 		--enable-blkid
 		--enable-efi
 		--enable-gnuefi
@@ -62,8 +66,6 @@ src_configure() {
 		--disable-xkbcommon
 		--disable-xz
 		--disable-zlib
-		EFI_CC="$(tc-getPROG "EFI_CC CC" gcc)"
-		ac_cv_search_cap_init=
 	)
 	econf "${myeconfargs[@]}"
 }
@@ -78,14 +80,36 @@ efi-mt() {
 }
 
 src_compile() {
+	local args=(
+		libsystemd-shared.la
+		bootctl
+		man/bootctl.1
+		linux$(efi-mt).efi.stub
+		systemd-boot$(efi-mt).efi
+	)
 	emake built-sources
-	emake bootctl man/bootctl.1 linux$(efi-mt).efi.stub systemd-boot$(efi-mt).efi
+	emake "${args[@]}"
 }
 
 src_install() {
-	dobin bootctl
-	doman man/bootctl.1
-	insinto usr/lib/systemd/boot/efi
-	doins linux$(efi-mt).efi.stub systemd-boot$(efi-mt).efi
+	local args=(
+		DESTDIR="${D%/}"
+
+		# libsystemd-shared
+		rootlibexec_LTLIBRARIES=libsystemd-shared.la
+		install-rootlibexecLTLIBRARIES
+
+		# bootctl
+		lib_LTLIBRARIES=
+		bin_PROGRAMS=bootctl
+		install-binPROGRAMS
+
+		man_MANS=man/bootctl.1
+		install-man1
+
+		install-bootlibDATA
+	)
+	emake "${args[@]}"
+	prune_libtool_files
 	einstalldocs
 }
