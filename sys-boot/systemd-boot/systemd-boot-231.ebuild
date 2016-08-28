@@ -16,7 +16,7 @@ KEYWORDS="~amd64"
 IUSE=""
 
 COMMON_DEPEND="
-	>=sys-apps/util-linux-2.26:0=
+	>=sys-apps/util-linux-2.27.1:0=
 	sys-libs/libcap:=
 "
 DEPEND="${COMMON_DEPEND}
