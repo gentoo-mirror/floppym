@@ -11,7 +11,7 @@ SRC_URI="http://gondor.apana.org.au/~herbert/dash/files/dash-${PV}.tar.gz"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="+lineno libedit"
+IUSE="libedit"
 
 DEPEND="libedit? ( dev-libs/libedit )"
 RDEPEND="${DEPEND}
@@ -23,7 +23,7 @@ src_configure() {
 	local args=(
 		--bindir="${EPREFIX}"/bin
 		--enable-fnmatch
-		$(use_enable lineno)
+		--disable-lineno
 		$(use_with libedit)
 	)
 	econf "${args[@]}"
