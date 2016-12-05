@@ -4,7 +4,7 @@
 
 EAPI=6
 
-DESCRIPTION="GCC virtual"
+DESCRIPTION="GCC virtual slots"
 
 SLOT="${PV}"
 KEYWORDS="*"

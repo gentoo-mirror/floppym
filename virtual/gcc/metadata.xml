@@ -5,4 +5,9 @@
 		<email>floppym@gentoo.org</email>
 		<name>Mike Gilbert</name>
 	</maintainer>
+	<longdescription>
+		This is a virtual package meant to simulate more reasonable slotting
+		of <pkg>sys-devel/gcc</pkg> for typical users. Its primary purpose is
+		to allow gcc release branches to be added to portage's world set.
+	</longdescription>
 </pkgmetadata>
