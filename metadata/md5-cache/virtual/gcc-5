@@ -1,8 +1,8 @@
 DEFINED_PHASES=-
-DESCRIPTION=GCC virtual
+DESCRIPTION=GCC virtual slots
 EAPI=6
 KEYWORDS=~*
 RDEPEND==sys-devel/gcc-5*
 SLOT=5
 _eclass_exported_funcs=-
-_md5_=3b0c3954319075c8d2d6d974c0a29981
+_md5_=0956318fbbd0aeeef7a7f9ecad81022c
