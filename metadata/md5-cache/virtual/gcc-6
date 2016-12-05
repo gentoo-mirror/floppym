@@ -1,0 +1,7 @@
+DEFINED_PHASES=-
+DESCRIPTION=GCC virtual
+EAPI=6
+RDEPEND==sys-devel/gcc-6*
+SLOT=6
+_eclass_exported_funcs=-
+_md5_=aa4a1c26d5d057f293d7d0229321ffab
