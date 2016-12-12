@@ -85,60 +85,22 @@ src_unpack() {
 src_install() {
 	local tmpl
 
-	dodir "${ICAROOT}"
-
 	exeinto "${ICAROOT}"
 	doexe *.DLL libctxssl.so libproxy.so wfica AuthManagerDaemon PrimaryAuthManager selfservice ServiceRecord
 
-	exeinto "${ICAROOT}"/lib
-	doexe lib/*.so
+	insinto "${ICAROOT}"
+	doins -r config gtk help icons keyboard nls site usb
+
+	insopts -m 0755
+	doins -r lib util
+
+	dosym /etc/ssl/certs "${ICAROOT}"/keystore/cacerts
 
 	if use nsplugin ; then
 		exeinto "${ICAROOT}"
 		doexe npica.so
 		dosym "${ICAROOT}"/npica.so /usr/$(get_libdir)/nsbrowser/plugins/npica.so
 	fi
-
-	insinto "${ICAROOT}"
-	doins -r nls usb
-	doins nls/en.UTF-8/eula.txt
-
-	insinto "${ICAROOT}"/nls/en
-	doins nls/en.UTF-8/eula.txt
-
-	insinto "${ICAROOT}"/config
-	doins config/* config/.* nls/en/*.ini
-	for tmpl in {appsrv,wfclient}.template ; do
-		newins nls/en/${tmpl} ${tmpl/template/ini}
-	done
-	touch "${ED}/${ICAROOT}"/config/.server || die
-
-	insinto "${ICAROOT}"/gtk
-	doins gtk/*
-
-	insinto "${ICAROOT}"/gtk/glade
-	doins gtk/glade/*
-
-	insinto "${ICAROOT}"/site
-	doins -r site/*
-
-	dodir "${ICAROOT}"/help
-
-	insinto "${ICAROOT}"/config/usertemplate
-	doins config/usertemplate/*
-
-	insinto "${ICAROOT}"/icons
-	doins icons/*
-
-	insinto "${ICAROOT}"/keyboard
-	doins keyboard/*
-
-	rm -r "${S}"/keystore/cacerts || die
-	dosym /etc/ssl/certs "${ICAROOT}"/keystore/cacerts
-
-	exeinto "${ICAROOT}"/util
-	doexe util/{configmgr,conncenter,echo_cmd,gst_aud_play,gst_aud_read,gst_play,gst_read,hdxcheck.sh,icalicense.sh,libgstflatstm.so}
-	doexe util/{lurdump,new_store,nslaunch,pnabrowse,storebrowse,sunraymac.sh,what,xcapture}
 
 	doenvd "${FILESDIR}"/10ICAClient
 
