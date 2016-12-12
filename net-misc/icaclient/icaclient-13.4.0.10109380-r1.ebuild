@@ -15,7 +15,7 @@ LICENSE="icaclient"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
 IUSE="nsplugin linguas_de linguas_es linguas_fr linguas_ja linguas_zh_CN"
-RESTRICT="mirror strip userpriv fetch"
+RESTRICT="mirror strip fetch"
 
 ICAROOT="/opt/Citrix/ICAClient"
 
