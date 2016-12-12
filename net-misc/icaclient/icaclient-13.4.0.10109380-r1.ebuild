@@ -14,7 +14,7 @@ SRC_URI="amd64? ( linuxx64-${PV}.tar.gz )
 LICENSE="icaclient"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
-IUSE="nsplugin linguas_de linguas_es linguas_fr linguas_ja linguas_zh_CN"
+IUSE="nsplugin"
 RESTRICT="mirror strip fetch"
 
 ICAROOT="/opt/Citrix/ICAClient"
@@ -100,8 +100,8 @@ src_install() {
 	fi
 
 	insinto "${ICAROOT}"
+	doins -r nls usb
 	doins nls/en.UTF-8/eula.txt
-	doins -r usb
 
 	insinto "${ICAROOT}"/nls/en
 	doins nls/en.UTF-8/eula.txt
@@ -126,36 +126,6 @@ src_install() {
 
 	insinto "${ICAROOT}"/config/usertemplate
 	doins config/usertemplate/*
-
-	LANGCODES="en"
-	use linguas_de && LANGCODES+=" de"
-	use linguas_es && LANGCODES+=" es"
-	use linguas_fr && LANGCODES+=" fr"
-	use linguas_ja && LANGCODES+=" ja"
-	use linguas_zh_CN && LANGCODES+=" zh_CN"
-
-	for lang in ${LANGCODES} ; do
-		insinto "${ICAROOT}"/nls/${lang}
-		doins nls/${lang}/*
-
-		insinto "${ICAROOT}"/nls/$lang/UTF-8
-		doins nls/${lang}.UTF-8/*
-
-		insinto "${ICAROOT}"/nls/${lang}/LC_MESSAGES
-		doins nls/${lang}/LC_MESSAGES/*
-
-		insinto "${ICAROOT}"/nls/${lang}
-		dosym UTF-8 "${ICAROOT}"/nls/${lang}/utf8
-
-		for tmpl in {appsrv,wfclient}.template ; do
-			cp "${ED}/${ICAROOT}"/nls/${lang}/${tmpl} \
-				"${ED}/${ICAROOT}"/nls/${lang}/${tmpl/template/ini} \
-				|| die
-		done
-	done
-
-	insinto "${ICAROOT}"/nls
-	dosym en /opt/Citrix/ICAClient/nls/C
 
 	insinto "${ICAROOT}"/icons
 	doins icons/*
