@@ -126,9 +126,7 @@ src_install() {
 
 	local dracutlibdir="usr/lib/dracut"
 
-	echo "DRACUT_VERSION=$PVR" > "${D%/}/${dracutlibdir}/dracut-version.sh"
-
-	insinto "${dracutlibdir}/dracut.conf.d/"
+	insinto "${dracutlibdir}/dracut.conf.d"
 	newins dracut.conf.d/gentoo.conf.example gentoo.conf
 
 	insinto /etc/logrotate.d
