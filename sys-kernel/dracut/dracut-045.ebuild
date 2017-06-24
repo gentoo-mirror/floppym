@@ -17,14 +17,14 @@ RESTRICT="test"
 
 CDEPEND="virtual/udev
 	virtual/pkgconfig
+	>=sys-apps/kmod-15[tools]
 	systemd? (
 		>=sys-apps/systemd-199
 	)
 	"
 RDEPEND="${CDEPEND}
 	app-arch/cpio
-	>=app-shells/bash-4.0
-	>sys-apps/kmod-5[tools]
+	>=app-shells/bash-4.0:0
 	|| (
 		>=sys-apps/sysvinit-2.87-r3
 		sys-apps/systemd[sysv-utils]
