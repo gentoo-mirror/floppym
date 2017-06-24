@@ -106,6 +106,8 @@ src_prepare() {
 
 src_configure() {
 	local myconf=(
+		--prefix="${EPREFIX}/usr"
+		--sysconfdir="${EPREFIX}/etc"
 		--libdir="${MY_LIBDIR}"
 		--bashcompletiondir="$(get_bashcompdir)"
 	)
@@ -114,12 +116,10 @@ src_configure() {
 		myconf+=( --systemdsystemunitdir="$(systemd_get_systemunitdir)" )
 	fi
 
-	econf "${myconf[@]}"
-}
+	tc-export CC PKG_CONFIG
 
-src_compile() {
-	tc-export CC
-	emake doc install/dracut-install skipcpio/skipcpio
+	echo ./configure "${myconf[@]}"
+	./configure "${myconf[@]}" || die
 }
 
 src_install() {
