@@ -49,11 +49,11 @@ DEPEND="${CDEPEND}
 
 DOCS=( AUTHORS HACKING NEWS README README.generic README.kernel README.modules
 	README.testsuite TODO )
-MY_LIBDIR=/usr/lib
+
 QA_MULTILIB_PATHS="
 	usr/lib/dracut/dracut-install
 	usr/lib/dracut/skipcpio
-	"
+"
 
 PATCHES=(
 )
@@ -108,7 +108,6 @@ src_configure() {
 	local myconf=(
 		--prefix="${EPREFIX}/usr"
 		--sysconfdir="${EPREFIX}/etc"
-		--libdir="${MY_LIBDIR}"
 		--bashcompletiondir="$(get_bashcompdir)"
 	)
 
@@ -125,8 +124,7 @@ src_configure() {
 src_install() {
 	default
 
-	local my_libdir="${MY_LIBDIR}"
-	local dracutlibdir="${my_libdir#/}/dracut"
+	local dracutlibdir="usr/lib/dracut"
 
 	echo "DRACUT_VERSION=$PVR" > "${D%/}/${dracutlibdir}/dracut-version.sh"
 
@@ -142,7 +140,7 @@ src_install() {
 
 	if ! use systemd; then
 		# Scripts in kernel/install.d are systemd-specific
-		rm -r "${D%/}/${my_libdir}/kernel" || die
+		rm -r "${D%/}/usr/lib/kernel" || die
 	fi
 
 	#
