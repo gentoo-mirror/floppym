@@ -56,11 +56,6 @@ QA_MULTILIB_PATHS="
 	"
 
 PATCHES=(
-	"${FILESDIR}"/044-0001-base-dracut-lib.sh-dev_unit_name-guard-against-dev-b.patch
-	"${FILESDIR}"/044-0002-systemd-initrd-add-initrd-root-device.target.patch
-	"${FILESDIR}"/044-0003-50-dracut.install-use-bin-bash-shebang.patch
-	"${FILESDIR}"/dracut-044-bash-4.4.patch
-	"${FILESDIR}"/dracut-044-preserve-xattrs-when-copying.patch
 )
 
 #
