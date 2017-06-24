@@ -54,26 +54,6 @@ QA_MULTILIB_PATHS="usr/lib/dracut"
 PATCHES=(
 )
 
-#
-# Helper functions
-#
-
-# Removes module from modules.d.
-# $1 = module name
-# Module name can be specified without number prefix.
-rm_module() {
-	local force m
-	[[ $1 = -f ]] && force=-f
-
-	for m in $@; do
-		if [[ $m =~ ^[0-9][0-9][^\ ]*$ ]]; then
-			rm ${force} --interactive=never -r "${modules_dir}"/$m
-		else
-			rm ${force} --interactive=never -r "${modules_dir}"/[0-9][0-9]$m
-		fi
-	done
-}
-
 src_configure() {
 	local myconf=(
 		--prefix="${EPREFIX}/usr"
@@ -113,34 +93,6 @@ src_install() {
 	dodir /var/lib/dracut/overlay
 
 	dodoc dracut.html
-
-	if ! use systemd; then
-		# Scripts in kernel/install.d are systemd-specific
-		rm -r "${ED%/}/usr/lib/kernel" || die
-	fi
-
-	#
-	# Modules
-	#
-	local module
-	modules_dir="${ED%/}/${dracutlibdir}/modules.d"
-
-	use debug || rm_module 95debug
-	use selinux || rm_module 98selinux
-
-	if use systemd; then
-		# With systemd following modules do not make sense
-		rm_module 96securityfs 97masterkey 98integrity
-	else
-		rm_module 00systemd 98dracut-systemd
-		# Without systemd following modules do not make sense
-		rm_module 00systemd-bootchart 01systemd-initrd 02systemd-networkd
-	fi
-
-	# Remove modules which won't work for sure
-	rm_module 95fcoe # no tools
-	# fips module depends on masked app-crypt/hmaccalc
-	rm_module 01fips 02fips-aesni
 }
 
 pkg_postinst() {
