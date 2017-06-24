@@ -1,5 +1,6 @@
 app-emulation/ovmf 9999: OVMF
 app-misc/sixpair 2007.04.18: Utility to initiate bluetooth pairing with a PS3 controller
 app-misc/var-run 0: Dummy package to keep /var/run symlink from being removed
-dev-libs/atf 0.21: Libraries to write tests in C, C++ and shell
+dev-lang/lua 5.3.4: A powerful light-weight programming language designed for extending applications
 sys-apps/sandbox 9999: sandbox'd LD_PRELOAD hack
+sys-kernel/dracut 045: Generic initramfs generation tool
