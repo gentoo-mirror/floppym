@@ -138,14 +138,14 @@ src_install() {
 
 	if ! use systemd; then
 		# Scripts in kernel/install.d are systemd-specific
-		rm -r "${D%/}/usr/lib/kernel" || die
+		rm -r "${ED%/}/usr/lib/kernel" || die
 	fi
 
 	#
 	# Modules
 	#
 	local module
-	modules_dir="${D%/}/${dracutlibdir}/modules.d"
+	modules_dir="${ED%/}/${dracutlibdir}/modules.d"
 
 	use debug || rm_module 95debug
 	use selinux || rm_module 98selinux
