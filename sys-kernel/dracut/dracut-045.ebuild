@@ -16,9 +16,9 @@ IUSE="debug selinux systemd"
 RESTRICT="test"
 
 CDEPEND="virtual/udev
+	virtual/pkgconfig
 	systemd? (
 		>=sys-apps/systemd-199
-		virtual/pkgconfig
 	)
 	"
 RDEPEND="${CDEPEND}
@@ -44,7 +44,6 @@ DEPEND="${CDEPEND}
 	>=dev-libs/libxslt-1.1.26
 	app-text/docbook-xml-dtd:4.5
 	>=app-text/docbook-xsl-stylesheets-1.75.2
-	virtual/pkgconfig
 	"
 
 DOCS=( AUTHORS HACKING NEWS README README.generic README.kernel README.modules
@@ -78,32 +77,6 @@ rm_module() {
 	done
 }
 
-src_prepare() {
-	local libdirs="/$(get_libdir) /usr/$(get_libdir)"
-	if [[ ${SYMLINK_LIB} = yes ]]; then
-		# Preserve lib -> lib64 symlinks in initramfs
-		[[ $libdirs =~ /lib\  ]] || libdirs+=" /lib /usr/lib"
-	fi
-	einfo "Setting libdirs to \"${libdirs}\" ..."
-	sed -e "3alibdirs=\"${libdirs}\"" \
-		-i "${S}/dracut.conf.d/gentoo.conf.example" || die
-
-	local udevdir="$("$(tc-getPKG_CONFIG)" udev --variable=udevdir)"
-	einfo "Setting udevdir to ${udevdir}..."
-	sed -r -e "s|^(udevdir=).*$|\1${udevdir}|" \
-			-i "${S}/dracut.conf.d/gentoo.conf.example" || die
-
-	if ! use systemd; then
-		local systemdutildir="/lib/systemd"
-		einfo "Setting systemdutildir for standalone udev to" \
-			"${systemdutildir}..."
-		sed -e "5asystemdutildir=\"${systemdutildir}\"" \
-			-i "${S}/dracut.conf.d/gentoo.conf.example" || die
-	fi
-
-	default
-}
-
 src_configure() {
 	local myconf=(
 		--prefix="${EPREFIX}/usr"
@@ -126,8 +99,16 @@ src_install() {
 
 	local dracutlibdir="usr/lib/dracut"
 
+	local libdirs="/$(get_libdir) /usr/$(get_libdir)"
+	if [[ ${SYMLINK_LIB} = yes ]]; then
+		# Preserve lib -> lib64 symlinks in initramfs
+		[[ $libdirs =~ /lib\  ]] || libdirs+=" /lib /usr/lib"
+	fi
+
+	einfo "Setting libdirs to \"${libdirs}\" ..."
+	echo "libdirs=\"${libdirs}\"" > "${T}/gentoo.conf"
 	insinto "${dracutlibdir}/dracut.conf.d"
-	newins dracut.conf.d/gentoo.conf.example gentoo.conf
+	doins "${T}/gentoo.conf"
 
 	insinto /etc/logrotate.d
 	newins dracut.logrotate dracut
