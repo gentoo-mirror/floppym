@@ -11,16 +11,13 @@ SRC_URI="mirror://kernel/linux/utils/boot/${PN}/${P}.tar.xz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
-IUSE="debug selinux systemd"
+IUSE="debug selinux"
 
 RESTRICT="test"
 
 CDEPEND="virtual/udev
 	virtual/pkgconfig
 	>=sys-apps/kmod-15[tools]
-	systemd? (
-		>=sys-apps/systemd-199
-	)
 	"
 RDEPEND="${CDEPEND}
 	app-arch/cpio
@@ -59,11 +56,8 @@ src_configure() {
 		--prefix="${EPREFIX}/usr"
 		--sysconfdir="${EPREFIX}/etc"
 		--bashcompletiondir="$(get_bashcompdir)"
+		--systemdsystemunitdir="$(systemd_get_systemunitdir)"
 	)
-
-	if use systemd; then
-		myconf+=( --systemdsystemunitdir="$(systemd_get_systemunitdir)" )
-	fi
 
 	tc-export CC PKG_CONFIG
 
