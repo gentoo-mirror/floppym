@@ -27,6 +27,7 @@ RDEPEND="${CDEPEND}
 		sys-apps/systemd[sysv-utils]
 		sys-apps/systemd-sysv-utils
 	)
+	sys-apps/coreutils[xattr(-)]
 	>=sys-apps/util-linux-2.21
 
 	debug? ( dev-util/strace )
