@@ -14,14 +14,30 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="idn ipv6 kerberos pam tcpd"
 
-RDEPEND="
+DEPEND="
 	sys-libs/readline:0=
 	idn? ( net-dns/libidn )
 	kerberos? ( virtual/krb5 )
 	pam? ( virtual/pam )
 	tcpd? ( sys-apps/tcp-wrappers )
 "
-DEPEND="${RDEPEND}"
+RDEPEND="${DEPEND}
+	ftp? ( !net-ftp/ftp )
+	dnsdomainname? ( !sys-apps/net-tools )
+	hostname? ( !sys-apps/net-tools[hostname(+)] )
+	ping? ( !net-misc/iputils )
+	ping6? ( !net-misc/iputils[ipv6(+)] )
+	rcp? ( !net-misc/netkit-rsh )
+	rexec? ( !net-misc/netkit-rsh )
+	rlogin? ( !net-misc/netkit-rsh )
+	rsh? ( !net-misc/netkit-rsh )
+	logger? ( !sys-apps/util-linux )
+	telnet? ( !net-misc/telnet-bsd !net-misc/netkit-telnetd )
+	tftp? ( !net-ftp/tftp-hpa )
+	whois? ( !net-misc/whois )
+	ifconfig? ( !sys-apps/net-tools )
+	traceroute? ( !net-analyzer/traceroute !net-misc/iputils[traceroute(+)] )
+"
 
 PROGRAMS=(
 	ftpd inetd rexecd rlogind rshd syslogd talkd telnetd tftpd uucpd
