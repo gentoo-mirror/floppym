@@ -11,25 +11,23 @@ SRC_URI="mirror://kernel/linux/utils/boot/${PN}/${P}.tar.xz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
-IUSE="debug selinux systemd"
+IUSE="debug selinux"
 
 RESTRICT="test"
 
 CDEPEND="virtual/udev
 	virtual/pkgconfig
-	systemd? (
-		>=sys-apps/systemd-199
-	)
+	>=sys-apps/kmod-15[tools]
 	"
 RDEPEND="${CDEPEND}
 	app-arch/cpio
-	>=app-shells/bash-4.0
-	>sys-apps/kmod-5[tools]
+	>=app-shells/bash-4.0:0
 	|| (
 		>=sys-apps/sysvinit-2.87-r3
 		sys-apps/systemd[sysv-utils]
 		sys-apps/systemd-sysv-utils
 	)
+	sys-apps/coreutils[xattr(-)]
 	>=sys-apps/util-linux-2.21
 
 	debug? ( dev-util/strace )
@@ -49,44 +47,18 @@ DEPEND="${CDEPEND}
 DOCS=( AUTHORS HACKING NEWS README README.generic README.kernel README.modules
 	README.testsuite TODO )
 
-QA_MULTILIB_PATHS="
-	usr/lib/dracut/dracut-install
-	usr/lib/dracut/skipcpio
-"
+QA_MULTILIB_PATHS="usr/lib/dracut"
 
 PATCHES=(
 )
-
-#
-# Helper functions
-#
-
-# Removes module from modules.d.
-# $1 = module name
-# Module name can be specified without number prefix.
-rm_module() {
-	local force m
-	[[ $1 = -f ]] && force=-f
-
-	for m in $@; do
-		if [[ $m =~ ^[0-9][0-9][^\ ]*$ ]]; then
-			rm ${force} --interactive=never -r "${modules_dir}"/$m
-		else
-			rm ${force} --interactive=never -r "${modules_dir}"/[0-9][0-9]$m
-		fi
-	done
-}
 
 src_configure() {
 	local myconf=(
 		--prefix="${EPREFIX}/usr"
 		--sysconfdir="${EPREFIX}/etc"
 		--bashcompletiondir="$(get_bashcompdir)"
+		--systemdsystemunitdir="$(systemd_get_systemunitdir)"
 	)
-
-	if use systemd; then
-		myconf+=( --systemdsystemunitdir="$(systemd_get_systemunitdir)" )
-	fi
 
 	tc-export CC PKG_CONFIG
 
@@ -116,34 +88,6 @@ src_install() {
 	dodir /var/lib/dracut/overlay
 
 	dodoc dracut.html
-
-	if ! use systemd; then
-		# Scripts in kernel/install.d are systemd-specific
-		rm -r "${ED%/}/usr/lib/kernel" || die
-	fi
-
-	#
-	# Modules
-	#
-	local module
-	modules_dir="${ED%/}/${dracutlibdir}/modules.d"
-
-	use debug || rm_module 95debug
-	use selinux || rm_module 98selinux
-
-	if use systemd; then
-		# With systemd following modules do not make sense
-		rm_module 96securityfs 97masterkey 98integrity
-	else
-		rm_module 00systemd 98dracut-systemd
-		# Without systemd following modules do not make sense
-		rm_module 00systemd-bootchart 01systemd-initrd 02systemd-networkd
-	fi
-
-	# Remove modules which won't work for sure
-	rm_module 95fcoe # no tools
-	# fips module depends on masked app-crypt/hmaccalc
-	rm_module 01fips 02fips-aesni
 }
 
 pkg_postinst() {
