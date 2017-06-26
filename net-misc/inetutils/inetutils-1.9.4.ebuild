@@ -24,7 +24,7 @@ DEPEND="
 RDEPEND="${DEPEND}
 	ftp? ( !net-ftp/ftp )
 	dnsdomainname? ( !sys-apps/net-tools )
-	hostname? ( !sys-apps/net-tools[hostname(+)] )
+	hostname? ( !sys-apps/coreutils[hostname(-)] !sys-apps/net-tools[hostname(+)] )
 	ping? ( !net-misc/iputils )
 	ping6? ( !net-misc/iputils[ipv6(+)] )
 	rcp? ( !net-misc/netkit-rsh )
