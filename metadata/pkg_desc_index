@@ -4,4 +4,3 @@ app-misc/var-run 0: Dummy package to keep /var/run symlink from being removed
 dev-lang/lua 5.3.4: A powerful light-weight programming language designed for extending applications
 net-misc/inetutils 1.9.4: Collection of common network programs
 sys-apps/sandbox 9999: sandbox'd LD_PRELOAD hack
-sys-kernel/dracut 045: Generic initramfs generation tool

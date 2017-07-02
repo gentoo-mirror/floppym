@@ -27,4 +27,3 @@ net-misc/inetutils:tftpd - Enable tftpd
 net-misc/inetutils:traceroute - Enable tracerout
 net-misc/inetutils:uucpd - Enable uucpd
 net-misc/inetutils:whois - Enable whois
-sys-kernel/dracut:debug - Module installing additional tools like strace, file editor, ssh and more
