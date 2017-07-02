@@ -44,7 +44,8 @@ PROGRAMS=(
 	ftp dnsdomainname hostname ping ping6 rcp rexec rlogin rsh logger
 	telnet tftp whois ifconfig traceroute
 )
-IUSE+=" ${PROGRAMS[@]/#/+}"
+IUSE+=" ${PROGRAMS[@]}"
+REQUIRED_USE="|| ( ${PROGRAMS[@]} )"
 
 src_configure() {
 	local myconf=(
