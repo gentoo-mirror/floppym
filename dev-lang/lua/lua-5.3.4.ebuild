@@ -60,6 +60,7 @@ multilib_src_compile() {
 	cat >> lua.pc <<-EOF
 
 	Name: lua
+	Description: lua library
 	Version: \${version}
 	Libs: -L\${libdir} -llua -ldl
 	Cflags: -I\${includedir}
