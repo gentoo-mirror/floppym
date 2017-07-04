@@ -44,7 +44,7 @@ multilib_src_compile() {
 		AR="${AR} rcu"
 		CC="${CC}"
 		RANLIB="${RANLIB}"
-		MYCFLAGS="-fPIC ${CFLAGS}"
+		MYCFLAGS="${CFLAGS}"
 		MYLDFLAGS="${LDFLAGS}"
 		INSTALL_TOP="${EPREFIX}/usr"
 		INSTALL_LIB="\$(INSTALL_TOP)/$(get_libdir)"
