@@ -2,6 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
+PYTHON_COMPAT=( python2_7 )
+
+inherit python-any-r1
 
 if [[ ${PV} == 9999 ]]; then
 	inherit autotools git-r3
@@ -17,14 +20,26 @@ HOMEPAGE="http://www.greenend.org.uk/rjk/sftpserver/"
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE=""
+IUSE="test"
+RESTRICT="!test? ( test )"
 
 RDEPEND="sys-libs/readline:0="
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	test? ( ${PYTHON_DEPS} )
+"
+
+pkg_setup() {
+	:
+}
 
 src_prepare() {
 	default
 	if [[ ${PV} == 9999 ]]; then
 		eautoreconf
 	fi
+}
+
+src_configure() {
+	use test && python_setup
+	default
 }
