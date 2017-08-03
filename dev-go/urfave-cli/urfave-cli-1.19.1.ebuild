@@ -5,7 +5,7 @@ EAPI=6
 
 inherit golang-build golang-vcs-snapshot
 
-DESCRIPTION="Go library for the Cloudflare v4 API"
+DESCRIPTION="A simple, fast, and fun package for building command line apps in Go"
 EGO_PN="github.com/urfave/cli"
 HOMEPAGE="https://${EGO_PN}"
 SRC_URI="https://${EGO_PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
