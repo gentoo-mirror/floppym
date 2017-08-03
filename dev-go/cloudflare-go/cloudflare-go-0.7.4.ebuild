@@ -13,4 +13,8 @@ LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
 
+DEPEND="
+	dev-go/pkg-errors
+"
+
 EGO_PN="github.com/cloudflare/cloudflare-go"
