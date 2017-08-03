@@ -6,10 +6,11 @@ EAPI=6
 inherit golang-build golang-vcs-snapshot
 
 DESCRIPTION="Simple error handling primitives"
-EGO_PN="github.com/pkg/errors"
-HOMEPAGE="https://${EGO_PN}"
-SRC_URI="https://${EGO_PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/pkg/errors"
+SRC_URI="https://github.com/pkg/errors/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="BSD-2"
 SLOT="0"
 KEYWORDS="~amd64"
+
+EGO_PN="github.com/pkg/errors"
