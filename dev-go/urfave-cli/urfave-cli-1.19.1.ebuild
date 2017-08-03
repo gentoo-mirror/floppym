@@ -6,10 +6,11 @@ EAPI=6
 inherit golang-build golang-vcs-snapshot
 
 DESCRIPTION="A simple, fast, and fun package for building command line apps in Go"
-EGO_PN="github.com/urfave/cli"
-HOMEPAGE="https://${EGO_PN}"
-SRC_URI="https://${EGO_PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/urfave/cli"
+SRC_URI="https://github.com/urfave/cli/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
+
+EGO_PN="github.com/urfave/cli"
