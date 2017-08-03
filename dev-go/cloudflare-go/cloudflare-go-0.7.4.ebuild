@@ -6,10 +6,11 @@ EAPI=6
 inherit golang-build golang-vcs-snapshot
 
 DESCRIPTION="Go library for the Cloudflare v4 API"
-EGO_PN="github.com/cloudflare/cloudflare-go"
-HOMEPAGE="https://${EGO_PN}"
-SRC_URI="https://${EGO_PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/cloudflare/cloudflare-go"
+SRC_URI="https://github.com/cloudflare/cloudflare-go/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
+
+EGO_PN="github.com/cloudflare/cloudflare-go"
