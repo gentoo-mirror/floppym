@@ -44,7 +44,7 @@ multilib_src_compile() {
 		AR="${AR} rcu"
 		CC="${CC}"
 		RANLIB="${RANLIB}"
-		MYCFLAGS="-fPIC ${CFLAGS}"
+		MYCFLAGS="${CFLAGS}"
 		MYLDFLAGS="${LDFLAGS}"
 		INSTALL_TOP="${EPREFIX}/usr"
 		INSTALL_LIB="\$(INSTALL_TOP)/$(get_libdir)"
@@ -60,6 +60,7 @@ multilib_src_compile() {
 	cat >> lua.pc <<-EOF
 
 	Name: lua
+	Description: lua library
 	Version: \${version}
 	Libs: -L\${libdir} -llua -ldl
 	Cflags: -I\${includedir}
