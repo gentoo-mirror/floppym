@@ -5,4 +5,7 @@
 		<email>floppym@gentoo.org</email>
 		<name>Mike Gilbert</name>
 	</maintainer>
+	<use>
+		<flag name="launcher">dbus-daemon compatibility launcher</flag>
+	</use>
 </pkgmetadata>
