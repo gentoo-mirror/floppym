@@ -3,6 +3,8 @@
 
 EAPI=6
 
+inherit rpm
+
 DESCRIPTION="Epson Inkjet Printer Driver (ESC/P-R) 2"
 HOMEPAGE="http://download.ebz.epson.net/dsc/search/01/search/?OSC=LX"
 SRC_URI="https://download3.ebz.epson.net/dsc/f/03/00/06/66/06/cbdec7133feb477f38ebd45337be3a8fb1416c0c/epson-inkjet-printer-escpr2-1.0.9-1lsb3.2.src.rpm"
@@ -13,22 +15,7 @@ KEYWORDS="~amd64"
 IUSE=""
 
 RDEPEND="net-print/cups"
-DEPEND="${RDEPEND}
-	app-arch/cpio
-	app-arch/rpm
-"
-
-src_unpack() {
-	local x
-	for x in ${A}; do
-		if [[ ${x} == *.src.rpm ]]; then
-			( rpm2cpio "${DISTDIR}/${x}" | cpio -id ) || die
-			unpack "./${x%.src.rpm}.tar.gz"
-		else
-			unpack "${x}"
-		fi
-	done
-}
+DEPEND="${RDEPEND}"
 
 src_configure() {
 	econf --disable-shared
