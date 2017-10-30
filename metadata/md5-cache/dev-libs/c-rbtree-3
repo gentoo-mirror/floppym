@@ -1,0 +1,11 @@
+DEFINED_PHASES=compile configure install test
+DEPEND=>=dev-util/meson-0.40.0 >=dev-util/ninja-1.7.2
+DESCRIPTION=Standalone Red-Black Tree Implementation in Standard ISO-C11
+EAPI=6
+HOMEPAGE=https://github.com/c-util/c-rbtree
+KEYWORDS=~amd64
+LICENSE=Apache-2.0
+SLOT=0
+SRC_URI=https://github.com/c-util/c-rbtree/archive/v3.tar.gz -> c-rbtree-3.tar.gz
+_eclasses_=meson	38757afcd8d9f0d1d44ba4cefc33b99d	multilib	97f470f374f2e94ccab04a2fb21d811e	multiprocessing	6f5991c7101863d0b29df63990ad852e	ninja-utils	ebb2eaddc6331c4fa000b8eb8f6fe074	python-utils-r1	c9de01becf9df3f8c10aeec3dc693f5d	toolchain-funcs	185a06792159ca143528e7010368e8af
+_md5_=63e020cbfa7fc6d445fbf3f94661bb0f
