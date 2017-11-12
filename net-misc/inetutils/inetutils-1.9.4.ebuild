@@ -49,7 +49,8 @@ REQUIRED_USE="|| ( ${PROGRAMS[@]} )"
 
 src_configure() {
 	local myconf=(
-		--disable-talk
+		--disable-clients
+		--disable-servers
 		$(use_enable ipv6)
 		$(use_with idn)
 		--without-krb4
