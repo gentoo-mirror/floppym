@@ -73,7 +73,7 @@ socket_tcp() {
 
 	use "${daemon}" || return
 
-	cat >"${T}/${daemon}@.service" <<-EOF
+	cat >"${T}/${daemon}@.service" <<-EOF || die
 	[Service]
 	ExecStart="${EPREFIX}/usr/libexec/${daemon}" $*
 	StandardInput=socket
@@ -83,7 +83,7 @@ socket_tcp() {
 	EOF
 	systemd_dounit "${T}/${daemon}@.service"
 
-	cat >"${T}/${daemon}.socket" <<-EOF
+	cat >"${T}/${daemon}.socket" <<-EOF || die
 	[Socket]
 	ListenStream=${port}
 	Accept=yes
@@ -101,7 +101,7 @@ socket_udp() {
 
 	use "${daemon}" || return
 
-	cat >"${T}/${daemon}.service" <<-EOF
+	cat >"${T}/${daemon}.service" <<-EOF || die
 	[Service]
 	ExecStart="${EPREFIX}/usr/libexec/${daemon}" $*
 	StandardInput=socket
@@ -111,7 +111,7 @@ socket_udp() {
 	EOF
 	systemd_dounit "${T}/${daemon}.service"
 
-	cat >"${T}/${daemon}.socket" <<-EOF
+	cat >"${T}/${daemon}.socket" <<-EOF || die
 	[Socket]
 	ListenDatagram=${port}
 
