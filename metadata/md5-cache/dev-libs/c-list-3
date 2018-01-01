@@ -7,5 +7,5 @@ KEYWORDS=~amd64
 LICENSE=Apache-2.0
 SLOT=0
 SRC_URI=https://github.com/c-util/c-list/archive/v3.tar.gz -> c-list-3.tar.gz
-_eclasses_=meson	f8e09b2b2ac1e9bb0bd374b6ad77a90d	multilib	97f470f374f2e94ccab04a2fb21d811e	multiprocessing	6f5991c7101863d0b29df63990ad852e	ninja-utils	ebb2eaddc6331c4fa000b8eb8f6fe074	python-utils-r1	c9de01becf9df3f8c10aeec3dc693f5d	toolchain-funcs	185a06792159ca143528e7010368e8af
+_eclasses_=meson	f8e09b2b2ac1e9bb0bd374b6ad77a90d	multilib	97f470f374f2e94ccab04a2fb21d811e	multiprocessing	6f5991c7101863d0b29df63990ad852e	ninja-utils	ebb2eaddc6331c4fa000b8eb8f6fe074	python-utils-r1	c9de01becf9df3f8c10aeec3dc693f5d	toolchain-funcs	885c7d8dd70a58825f3d17e35a3cd1e9
 _md5_=dbef5d000f138b0caea7ffb1f1a39cdd
