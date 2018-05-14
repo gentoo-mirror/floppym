@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -16,7 +16,7 @@ IUSE="idn ipv6 kerberos pam tcpd"
 
 DEPEND="
 	sys-libs/readline:0=
-	idn? ( net-dns/libidn )
+	idn? ( net-dns/libidn:= )
 	kerberos? ( virtual/krb5 )
 	pam? ( virtual/pam )
 	tcpd? ( sys-apps/tcp-wrappers )
