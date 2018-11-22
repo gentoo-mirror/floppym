@@ -1,7 +1,7 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 inherit multilib-minimal
 
@@ -39,24 +39,35 @@ src_compile() {
 	multilib-minimal_src_compile
 }
 
-multilib_src_compile() {
+luamake() {
 	local args=(
 		AR="${AR} rcu"
 		CC="${CC}"
 		RANLIB="${RANLIB}"
 		MYCFLAGS="${CFLAGS}"
 		MYLDFLAGS="${LDFLAGS}"
-		INSTALL_TOP="${EPREFIX}/usr"
 		INSTALL_LIB="\$(INSTALL_TOP)/$(get_libdir)"
+		INSTALL_LIB="\$(INSTALL_TOP)/$(get_libdir)"
+		INSTALL_MAN="\$(INSTALL_TOP)/share/man/man1"
 	)
 
-	if multilib_is_native_abi; then
-		emake "${args[@]}" linux
+	if [[ ${EBUILD_PHASE} == install ]]; then
+		args+=( INSTALL_TOP="${ED}/usr" )
 	else
-		emake "${args[@]}" -C src liblua.a
+		args+=( INSTALL_TOP="${EPREFIX}/usr" )
 	fi
 
-	emake "${args[@]}" pc > lua.pc
+	emake "${args[@]}" "$@"
+}
+
+multilib_src_compile() {
+	if multilib_is_native_abi; then
+		luamake linux
+	else
+		luamake -C src liblua.a
+	fi
+
+	luamake pc > lua.pc
 	cat >> lua.pc <<-EOF
 
 	Name: lua
@@ -68,19 +79,13 @@ multilib_src_compile() {
 }
 
 multilib_src_install() {
-	local args=(
-		INSTALL_TOP="${ED%/}/usr"
-		INSTALL_LIB="\$(INSTALL_TOP)/$(get_libdir)"
-		INSTALL_MAN="\$(INSTALL_TOP)/share/man/man1"
-	)
-
 	if multilib_is_native_abi; then
-		emake "${args[@]}" install
+		luamake install
 	else
 		dolib.a src/liblua.a
 		doheader src/{lua.h,luaconf.h,lualib.h,lauxlib.h,lua.hpp}
 	fi
 
-	insinto /usr/$(get_libdir)/pkgconfig
+	insinto "/usr/$(get_libdir)/pkgconfig"
 	doins lua.pc
 }
