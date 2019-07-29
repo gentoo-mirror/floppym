@@ -7,7 +7,8 @@ inherit systemd
 
 DESCRIPTION="SSL VPN server"
 HOMEPAGE="https://ocserv.gitlab.io/www/index.html"
-SRC_URI="ftp://ftp.infradead.org/pub/ocserv/${P}.tar.xz"
+SRC_URI="ftp://ftp.infradead.org/pub/ocserv/${P}.tar.xz
+	https://dev.gentoo.org/~floppym/dist/${P}-man.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
