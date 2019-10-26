@@ -18,7 +18,7 @@ DEPEND="
 	sys-libs/readline:0=
 	idn? ( net-dns/libidn:= )
 	kerberos? ( virtual/krb5 )
-	pam? ( virtual/pam )
+	pam? ( sys-libs/pam )
 	tcpd? ( sys-apps/tcp-wrappers )
 "
 RDEPEND="${DEPEND}
