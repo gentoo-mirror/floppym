@@ -13,10 +13,15 @@ SRC_URI="ftp://ftp.infradead.org/pub/ocserv/${P}.tar.xz
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="geoip kerberos +lz4 otp pam radius +seccomp systemd tcpd"
+IUSE="geoip kerberos +lz4 otp pam radius +seccomp systemd tcpd test"
+RESTRICT="!test? ( test )"
 
 BDEPEND="
 	virtual/pkgconfig
+	test? (
+		net-libs/socket_wrapper
+		sys-libs/uid_wrapper
+	)
 "
 DEPEND="
 	dev-libs/libnl:3=
@@ -50,8 +55,8 @@ src_configure() {
 		$(use_enable systemd)
 
 		$(use_with geoip)
-		$(use_with lz4)
 		$(use_with kerberos gssapi)
+		$(use_with lz4)
 		$(use_with otp liboath)
 		$(use_with radius)
 		$(use_with tcpd libwrap)
