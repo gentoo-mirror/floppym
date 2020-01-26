@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 2002-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -44,7 +44,7 @@ luamake() {
 		AR="${AR} rcu"
 		CC="${CC}"
 		RANLIB="${RANLIB}"
-		MYCFLAGS="${CFLAGS}"
+		MYCFLAGS="${CFLAGS} -fPIC"
 		MYLDFLAGS="${LDFLAGS}"
 		INSTALL_LIB="\$(INSTALL_TOP)/$(get_libdir)"
 		INSTALL_LIB="\$(INSTALL_TOP)/$(get_libdir)"
