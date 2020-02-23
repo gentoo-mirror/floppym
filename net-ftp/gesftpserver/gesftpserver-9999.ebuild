@@ -1,12 +1,13 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 2017-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
-PYTHON_COMPAT=( python2_7 )
+EAPI=7
+PYTHON_COMPAT=( python3_{6..8} )
 
 inherit python-any-r1
 
 if [[ ${PV} == 9999 ]]; then
+	WANT_LIBTOOL=none
 	inherit autotools git-r3
 	EGIT_REPO_URI="https://github.com/ewxrjk/sftpserver"
 else
@@ -23,10 +24,9 @@ SLOT="0"
 IUSE="test"
 RESTRICT="!test? ( test )"
 
+BDEPEND="test? ( ${PYTHON_DEPS} )"
 RDEPEND="sys-libs/readline:0="
-DEPEND="${RDEPEND}
-	test? ( ${PYTHON_DEPS} )
-"
+DEPEND="${RDEPEND}"
 
 pkg_setup() {
 	:
@@ -41,5 +41,5 @@ src_prepare() {
 
 src_configure() {
 	use test && python_setup
-	default
+	econf --disable-warnings-as-errors
 }
