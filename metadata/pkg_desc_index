@@ -11,7 +11,7 @@ dev-libs/c-list 3: Circular Double Linked List Implementation in Standard ISO-C1
 dev-libs/c-rbtree 3: Standalone Red-Black Tree Implementation in Standard ISO-C11
 dev-libs/c-sundry 1: Collection of sundry convenience headers
 dev-python/pydbus 0.6.0: Pythonic DBus library
-net-ftp/gesftpserver 0.2.2 9999: Green End SFTP Server
+net-ftp/gesftpserver 9999: Green End SFTP Server
 net-misc/inetutils 1.9.4: Collection of common network programs
 net-print/epson-inkjet-printer-escpr2 1.0.9: Epson Inkjet Printer Driver (ESC/P-R) 2
 net-vpn/ocserv 0.12.4: SSL VPN server
