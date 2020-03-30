@@ -1,15 +1,11 @@
-# Copyright 1999-2015 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: $
-
-EAPI=5
+EAPI=7
 
 DESCRIPTION="Dummy package to keep /var/run symlink from being removed"
-HOMEPAGE="http://gentoo.org/"
+HOMEPAGE="https://github.com/floppym/floppym"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 
 S=${WORKDIR}
 
