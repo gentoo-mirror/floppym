@@ -1,7 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-
-EAPI=6
+EAPI=7
 
 inherit systemd
 
@@ -11,7 +8,7 @@ SRC_URI="mirror://gnu/${PN}/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64"
 IUSE="idn ipv6 kerberos pam tcpd"
 
 DEPEND="
@@ -44,8 +41,7 @@ PROGRAMS=(
 	ftp dnsdomainname hostname ping ping6 rcp rexec rlogin rsh logger
 	telnet tftp whois ifconfig traceroute
 )
-IUSE+=" ${PROGRAMS[@]}"
-REQUIRED_USE="|| ( ${PROGRAMS[@]} )"
+IUSE+=" ${PROGRAMS[*]}"
 
 src_configure() {
 	local myconf=(
@@ -85,8 +81,8 @@ socket_tcp() {
 
 	cat >"${T}/${daemon}.socket" <<-EOF || die
 	[Socket]
-	ListenStream=${port}
 	Accept=yes
+	ListenStream=${port}
 
 	[Install]
 	WantedBy=sockets.target
