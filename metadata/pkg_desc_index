@@ -3,4 +3,3 @@ app-misc/var-run 0: Dummy package to keep /var/run symlink from being removed
 dev-lang/lua 5.3.5: A powerful light-weight programming language designed for extending applications
 net-ftp/gesftpserver 9999: Green End SFTP Server
 net-misc/inetutils 1.9.4-r1: Collection of common network programs
-net-vpn/ocserv 0.12.4: SSL VPN server
