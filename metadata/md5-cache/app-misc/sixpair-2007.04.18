@@ -1,12 +1,11 @@
-DEFINED_PHASES=compile install unpack
+DEFINED_PHASES=compile install
 DEPEND=virtual/libusb:0
 DESCRIPTION=Utility to initiate bluetooth pairing with a PS3 controller
-EAPI=4
+EAPI=7
 HOMEPAGE=http://www.pabr.org/sixlinux/sixlinux.en.html
 KEYWORDS=~amd64
-LICENSE=public-domain
+LICENSE=GPL-2
 RDEPEND=virtual/libusb:0 net-wireless/bluez
 SLOT=0
-SRC_URI=http://www.pabr.org/sixlinux/sixpair.c -> sixpair-2007.04.18.c
 _eclasses_=multilib	318e8ae683e57fd3ccd0d31a769d8ee8	toolchain-funcs	512eb3367f507ebaa1d1d43ab7d66e6c
-_md5_=02b497e2eeab0993c0416c5dce26e8f0
+_md5_=22ef4a467fa37915890a4f12741b8e27
