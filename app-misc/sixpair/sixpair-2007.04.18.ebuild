@@ -1,19 +1,16 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 2011-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
-EAPI="4"
+EAPI=7
 
 inherit toolchain-funcs
 
 DESCRIPTION="Utility to initiate bluetooth pairing with a PS3 controller"
 HOMEPAGE="http://www.pabr.org/sixlinux/sixlinux.en.html"
-SRC_URI="http://www.pabr.org/sixlinux/sixpair.c -> ${P}.c"
 
-LICENSE="public-domain"
+LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
 
 DEPEND="virtual/libusb:0"
 RDEPEND="${DEPEND}
@@ -21,14 +18,21 @@ RDEPEND="${DEPEND}
 
 S=${WORKDIR}
 
-src_unpack() {
-	cp "${DISTDIR}/${P}.c" sixpair.c || die
-}
-
 src_compile() {
-	local args="$(tc-getCC) ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} sixpair.c -lusb -o sixpair"
-	echo "${args}"
-	${args} || die
+	local pkgconfig="$(tc-getPKG_CONFIG)"
+	local libusb_cflags="$(${pkgconfig} --cflags libusb)"
+	local libusb_libs="$(${pkgconfig} --libs libusb)"
+	local compile=(
+		$(tc-getCC)
+		${CFLAGS} ${CPPFLAGS}
+		${libusb_cflags}
+		-o sixpair
+		${LDFLAGS}
+		"${FILESDIR}"/sixpair.c
+		${libusb_libs}
+	)
+	echo "${compile[@]}" >&2
+	"${compile[@]}" || die
 }
 
 src_install() {
