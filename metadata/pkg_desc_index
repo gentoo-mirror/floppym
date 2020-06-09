@@ -5,4 +5,4 @@ dev-python/cloudflare 2.6.5: Python wrapper for the Cloudflare v4 API
 dev-python/jsonlines 1.2.0: Python library to simplify working with jsonlines and ndjson data
 net-ftp/gesftpserver 9999: Green End SFTP Server
 net-misc/inetutils 1.9.4-r1: Collection of common network programs
-sys-fs/ntfs3g 2017.3.23.5: 
+sys-fs/ntfs3g 2017.3.23.5: NTFS driver
