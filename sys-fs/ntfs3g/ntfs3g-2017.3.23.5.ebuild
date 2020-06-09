@@ -3,25 +3,27 @@
 
 EAPI=7
 
-DESCRIPTION=""
-HOMEPAGE=""
+DESCRIPTION="NTFS driver"
+HOMEPAGE="https://jp-andre.pagesperso-orange.fr/advanced-ntfs-3g.html"
 MY_P="ntfs-3g_ntfsprogs-${PV%.*}AR.${PV##*.}"
 SRC_URI="https://jp-andre.pagesperso-orange.fr/${MY_P}.tgz"
 
-LICENSE=""
+LICENSE="GPL-2+ LGPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-
-DEPEND=""
-RDEPEND="${DEPEND}"
-BDEPEND=""
+KEYWORDS="~amd64"
 
 S="${WORKDIR}/${MY_P}"
 
 src_configure() {
 	local myconf=(
 		--exec-prefix="${EPREFIX}"/usr
-		--disable-ldconfig
+		--disable-library
 	)
 	econf "${myconf[@]}"
+}
+
+src_install() {
+	default
+	dosym "${EPREFIX}"/usr/bin/ntfs-3g /sbin/mount.ntfs
+	keepdir "/usr/$(get_libdir)/ntfs-3g"
 }
