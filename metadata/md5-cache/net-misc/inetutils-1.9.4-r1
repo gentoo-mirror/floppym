@@ -10,5 +10,5 @@ LICENSE=GPL-3
 RDEPEND=sys-libs/readline:0= idn? ( net-dns/libidn:= ) kerberos? ( virtual/krb5 ) pam? ( sys-libs/pam ) tcpd? ( sys-apps/tcp-wrappers ) ftp? ( !net-ftp/ftp ) dnsdomainname? ( !sys-apps/net-tools ) hostname? ( !sys-apps/coreutils[hostname(-)] !sys-apps/net-tools[hostname(+)] ) ping? ( !net-misc/iputils ) ping6? ( !net-misc/iputils[ipv6(+)] ) rcp? ( !net-misc/netkit-rsh ) rexec? ( !net-misc/netkit-rsh ) rlogin? ( !net-misc/netkit-rsh ) rsh? ( !net-misc/netkit-rsh ) logger? ( !sys-apps/util-linux ) telnet? ( !net-misc/telnet-bsd !net-misc/netkit-telnetd ) tftp? ( !net-ftp/tftp-hpa ) whois? ( !net-misc/whois ) ifconfig? ( !sys-apps/net-tools ) traceroute? ( !net-analyzer/traceroute !net-misc/iputils[traceroute(+)] )
 SLOT=0
 SRC_URI=mirror://gnu/inetutils/inetutils-1.9.4.tar.xz
-_eclasses_=multilib	ba693a7065ee4edc78b3ea02a015bcad	systemd	71fd8d2065d102753fb9e4d20eaf3e9f	toolchain-funcs	d3e75048a89c0445838d2f44e5c65d97
+_eclasses_=multilib	2477ebe553d3e4d2c606191fe6c33602	systemd	71fd8d2065d102753fb9e4d20eaf3e9f	toolchain-funcs	605c126bed8d87e4378d5ff1645330cb
 _md5_=84cdd2a6fe9f18eb91aa68b8a66de20f
