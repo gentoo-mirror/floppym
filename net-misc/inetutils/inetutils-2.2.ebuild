@@ -1,3 +1,6 @@
+# Copyright 2021 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
 EAPI=7
 
 inherit systemd
@@ -13,10 +16,12 @@ IUSE="idn ipv6 kerberos pam tcpd"
 
 DEPEND="
 	sys-libs/readline:0=
-	idn? ( net-dns/libidn:= )
+	ftpd? ( virtual/libcrypt:0= )
+	idn? ( net-dns/libidn2:= )
 	kerberos? ( virtual/krb5 )
 	pam? ( sys-libs/pam )
 	tcpd? ( sys-apps/tcp-wrappers )
+	uucpd? ( virtual/libcrypt:0= )
 "
 RDEPEND="${DEPEND}
 	ftp? ( !net-ftp/ftp )
@@ -28,12 +33,12 @@ RDEPEND="${DEPEND}
 	rexec? ( !net-misc/netkit-rsh )
 	rlogin? ( !net-misc/netkit-rsh )
 	rsh? ( !net-misc/netkit-rsh )
-	logger? ( !sys-apps/util-linux )
+	logger? ( !sys-apps/util-linux[logger(+)] )
 	telnet? ( !net-misc/telnet-bsd !net-misc/netkit-telnetd )
 	tftp? ( !net-ftp/tftp-hpa )
 	whois? ( !net-misc/whois )
 	ifconfig? ( !sys-apps/net-tools )
-	traceroute? ( !net-analyzer/traceroute !net-misc/iputils[traceroute(+)] )
+	traceroute? ( !net-analyzer/traceroute )
 "
 
 PROGRAMS=(
