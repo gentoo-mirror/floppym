@@ -1,6 +1,7 @@
-EAPI=7
+# Copyright 2021 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
 
-inherit systemd
+EAPI=7
 
 DESCRIPTION="Collection of common network programs"
 HOMEPAGE="https://www.gnu.org/software/inetutils/"
@@ -13,10 +14,12 @@ IUSE="idn ipv6 kerberos pam tcpd"
 
 DEPEND="
 	sys-libs/readline:0=
-	idn? ( net-dns/libidn:= )
+	ftpd? ( virtual/libcrypt:0= )
+	idn? ( net-dns/libidn2:= )
 	kerberos? ( virtual/krb5 )
 	pam? ( sys-libs/pam )
 	tcpd? ( sys-apps/tcp-wrappers )
+	uucpd? ( virtual/libcrypt:0= )
 "
 RDEPEND="${DEPEND}
 	ftp? ( !net-ftp/ftp )
@@ -28,12 +31,12 @@ RDEPEND="${DEPEND}
 	rexec? ( !net-misc/netkit-rsh )
 	rlogin? ( !net-misc/netkit-rsh )
 	rsh? ( !net-misc/netkit-rsh )
-	logger? ( !sys-apps/util-linux )
+	logger? ( !sys-apps/util-linux[logger(+)] )
 	telnet? ( !net-misc/telnet-bsd !net-misc/netkit-telnetd )
 	tftp? ( !net-ftp/tftp-hpa )
 	whois? ( !net-misc/whois )
 	ifconfig? ( !sys-apps/net-tools )
-	traceroute? ( !net-analyzer/traceroute !net-misc/iputils[traceroute(+)] )
+	traceroute? ( !net-analyzer/traceroute )
 "
 
 PROGRAMS=(
@@ -60,70 +63,4 @@ src_configure() {
 		myconf+=( $(use_enable "${prog}") )
 	done
 	econf "${myconf[@]}"
-}
-
-socket_tcp() {
-	local port=$1
-	local daemon=$2
-	shift 2
-
-	use "${daemon}" || return
-
-	cat >"${T}/${daemon}@.service" <<-EOF || die
-	[Service]
-	ExecStart="${EPREFIX}/usr/libexec/${daemon}" $*
-	StandardInput=socket
-
-	[Install]
-	Also=${daemon}.socket
-	EOF
-	systemd_dounit "${T}/${daemon}@.service"
-
-	cat >"${T}/${daemon}.socket" <<-EOF || die
-	[Socket]
-	Accept=yes
-	ListenStream=${port}
-
-	[Install]
-	WantedBy=sockets.target
-	EOF
-	systemd_dounit "${T}/${daemon}.socket"
-}
-
-socket_udp() {
-	local port=$1
-	local daemon=$2
-	shift 2
-
-	use "${daemon}" || return
-
-	cat >"${T}/${daemon}.service" <<-EOF || die
-	[Service]
-	ExecStart="${EPREFIX}/usr/libexec/${daemon}" $*
-	StandardInput=socket
-
-	[Install]
-	Also=${daemon}.socket
-	EOF
-	systemd_dounit "${T}/${daemon}.service"
-
-	cat >"${T}/${daemon}.socket" <<-EOF || die
-	[Socket]
-	ListenDatagram=${port}
-
-	[Install]
-	WantedBy=sockets.target
-	EOF
-	systemd_dounit "${T}/${daemon}.socket"
-}
-
-src_install() {
-	default
-	socket_tcp  21 ftpd
-	socket_tcp 512 rexecd
-	socket_tcp 513 rlogind
-	socket_tcp 514 rshd
-	socket_tcp  23 telnetd
-	socket_udp  69 tftpd /tftproot
-	socket_tcp 540 uucpd
 }
