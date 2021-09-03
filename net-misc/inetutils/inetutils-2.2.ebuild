@@ -3,8 +3,6 @@
 
 EAPI=7
 
-inherit systemd
-
 DESCRIPTION="Collection of common network programs"
 HOMEPAGE="https://www.gnu.org/software/inetutils/"
 SRC_URI="mirror://gnu/${PN}/${P}.tar.xz"
@@ -65,70 +63,4 @@ src_configure() {
 		myconf+=( $(use_enable "${prog}") )
 	done
 	econf "${myconf[@]}"
-}
-
-socket_tcp() {
-	local port=$1
-	local daemon=$2
-	shift 2
-
-	use "${daemon}" || return
-
-	cat >"${T}/${daemon}@.service" <<-EOF || die
-	[Service]
-	ExecStart="${EPREFIX}/usr/libexec/${daemon}" $*
-	StandardInput=socket
-
-	[Install]
-	Also=${daemon}.socket
-	EOF
-	systemd_dounit "${T}/${daemon}@.service"
-
-	cat >"${T}/${daemon}.socket" <<-EOF || die
-	[Socket]
-	Accept=yes
-	ListenStream=${port}
-
-	[Install]
-	WantedBy=sockets.target
-	EOF
-	systemd_dounit "${T}/${daemon}.socket"
-}
-
-socket_udp() {
-	local port=$1
-	local daemon=$2
-	shift 2
-
-	use "${daemon}" || return
-
-	cat >"${T}/${daemon}.service" <<-EOF || die
-	[Service]
-	ExecStart="${EPREFIX}/usr/libexec/${daemon}" $*
-	StandardInput=socket
-
-	[Install]
-	Also=${daemon}.socket
-	EOF
-	systemd_dounit "${T}/${daemon}.service"
-
-	cat >"${T}/${daemon}.socket" <<-EOF || die
-	[Socket]
-	ListenDatagram=${port}
-
-	[Install]
-	WantedBy=sockets.target
-	EOF
-	systemd_dounit "${T}/${daemon}.socket"
-}
-
-src_install() {
-	default
-	socket_tcp  21 ftpd
-	socket_tcp 512 rexecd
-	socket_tcp 513 rlogind
-	socket_tcp 514 rshd
-	socket_tcp  23 telnetd
-	socket_udp  69 tftpd /tftproot
-	socket_tcp 540 uucpd
 }
