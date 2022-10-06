@@ -2,4 +2,4 @@ app-misc/sixpair 2007.04.18: Utility to initiate bluetooth pairing with a PS3 co
 app-misc/var-run 0: Dummy package to keep /var/run symlink from being removed
 dev-libs/libkqueue 2.5.0: kqueue(2) compatibility library
 net-ftp/gesftpserver 9999: Green End SFTP Server
-net-misc/inetutils 2.2: Collection of common network programs
+net-misc/inetutils 2.3: Collection of common network programs

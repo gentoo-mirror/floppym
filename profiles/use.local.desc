@@ -24,6 +24,6 @@ net-misc/inetutils:telnet - Enable telnet
 net-misc/inetutils:telnetd - Enable telnetd
 net-misc/inetutils:tftp - Enable tftp
 net-misc/inetutils:tftpd - Enable tftpd
-net-misc/inetutils:traceroute - Enable tracerout
+net-misc/inetutils:traceroute - Enable traceroute
 net-misc/inetutils:uucpd - Enable uucpd
 net-misc/inetutils:whois - Enable whois
