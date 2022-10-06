@@ -30,6 +30,6 @@
 		<flag name="tftp">Enable tftp</flag>
 		<flag name="whois">Enable whois</flag>
 		<flag name="ifconfig">Enable ifconfig</flag>
-		<flag name="traceroute">Enable tracerout</flag>
+		<flag name="traceroute">Enable traceroute</flag>
 	</use>
 </pkgmetadata>
