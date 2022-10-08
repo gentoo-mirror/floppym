@@ -3,6 +3,8 @@
 
 EAPI=8
 
+inherit pam
+
 DESCRIPTION="Collection of common network programs"
 HOMEPAGE="https://www.gnu.org/software/inetutils/"
 SRC_URI="mirror://gnu/${PN}/${P}.tar.xz"
@@ -63,4 +65,13 @@ src_configure() {
 		myconf+=( $(use_enable "${prog}") )
 	done
 	econf "${myconf[@]}"
+}
+
+src_install() {
+	default
+	if use pam; then
+		use rexecd && newpamd "${FILESDIR}/rsh.pam" rexec
+		use rlogind && newpamd "${FILESDIR}/rlogin.pam" rlogin
+		use rshd && newpamd "${FILESDIR}/rsh.pam" rsh
+	fi
 }
