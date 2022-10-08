@@ -1,12 +1,14 @@
-DEFINED_PHASES=configure
+DEFINED_PHASES=configure install
 DEPEND=sys-libs/readline:0= ftpd? ( virtual/libcrypt:0= ) idn? ( net-dns/libidn2:= ) kerberos? ( virtual/krb5 ) pam? ( sys-libs/pam ) tcpd? ( sys-apps/tcp-wrappers ) uucpd? ( virtual/libcrypt:0= )
 DESCRIPTION=Collection of common network programs
 EAPI=8
 HOMEPAGE=https://www.gnu.org/software/inetutils/
+INHERIT=pam
 IUSE=idn ipv6 kerberos pam tcpd ftpd inetd rexecd rlogind rshd syslogd talkd telnetd tftpd uucpd ftp dnsdomainname hostname ping ping6 rcp rexec rlogin rsh logger telnet tftp whois ifconfig traceroute
 KEYWORDS=~amd64
 LICENSE=GPL-3
 RDEPEND=sys-libs/readline:0= ftpd? ( virtual/libcrypt:0= ) idn? ( net-dns/libidn2:= ) kerberos? ( virtual/krb5 ) pam? ( sys-libs/pam ) tcpd? ( sys-apps/tcp-wrappers ) uucpd? ( virtual/libcrypt:0= ) ftp? ( !net-ftp/ftp ) dnsdomainname? ( !sys-apps/net-tools ) hostname? ( !sys-apps/coreutils[hostname(-)] !sys-apps/net-tools[hostname(+)] ) ping? ( !net-misc/iputils ) ping6? ( !net-misc/iputils[ipv6(+)] ) rcp? ( !net-misc/netkit-rsh ) rexec? ( !net-misc/netkit-rsh ) rlogin? ( !net-misc/netkit-rsh ) rsh? ( !net-misc/netkit-rsh ) logger? ( !sys-apps/util-linux[logger(+)] ) telnet? ( !net-misc/telnet-bsd !net-misc/netkit-telnetd ) tftp? ( !net-ftp/tftp-hpa ) whois? ( !net-misc/whois ) ifconfig? ( !sys-apps/net-tools ) traceroute? ( !net-analyzer/traceroute )
 SLOT=0
 SRC_URI=mirror://gnu/inetutils/inetutils-2.3.tar.xz
-_md5_=04c3726fee7fffa3d0141903fbfdb15b
+_eclasses_=toolchain-funcs	1542e649be915f43f6908a9e93909961	multilib	5ca4e49abed8e3a2f7b56920eadee157	flag-o-matic	29a755b1291d64133634d80b0328f153	pam	e44a1dd98f13e1ad76de01e919bde1f1
+_md5_=23e5bf30744d8f7127291e277fdc8bf9
