@@ -1,0 +1,5 @@
+auth		required	pam_rhosts.so
+auth		substack	system-remote-login
+account		substack	system-remote-login
+password	substack	system-remote-login
+session		substack	system-remote-login
